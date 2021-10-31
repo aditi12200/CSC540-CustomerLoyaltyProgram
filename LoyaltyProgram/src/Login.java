@@ -53,7 +53,7 @@ public class Login {
                 userType = rs.getString("USERTYPE"); //update usertype
                 success = true;
             } else {
-                System.out.println("username and/or password is incorrect, Please try again.");
+                System.out.println("Username and/or password is incorrect. Please try again.");
             }
             rs.close();
         } catch (SQLException e) {

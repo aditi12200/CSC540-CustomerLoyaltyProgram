@@ -17,7 +17,7 @@ public class Signup {
 
             try {
                 selection = sc.nextInt();
-                flag = true;
+                selected = true;
 
                 switch (selection) {
                     case 1:
@@ -27,15 +27,15 @@ public class Signup {
                         addCustomer();
                         break;
                     case 3:
-                        Home.showMenu();
+                        MainMenu.displayMenu();
                         break;
                     default:
-                        System.out.println("You have entered a wrong option. Please choose again.");
+                        System.out.println("You have made an invalid choice. Please pick again.");
                         flag = false;
                 }
 
             } catch (Exception e) {
-                System.out.println("Please choose between 1 and 3. Please choose again.");
+                System.out.println("You have made an invalid choice. Please pick again.");
                 sc.next();
             }
         } while (!flag);

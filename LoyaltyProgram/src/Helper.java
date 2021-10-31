@@ -46,7 +46,7 @@ public class Helper {
             try {
                 selection = sc.nextInt();
                 if (selection != 1 && selection != 2) {
-                    System.out.println("You have made an invalid choice. Please choose again.");
+                    System.out.println("You have made an invalid choice. Please pick again.");
                 } else
                 {
                     selected = true;

@@ -70,10 +70,10 @@ public class MainMenu {
                         exitProgram();
                         break;
                     default:
-                        System.out.println("You have entered a wrong option. Please choose again.");
+                        System.out.println("You have made an invalid choice. Please pick again.");
                 }
             } catch (Exception e) {
-                System.out.println("You have entered a wrong option. Please choose again.");
+                System.out.println("You have made an invalid choice. Please pick again.");
                 displayMenu();
             }
         } while (enteredValue != 4);
