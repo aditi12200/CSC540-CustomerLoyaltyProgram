@@ -80,8 +80,8 @@ public class MainMenu {
     }
 
     public static void exitProgram() {
-        Utility.close(connection);
-        Utility.close(statement);
+        Helper.close(connection);
+        Helper.close(statement);
         System.exit((0));
     }
 }
