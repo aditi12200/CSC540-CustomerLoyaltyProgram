@@ -3,7 +3,6 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Scanner;
 
-
 public class Login {
     public static String userType = "";
 

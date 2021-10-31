@@ -1,0 +1,56 @@
+import java.util.Scanner;
+
+public class Brand {
+    public static void brandPage() {
+        Scanner sc = new Scanner(System.in);
+        int enteredValue;
+        boolean selected = false;
+
+        do {
+            System.out.println("Choose one of the following options");
+            System.out.println("1. Add Loyalty Program");
+            System.out.println("2. Add reward earning rules(RER)");
+            System.out.println("3. Update reward earning rules(RER)");
+            System.out.println("4. Add reward redemption rules(RRR)");
+            System.out.println("5. Update reward redemption rules(RRR)");
+            System.out.println("6. Validate Loyalty Program");
+            System.out.println("7. Log out");
+
+            try {
+                enteredValue = sc.nextInt();
+                selected = true;
+
+                switch (enteredValue) {
+                    case 1:
+                        //TODO
+                        break;
+                    case 2:
+                        //TODO
+                        break;
+                    case 3:
+                        //TODO
+                        break;
+                    case 4:
+                        //TODO
+                        break;
+                    case 5:
+                        //TODO
+                        break;
+                    case 6:
+                        //TODO
+                        break;
+                    case 7:
+                        MainMenu.displayMenu();
+                        break;
+                    default:
+                        System.out.println("You have made an invalid choice. Please pick again.");
+                        selected = false;
+                }
+
+            } catch (Exception e) {
+                System.out.println("Please pick an option between 1 and 7.");
+                sc.next();
+            }
+        } while (!selected);
+    }
+}

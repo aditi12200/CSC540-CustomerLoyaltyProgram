@@ -36,7 +36,7 @@ public class Helper {
 
     public static int selectNextOption(Scanner sc, String optionText) {
         boolean selected = false;
-        int selection;
+        int enteredValue;
 
         do{
             System.out.println("Choose one of the following options");
@@ -44,8 +44,8 @@ public class Helper {
             System.out.println("2. Go Back");
 
             try {
-                selection = sc.nextInt();
-                if (selection != 1 && selection != 2) {
+                enteredValue = sc.nextInt();
+                if (enteredValue != 1 && enteredValue != 2) {
                     System.out.println("You have made an invalid choice. Please pick again.");
                 } else
                 {
@@ -57,6 +57,6 @@ public class Helper {
             }
         } while(!selected);
 
-        return selection;
+        return enteredValue;
     }
 }

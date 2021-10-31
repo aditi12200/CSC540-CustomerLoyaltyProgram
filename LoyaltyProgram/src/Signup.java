@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Signup {
     public static void signUpPage() {
         Scanner sc = new Scanner(System.in);
-        int selection;
+        int enteredValue;
         boolean selected = false;
 
         do {
@@ -16,10 +16,10 @@ public class Signup {
             System.out.println("3. Go Back");
 
             try {
-                selection = sc.nextInt();
+                enteredValue = sc.nextInt();
                 selected = true;
 
-                switch (selection) {
+                switch (enteredValue) {
                     case 1:
                         addBrand();
                         break;
@@ -31,38 +31,38 @@ public class Signup {
                         break;
                     default:
                         System.out.println("You have made an invalid choice. Please pick again.");
-                        flag = false;
+                        selected = false;
                 }
 
             } catch (Exception e) {
                 System.out.println("You have made an invalid choice. Please pick again.");
                 sc.next();
             }
-        } while (!flag);
+        } while (!selected);
     }
 
     public static void addBrand() {
-        String brandUserId, brandPassword, brandName, brandAddress;
+        String brandId, brandPassword, brandName, brandAddress;
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter brand userid:");
-        brandUserId = sc.nextLine();
-        System.out.print("Enter brand password:");
+        System.out.print("Enter brand id (This will be used as your loyalty program's id):");
+        brandId = sc.nextLine();
+        System.out.print("Enter password:");
         brandPassword = sc.nextLine();
         System.out.print("Enter brand name:");
         brandName = sc.nextLine();
-        System.out.print("Enter brand address:");
+        System.out.print("Enter address:");
         brandAddress = sc.nextLine();
 
-        int selection = Utility.chooseAddMenu(sc, "Sign-up");
+        int enteredValue = Helper.selectNextOption(sc, "Sign-up");
         CallableStatement statement = null;
 
-        if (selection == 2) {
+        if (enteredValue == 2) {
             signUpPage();
         } else {
             try {
                 statement = Home.connection.prepareCall("{call add_brand(?, ?, ?, ?, ?)}");
-                statement.setString(1, brandUserId);
+                statement.setString(1, brandId);
                 statement.setString(2, brandPassword);
                 statement.setString(3, brandName);
                 statement.setString(4, brandAddress);
@@ -73,67 +73,64 @@ public class Signup {
                 statement.close();
 
                 if (ret == 0) {
-                    System.out.println("Brand user id is already taken. Please try again.");
+                    System.out.println("Brand id is already taken. Please try again.");
                     addBrand();
                 } else {
                     System.out.println("Brand has been added successfully.");
                     Login.loginUI();
                 }
             } catch (SQLException e) {
-                Utility.close(statement);
-                System.out.println("Brand can not be added. Please try again.");
+                Helper.close(statement);
+                System.out.println("Brand could not be added.");
                 addBrand();
             }
         }
     }
 
     public static void addCustomer() {
-        String customerUserId, customerPassword, customerFName, customerLName, customerAddress, customerPhone;
+        String customerId, customerPassword, customerName, customerAddress, customerPhone;
 
         Scanner sc = new Scanner(System.in);
-        System.out.print("Enter customer userid:");
-        customerUserId = sc.nextLine();
-        System.out.print("Enter customer password:");
+        System.out.print("Enter customer id:");
+        customerId = sc.nextLine();
+        System.out.print("Enter password:");
         customerPassword = sc.nextLine();
-        System.out.print("Enter customer first name:");
-        customerFName = sc.nextLine();
-        System.out.print("Enter customer last name:");
-        customerLName = sc.nextLine();
-        System.out.print("Enter customer address:");
+        System.out.print("Enter name:");
+        customerName = sc.nextLine();
+        System.out.print("Enter address:");
         customerAddress = sc.nextLine();
-        System.out.print("Enter customer phone:");
+        System.out.print("Enter phone:");
         customerPhone = sc.nextLine();
 
-        int selection = Utility.chooseAddMenu(sc, "Sign-up");
+        int enteredValue = Helper.selectNextOption(sc, "Sign-up");
         CallableStatement statement = null;
 
-        if (selection == 2) {
+        if (enteredValue == 2) {
             signUpPage();
         } else {
             try {
                 statement = Home.connection.prepareCall("{call add_customer(?, ?, ?, ?, ?, ?, ?)}");
-                statement.setString(1, customerUserId);
+                statement.setString(1, customerId);
                 statement.setString(2, customerPassword);
-                statement.setString(3, customerFName);
-                statement.setString(4, customerLName);
-                statement.setString(5, customerAddress);
-                statement.setString(6, customerPhone);
-                statement.registerOutParameter(7, Types.INTEGER);
+                statement.setString(3, customerName);
+                statement.setString(4, customerAddress);
+                statement.setString(5, customerPhone);
+                statement.registerOutParameter(6, Types.INTEGER);
 
                 statement.execute();
-                int ret = statement.getInt(7);
+                int ret = statement.getInt(6);
                 statement.close();
 
                 if (ret == 0) {
-                    System.out.println("Customer user id is already taken. Please try again.");
+                    System.out.println("Customer id is already taken. Please try again.");
                     addCustomer();
                 } else {
                     System.out.println("Customer has been added successfully.");
                     Login.loginUI();
                 }
             } catch (SQLException e) {
-                Utility.close(statement);
-                System.out.println("Customer can not be added. Please try again.");
+                Helper.close(statement);
+                System.out.println("Customer could not be added.");
                 addCustomer();
             }
         }

@@ -14,16 +14,9 @@ public class MainMenu {
     public static void main(String[] args) {
         try {
 
-            // Load the driver. This creates an instance of the driver
-            // and calls the registerDriver method to make Oracle Thin
-            // driver available to clients.
-
             Class.forName("oracle.jdbc.OracleDriver");
 
             try {
-
-                // Get a connection from the first driver in the
-                // DriverManager list that recognizes the URL jdbcURL
 
                 connection = DriverManager.getConnection(jdbcURL, user, passwd);
                 statement = connection.createStatement();
