@@ -31,10 +31,10 @@ public class Login {
             Admin.adminPage();
         } else if(userType.equalsIgnoreCase("Brand"))
         {
-            //TODO: go to Brand dashboard
+            Brand.brandPage();
         } else
         {
-            //TODO: go to Customer dashboard
+            Customer.customerPage();
         }
 
     }
