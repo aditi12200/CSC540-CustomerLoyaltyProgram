@@ -53,4 +53,61 @@ public class Brand {
             }
         } while (!selected);
     }
+    
+    public static void addRERule() {
+        String rerCode, activityCategoryId, numOfPoints;
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Reward Earning Rule code:");
+        rerCode = sc.nextLine();
+        System.out.print("Enter activity category id:");
+        activityCategoryId = sc.nextLine();
+        System.out.print("Enter number of points for this activity:");
+        numOfPoints = sc.nextLine();
+
+        int enteredValue = Helper.selectNextOption(sc, "Add RERule");
+        CallableStatement statement = null;
+
+        if (enteredValue == 2) {
+            brandPage();
+        } else {
+            try {
+                //TODO: Change query as per our tables
+                PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into ActivityType (ACTIVITYCODE, ACTIVITYNAME) values (?,?,?)");
+                ps.setString(1, rerCode);
+                ps.setString(2, activityCategoryId);
+                ps.setString(3, numOfPoints);
+
+                int rows = ps.executeUpdate();
+                if (rows > 0) {
+                    System.out.println("RERule added successfully.");
+                } else {
+                    System.out.println("RERule could not be added. Please try again.");
+                    addRERule
+                }
+            } catch (SQLIntegrityConstraintViolationException e) {
+                System.out.println("RERule code already exists. Please try again.");
+            } catch(SQLException e)
+            {
+                System.out.println("RERule Type could not be added. Please try again.");
+                addRERule();
+            }
+        }
+    }
+
+    public static void updateRERule() {
+
+    }
+
+    public static void addRRRule() {
+
+    }
+
+    public static void updateRRRule() {
+
+    }
+    
+    public static void validateLoyaltyProgram() {
+        
+    }
 }
