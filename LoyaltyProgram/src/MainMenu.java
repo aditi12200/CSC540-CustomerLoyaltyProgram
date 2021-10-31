@@ -40,10 +40,10 @@ public class MainMenu {
         }
     }
 
-    public static void showMenu() {
+    public static void displayMenu() {
         Scanner sc = new Scanner(System.in);
 
-        int selection = 1;
+        int enteredValue;
 
         do {
             System.out.println("Select from the options below");
@@ -54,14 +54,14 @@ public class MainMenu {
             System.out.print("Enter your option:");
 
             try {
-                selection = sc.nextInt();
+                enteredValue = sc.nextInt();
 
-                switch (selection) {
+                switch (enteredValue) {
                     case 1:
-                        Login.loginUI();
+                        Login.loginPage();
                         break;
                     case 2:
-                        Signup.signUpUI();
+                        Signup.signUpPage();
                         break;
                     case 3:
                         //Todo: Show Queries
@@ -74,9 +74,9 @@ public class MainMenu {
                 }
             } catch (Exception e) {
                 System.out.println("You have entered a wrong option. Please choose again.");
-                showMenu();
+                displayMenu();
             }
-        } while (selection != 4);
+        } while (enteredValue != 4);
     }
 
     public static void exitProgram() {
