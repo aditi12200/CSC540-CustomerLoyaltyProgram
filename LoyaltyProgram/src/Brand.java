@@ -22,22 +22,22 @@ public class Brand {
 
                 switch (enteredValue) {
                     case 1:
-                        //TODO
+                        LoyaltyProgram.addLoyaltyProgram();
                         break;
                     case 2:
-                        //TODO
+                        addRERule();
                         break;
                     case 3:
-                        //TODO
+                        updateRERule();
                         break;
                     case 4:
-                        //TODO
+                        addRRRule();
                         break;
                     case 5:
-                        //TODO
+                        updateRRRule();
                         break;
                     case 6:
-                        //TODO
+                        validateLoyaltyProgram();
                         break;
                     case 7:
                         MainMenu.displayMenu();
