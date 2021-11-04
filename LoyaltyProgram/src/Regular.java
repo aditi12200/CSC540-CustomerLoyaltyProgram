@@ -8,11 +8,10 @@ public class Regular {
         boolean selected = false;
 
         do {
-            System.out.println("Choose what operation you want to perform");
+            System.out.println("Choose one of the following options");
             System.out.println("1. Activity Types");
             System.out.println("2. Reward Types");
             System.out.println("3. Go Back");
-            System.out.print("Enter your option:");
 
             try {
                 enteredValue = sc.nextInt();
