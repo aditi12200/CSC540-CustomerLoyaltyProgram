@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+import
 public class Customer {
     public static void customerPage() {
         Scanner sc = new Scanner(System.in);
@@ -79,5 +79,36 @@ public class Customer {
             }
         }
         //TODO : enter the chosen loyalty program in respective tables.
+        // -> also implement go back
+    }
+
+    public static void viewWallet(){
+        String custId=Login.userId;
+        Scanner sc=new Scanner(System.in);
+        int enteredValue;
+        do{
+            enteredValue = Helper.selectNextOption(sc, "viewWallet");
+
+            if(enteredValue==2){
+                customerPage();
+            } else{
+                try{
+                    String walletSelect="select * from WALLET where WALLET.CUST_ID="+custId;
+                    ResultSet rs=MainMenu.statement.executeQuery(walletSelect);
+                    System.out.println("Wallet ID\tBrand ID\tCustomer ID\tPoints\tTier Status");
+                    while(rs.next()){
+                        String walletId = rs.getString("WALLET_ID");
+                        String brandId = rs.getString("BRAND_ID");
+                        String custId=rs.getString("CUST_ID");
+                        int points=rs.getInt("POINTS");
+                        String tierStatus=rs.getString("TIER_STATUS");
+
+                        System.out.println(walletId+"\t"+brandId+"\t"+custId+"\t"+points+"\t"+tierStatus);
+                    }
+                } catch(SQLException e){
+                    System.out.println("You do not have any existing wallets.");
+                }
+            }
+        } while(enteredValue!=2)
     }
 }
