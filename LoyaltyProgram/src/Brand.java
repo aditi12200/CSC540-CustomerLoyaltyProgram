@@ -1,7 +1,12 @@
 import java.util.Scanner;
 
 public class Brand {
+    //NOT SURE ABOUT THIS!
+    public static boolean isEnrolled = false, isActive = false;
+    public static String lpType = "R", lpName = "";
+
     public static void brandPage() {
+        initialize();
         Scanner sc = new Scanner(System.in);
         int enteredValue;
         boolean selected = false;
@@ -19,6 +24,20 @@ public class Brand {
             try {
                 enteredValue = sc.nextInt();
                 selected = true;
+
+                if (!isEnrolled) {
+                    if (selection >= 2 && selection <= 5) {
+                        System.out.println("Brand is not enrolled in a program yet. Please enroll first.");
+                        selected = false;
+                        continue;
+                    }
+                } else {
+                    if (selection == 6 && isActive) {
+                        System.out.println("Loyalty program has been validated already and is in active state.");
+                        selected = false;
+                        continue;
+                    }
+                }
 
                 switch (enteredValue) {
                     case 1:
@@ -243,6 +262,54 @@ public class Brand {
     }
     
     public static void validateLoyaltyProgram() {
-        
+        CallableStatement statement = null;
+        try {
+            statement = Home.connection.prepareCall("{call validate_loyalty_program(?, ?, ?, ?)}");
+            statement.setString(1, Login.loggedInUserId);
+            statement.setString(2, lpName);
+            statement.setString(3, lpType);
+            statement.registerOutParameter(4, Types.INTEGER);
+
+            statement.execute();
+
+            int ret = statement.getInt(4);
+
+            if (ret == 0) {
+                System.out.println("Tiers are not defined. Please define the Tiers.");
+            } else if (ret == 1) {
+                System.out.println("One Reward Earning rule must be defined.");
+            } else if (ret == 2) {
+                System.out.println("One Reward Redeeming rule must be defined.");
+            } else {
+                System.out.println("Loyalty Program has been validated and set to active status.");
+                isActive = true;
+            }
+
+            statement.close();
+
+        } catch (SQLException e) {
+            Utility.close(statement);
+            System.out.println("Loyalty Program can not be validated. Please try again.");
+        }
+    }
+
+    private static void intialize() {
+        String sql = "select BRANDID, TYPE, ACTIVE from LOYALTYPROGRAM where BRANDID =  '" + Login.loggedInUserId + "'";
+
+        ResultSet rs = null;
+        try {
+            rs = MainMenu.statement.executeQuery(sql);
+            if (rs.next()) {
+                isEnrolled = true;
+                lpName = rs.getString("BRANDID");
+                isActive = rs.getBoolean("ACTIVE");
+                lpType = rs.getString("TYPE");
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            Helper.close(rs);
+            e.printStackTrace();
+        }
     }
 }
