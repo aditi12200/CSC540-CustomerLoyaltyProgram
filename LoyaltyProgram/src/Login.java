@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class Login {
-    public static String userType = "";
+    public static String userId, userType;
 
     public static void loginPage() {
         Scanner sc = new Scanner(System.in);
@@ -50,6 +50,7 @@ public class Login {
             rs = Mainmenu.statement.executeQuery(sqlquery);
             if (rs.next()) {
                 userType = rs.getString("USERTYPE"); //update usertype
+                userId = userid;
                 success = true;
             } else {
                 System.out.println("Username and/or password is incorrect. Please try again.");
