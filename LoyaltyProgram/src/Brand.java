@@ -73,38 +73,173 @@ public class Brand {
         } else {
             try {
                 //TODO: Change query as per our tables
-                PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into ActivityType (ACTIVITYCODE, ACTIVITYNAME) values (?,?,?)");
-                ps.setString(1, rerCode);
-                ps.setString(2, activityCategoryId);
-                ps.setString(3, numOfPoints);
+                statement = MainMenu.connection.prepareCall("{call add_rerule(?, ?, ?, ?)}");
+                statement.setString(1, rerCode);
+                statement.setString(2, activityCategoryId);
+                statement.setString(3, numOfPoints);
+                statement.registerOutParameter(4, Types.INTEGER);
 
-                int rows = ps.executeUpdate();
-                if (rows > 0) {
+                statement.execute();
+
+                int result = statement.getInt(4);
+
+                statement.close();
+
+                if (ret == 0) {
+                    System.out.println("RERule with this code already present.");
+                } else if(ret == 1) {
                     System.out.println("RERule added successfully.");
                 } else {
                     System.out.println("RERule could not be added. Please try again.");
-                    addRERule
                 }
-            } catch (SQLIntegrityConstraintViolationException e) {
-                System.out.println("RERule code already exists. Please try again.");
+                addRERule();
             } catch(SQLException e)
             {
-                System.out.println("RERule Type could not be added. Please try again.");
+                Helper.close(statement);
+                System.out.println("RERule could not be added. Please try again.");
                 addRERule();
             }
         }
     }
 
     public static void updateRERule() {
+        String rerCode, activityCategoryId, numOfPoints;
 
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter code of Reward Earning Rule that you want to update:");
+        rerCode = sc.nextLine();
+        System.out.print("Enter activity category id:");
+        activityCategoryId = sc.nextLine();
+        System.out.print("Enter number of points for this activity:");
+        numOfPoints = sc.nextLine();
+
+        int enteredValue = Helper.selectNextOption(sc, "Update RERule");
+        CallableStatement statement = null;
+
+        if (enteredValue == 2) {
+            brandPage();
+        } else {
+            try {
+                //TODO: Change query as per our tables
+                statement = MainMenu.connection.prepareCall("{call update_rerule(?, ?, ?, ?)}");
+                statement.setString(1, rerCode);
+                statement.setString(2, activityCategoryId);
+                statement.setString(3, numOfPoints);
+                statement.registerOutParameter(4, Types.INTEGER);
+
+                statement.execute();
+
+                int result = statement.getInt(4);
+
+                statement.close();
+
+                if (result == 0) {
+                    System.out.println("RERule with this code is not present.");
+                } else {
+                    System.out.println("RERule has been updated successfully.");
+                }
+                updateRERule();
+            } catch(SQLException e)
+            {
+                Helper.close(statement);
+                System.out.println("RERule could not be updated. Please try again.");
+                updateRERule();
+            }
+        }
     }
 
     public static void addRRRule() {
+        String rrrCode, rewardCategoryId, numOfPoints;
 
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Reward Redemption Rule code:");
+        rerCode = sc.nextLine();
+        System.out.print("Enter reward category id:");
+        activityCategoryId = sc.nextLine();
+        System.out.print("Enter number of points for this reward:");
+        numOfPoints = sc.nextLine();
+
+        int enteredValue = Helper.selectNextOption(sc, "Add RRRule");
+        CallableStatement statement = null;
+
+        if (enteredValue == 2) {
+            brandPage();
+        } else {
+            try {
+                //TODO: Change query as per our tables
+                statement = MainMenu.connection.prepareCall("{call add_rrrule(?, ?, ?, ?)}");
+                statement.setString(1, rrrCode);
+                statement.setString(2, rewardCategoryId);
+                statement.setString(3, numOfPoints);
+                statement.registerOutParameter(4, Types.INTEGER);
+
+                statement.execute();
+
+                int result = statement.getInt(4);
+
+                statement.close();
+
+                if (result == 0) {
+                    System.out.println("RRRule with this code already present.");
+                } else if(ret == 1) {
+                    System.out.println("RRRule added successfully.");
+                } else {
+                    System.out.println("RRRule could not be added. Please try again.");
+                }
+                addRRRule();
+            } catch(SQLException e)
+            {
+                Helper.close(statement);
+                System.out.println("RRRule could not be added. Please try again.");
+                addRRRule();
+            }
+        }
     }
 
     public static void updateRRRule() {
+        String rrrCode, rewardCategoryId, numOfPoints;
 
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter code of Reward Redemption Rule that you want to update:");
+        rrrCode = sc.nextLine();
+        System.out.print("Enter reward category id:");
+        rewardCategoryId = sc.nextLine();
+        System.out.print("Enter number of points for this reward:");
+        numOfPoints = sc.nextLine();
+
+        int enteredValue = Helper.selectNextOption(sc, "Update RRRule");
+        CallableStatement statement = null;
+
+        if (enteredValue == 2) {
+            brandPage();
+        } else {
+            try {
+                //TODO: Change query as per our tables
+                statement = MainMenu.connection.prepareCall("{call update_rrrule(?, ?, ?, ?)}");
+                statement.setString(1, rrrCode);
+                statement.setString(2, rewardCategoryId);
+                statement.setString(3, numOfPoints);
+                statement.registerOutParameter(4, Types.INTEGER);
+
+                statement.execute();
+
+                int result = statement.getInt(4);
+
+                statement.close();
+
+                if (result == 0) {
+                    System.out.println("RRRule with this code is not present.");
+                } else {
+                    System.out.println("RRRule has been updated successfully.");
+                }
+                updateRRRule();
+            } catch(SQLException e)
+            {
+                Helper.close(statement);
+                System.out.println("RRRule could not be updated. Please try again.");
+                updateRRRule();
+            }
+        }
     }
     
     public static void validateLoyaltyProgram() {
