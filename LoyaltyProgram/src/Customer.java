@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import
+
 public class Customer {
     public static void customerPage() {
         Scanner sc = new Scanner(System.in);
@@ -26,7 +26,7 @@ public class Customer {
                         performRewardActivities();
                         break;
                     case 3:
-                        //TODO
+                        viewWallet();
                         break;
                     case 4:
                         //TODO
@@ -50,36 +50,158 @@ public class Customer {
         String chosenLoyaltyProgram;
         Scanner sc=new Scanner(System.in);
         List<String> availableLoyaltyPrograms = new ArrayList<String>();
+        List<String> availableLoyaltyProgramIds = new ArrayList<String>();
 
-        try{
-            String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_ID=B.BRAND_ID and L.STATE='active'";
-            ResultSet rs = MainMenu.statement.executeQuery(sqlLoyaltyProgramSelect);
-            while (rs.next()){
-                String loyaltyProgram = rs.getString("NAME");
-                availableLoyaltyPrograms.add(loyaltyProgram);
+        enteredValue = Helper.selectNextOption(sc, "enrollLoyaltyProgram");
+
+        if (enteredValue==2){
+            Customer.customerPage();
+        }else {
+            try {
+                String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_ID=B.BRAND_ID and L.STATE='active'";
+                ResultSet rs = MainMenu.statement.executeQuery(sqlLoyaltyProgramSelect);
+                while (rs.next()) {
+                    String loyaltyProgram = rs.getString("NAME");
+                    String brandIds = rs.getString("BRAND_ID");
+                    availableLoyaltyPrograms.add(loyaltyProgram);
+                    availableLoyaltyProgramIds.add(brandIds);
+                }
+            } catch (SQLException e) {
+                System.out.println("No active loyalty programs at the moment.")
             }
-        } catch(SQLException e){
-            System.out.println("No active loyalty programs at the moment.")
+
+            boolean correctValue = false;
+            boolean customerIsEnrolled = true;
+            while (!correctValue && customerIsEnrolled) {
+                System.out.println("List of available loyalty programs: ");
+
+                for (String prog : availableLoyaltyPrograms) {
+                    System.out.println(prog);
+                }
+
+                System.out.println("Enter the loyalty program you want to enroll in: ");
+                chosenLoyaltyProgram = sc.nextLine();
+
+                correctValue = availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
+                LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
+                LPId = availableLoyaltyProgramIds.get(LP_index);
+
+                customerIsEnrolled = checkIfCustomerEnrolled(LPId);
+                if (!correctValue) {
+                    System.out.println("Chosen loyalty program doesn't exist. Choose again.")
+                }
+                if (customerIsEnrolled) {
+                    System.out.println("You are already enrolled in the loyalty program.");
+                    Customer.customerPage();
+                }
+            }
+            //customer has chosen a new and correct loyalty program --> chosenLoyaltyProgram
+            //Entry into wallet table assuming wallet_id is auto_generated
+            String loyaltyProgramType;
+            String tierStatus;
+            String joinCategoryCode;
+            String walletId;
+            String activityId;
+            try {
+                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_ID=" + LPId;//name
+                ResultSet rs1 = MainMenu.statement.executeQuery(sqlLPTypeSelect);
+                PreparedStatement ps;
+                if (rs1.next()) {
+                    loyaltyProgramType = rs1.getString("TYPE");
+                }
+
+                if (loyaltyProgramType.toLowerCase() == "R") {
+                    try {
+                        ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS) values (?,?,?)");
+                        ps.setString(1, LPId);//name
+                        ps.setString(2, Login.userId);
+                        ps.setInt(3, 0);
+                    } catch (SQLIntegrityConstraintViolationException e) {
+                        System.out.println("Incorrect Brand ID");
+                    }
+
+                } else if (loyaltyProgramType.toLowerCase() == "T") {
+                    try {
+                        String sqlTierSelect = "select * from TIER where BRAND_ID=" + LPId + " and PRECEDENCE=1";
+                        ResultSet rs2 = MainMenu.statement.executeQuery(sqlTierSelect);
+                        if (rs2.next()) {
+                            tierStatus = rs2.getString("TIER_NAME");
+                        }
+                        ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS,TIER_STATUS) values (?,?,?,?)");
+                        ps.setString(1, LPId);
+                        ps.setString(2, Login.userId);
+                        ps.setInt(3, 0);
+                        ps.setString(4, tierStatus)
+                    } catch (SQLException e) {
+                        System.out.println("Incorrect Brand ID");
+                    } catch (SQLIntegrityConstraintViolation e) {
+                        System.out.println("Incorrect Brand ID");
+                    }
+                }
+                //find join activity category code
+                try {
+                    String sqlActCategorySelect = "select AT_ID from ACTIVITY_TYPE where ACTIVITY_NAME='JOIN'";
+                    ResultSet rs3 = MainMenu.statement.executeQuery(sqlActCategorySelect);
+                    if (rs3.next()) {
+                        joinCategoryCode = rs3.getString("AT_ID");
+                    }
+                    //entry into activity table
+                    ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
+                    ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+                    ps.setString(2, joinCategoryCode);
+                    ps.setString(3, "JOIN");
+                } catch (SQLException e) {
+                    System.out.println("SQL Exception encountered");
+                } catch (SQLIntegrityConstraintViolation e) {
+                    System.out.println("Integrity Constraint Violation");
+                }
+
+                //find wallet_id of customer for current brand
+                try {
+                    String walletIdSelect = "select MAX(WALLET_ID) AS MAX_WALLET_ID from WALLET where CUST_ID=" + Login.userId;
+                    ResultSet rs4 = MainMenu.statement.executeQuery(walletIdSelect);
+
+                    if (rs4.next()) {
+                        walletId = rs4.getInt("WALLET_ID");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQL Exception encountered");
+                }
+
+
+                //find activity_id from activity table
+                try {
+                    String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
+                    rs4 = MainMenu.statement.executeQuery(activityIdSelect);
+
+                    if (rs4.next()) {
+                        activityId = rs4.getInt("ACT_ID");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("SQL Exception encountered");
+                }
+                //entry into wallet_acitivity_bridgetable
+                try {
+                    ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
+                    ps.setString(1, walletId);
+                    ps.setString(2, activityId);
+                } catch (SQLIntegrityConstraintViolation e) {
+                    System.out.println("Integrity Constraint Violation");
+                }
+
+            } catch (SQLException e) {
+                System.out.println("SQL Exception Encountered"); //figure out this message
+            }
         }
+    }
 
-        boolean correctValue=false;
-        while (!correctValue){
-            System.out.println("List of available loyalty programs: ");
+    private static boolean checkIfCustomerEnrolled(String chosenLP){
+        String sqlWalletSelect="select * from WALLET where CUST_ID="+Login.userId+" and BRAND_ID="+chosenLP;
 
-            for(String prog: availableLoyaltyPrograms){
-                System.out.println(prog);
-            }
-
-            System.out.println("Enter the loyalty program you want to enroll in: ");
-            chosenLoyaltyProgram=sc.nextLine();
-
-            correctValue=availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
-            if(!correctValue) {
-                System.out.println("Chosen loyalty program doesn't exist. Choose again.")
-            }
+        if(rs.next()) {
+            return true;
         }
-        //TODO : enter the chosen loyalty program in respective tables.
-        // -> also implement go back
+        return false;
     }
 
     public static void viewWallet() {
