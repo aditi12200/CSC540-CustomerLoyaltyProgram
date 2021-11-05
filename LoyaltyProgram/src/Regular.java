@@ -25,7 +25,7 @@ public class Regular {
                         RewardType.rewardTypePage();
                         break;
                     case 3:
-                        LoyaltyProgram.loyaltyPage();
+                        LoyaltyProgram.addLoyaltyProgram();
                         break;
                     default:
                         System.out.println("You have made an invalid choice. Please pick again.");
