@@ -52,7 +52,7 @@ public class ShowQuery {
                         query8();
                         break;
                     case 9:
-                        MainMenu.showMenu();
+                        MainMenu.displayMenu();
                         break;
                     default:
                         System.out.println("You have made an invalid choice. Please pick again.");
