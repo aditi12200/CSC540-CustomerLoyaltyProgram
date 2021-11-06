@@ -57,7 +57,7 @@ public class MainMenu {
                         Signup.signUpPage();
                         break;
                     case 3:
-                        //Todo: Show Queries
+                        ShowQuery.showQueryPage();
                         break;
                     case 4:
                         exitProgram();
