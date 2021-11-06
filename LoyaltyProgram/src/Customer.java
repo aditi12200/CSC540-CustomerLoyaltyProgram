@@ -290,6 +290,7 @@ public class Customer {
         }
         //SQL to get the reward activities for this brand -  get it by getting ids of supported reward activities from bridge table
         // and then get reward activity names from the reward category table.
+        //TODO: Change this to fetch from RER table instead!
         try
         {
             String SQL_Activity_name = "SELECT A.ACTIVITY_NAME " +
@@ -329,7 +330,15 @@ public class Customer {
         }
         // get the string value for that particular integer
         String value_option = rewardActCategories.get(selected_option);
+        String gcc="";
+        if(value_option.toLowerCase()=="purchase") {
+            System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter.");
+            gcc=sc.nextLine();
+            gcc=gcc.trim();
+        }
         // get activity_category_code from activity_category table
+        System.out.println("Enter value for this activity");
+        String activity_value=sc.nextLine();
         int acc;
         int points;
         String type;
@@ -337,6 +346,50 @@ public class Customer {
         String tier_status;
         int multiplier;
         String Total;
+
+        if(gcc.length()>0) {
+            try
+            {
+                String SQL_Activity_code = "SELECT GIFT_CARD_CODE " +
+                        "FROM WALLET W, WALLET_GIFTCARD WG " +
+                        "WHERE W.WALLET_ID=WG.WALLET_ID AND W.BRAND_ID= '"+brandId+"' AND W.CUST_ID='"+Login.userId+"'";
+                ResultSet rs = MainMenu.statement.executeQuery(SQL_Activity_code);
+            }
+            catch(SQLException e)
+            {
+                System.out.println("Gift card could not be retrieved. Please try again.");
+            }
+
+            List<String> giftCards=new ArrayList();
+            // for that ACC and brand_id, find number of points from RER table
+            while(rs.next())
+            {
+                giftCards.add(rs.getInt("GIFT_CARD_CODE"));
+            }
+
+            if(!giftCards.contains(gcc)) {
+                System.out.println("Please select a valid gift card!");
+                performRewardActivties();
+            }
+
+            String deleteGcSql = "DELETE from WALLET_GIFTCARD where GIFT_CARD_CODE=?";
+            try {
+                PreparedStatement ps = Home.connection.prepareStatement(deleteGcSql);
+                ps.setString(1, gcc);
+
+                int rows = ps.executeUpdate();
+                if (rows == 0) {
+                    throw new SQLException("Gift card could not be updated as used, no rows affected.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Gift card could not be used. Please try again.");
+                performRewardActivities();
+            }
+
+            //TODO: CODE TO CHECK IF PURCHASE AMOUNT IS LESS THAN OR EQUAL TO GC AMT. IF YES, SET GiVEREWARD FLAG TO FALSE?
+
+        }
+
         try
         {
             String SQL_Activity_code = "SELECT ACT_CATEGORY_CODE " +
@@ -462,6 +515,8 @@ public class Customer {
         {
             System.out.println("Points cannot be updated, Please try again. " + e);
         }
+
+        //CODE TO UPDATE WALLET_ACT table and ACTIVITY TABLE
     }
 
     public static void redeemPoints()
