@@ -91,14 +91,18 @@ public class ShowQuery {
     }
 
     private static void query2() {
-        String sqlCred = "SELECT * FROM TABLE(show_query_2)";
+        String sqlCred = "SELECT C.CUST_ID, C.NAME FROM WALLET W,CUSTOMER C WHERE W.WALLET_ID NOT IN " +
+                "(SELECT WA.WALLET_ID FROM WALLET_ACTIVITY WA WHERE WA.ACT_ID IN " +
+                "(SELECT A.ACT_ID FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_ID=A1.AT_ID AND A1.ACTIVITY_NAME<>'JOIN')" +
+                "GROUP BY WA.WALLET_ID)";
 
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
             if (rs.next()) {
                 while (rs.next()) {
-                    //TODO
+                    String custName=rs.getString("NAME");
+                    System.out.println(custName);
                 }
             } else {
                 System.out.println("No Customer Found.");
@@ -144,7 +148,7 @@ public class ShowQuery {
             rs = MainMenu.statement.executeQuery(sqlGetLpName);
             if (rs.next()) {
                 while (rs.next()) {
-                    System.Out.println(rs.getString("NAME"));
+                    System.out.println(rs.getString("NAME"));
                 }
             } else {
                 System.out.println("No Loyalty Program Found.");
@@ -158,14 +162,20 @@ public class ShowQuery {
     }
 
     private static void query5() {
-        String sqlCred = "SELECT * FROM TABLE(show_query_5)";
+        String sqlCred = "SELECT TEMP.ACTIVITY_NAME, COUNT(*) AS ACT_COUNT FROM" +
+                "((SELECT A.ACT_ID, A1.ACTIVITY_NAME FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_ID=A1.AT_ID AND A1.VISIBLE='Y')" +
+                "NATURAL INNER JOIN" +
+                "(SELECT * FROM WALLET_ID, ACT_ID FROM WALLET_ACTIVITY WHERE WALLET_ID IN " +
+                "(SELECT W.WALLET_ID FROM WALLET W,BRAND B WHERE W.BRAND_ID=B.BRAND_ID AND B.NAME='Brand01'))) AS TEMP" +
+                "GROUP BY TEMP.ACTIVITY_NAME";
 
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
             if (rs.next()) {
                 while (rs.next()) {
-                    //TODO
+                    System.out.println(rs.getString("ACTIVITY_NAME"));
+                    System.out.println(rs.getString("ACT_COUNT"));
                 }
             } else {
                 System.out.println("No Activity Type Found.");
@@ -179,14 +189,21 @@ public class ShowQuery {
     }
 
     private static void query6() {
-        String sqlCred = "SELECT * FROM TABLE(show_query_6)";
+        String sqlCred = "SELECT NAME, COUNT(*) FROM CUSTOMER WHERE CUST_ID IN " +
+                "(SELECT TEMP.CUST_ID FROM" +
+                "((SELECT A.ACT_ID FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_ID=A1.AT_ID AND A1.ACTIVITY_NAME='REDEEM')" +
+                "NATURAL INNER JOIN" +
+                "(SELECT W.ACT_ID, W1.CUST_ID FROM WALLET_ACTIVITY W, WALLET W1,BRAND B WHERE W.WALLET_ID=W1.WALLET_ID AND" +
+                "B.BRAND_ID=W1.BRAND_ID AND B.NAME='Brand01')) AS TEMP)" +
+                "GROUP BY NAME" +
+                "HAVING COUNT(*)>1";
 
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
             if (rs.next()) {
                 while (rs.next()) {
-                    //TODO
+                    System.out.println(rs.getString("NAME"));
                 }
             } else {
                 System.out.println("No Customer Found.");
