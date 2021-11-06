@@ -408,11 +408,28 @@ public class Customer {
             acc = rs.getInt("ACT_CATEGORY_CODE");
         }
 
+        int versionNo;
+        try
+        {
+            String SQL_RER_latestVersion = "SELECT MAX(VERSION_NO) AS MAX_VERSION" +
+                    "FROM RE_RULES" +
+                    "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"'";
+            rs = MainMenu.statement.executeQuery(SQL_RER_points);
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Activity Type can not be added, Please try again.");
+        }
+        if(rs.next())
+        {
+            versionNo = rs.getInt("MAX_VERSION");
+        }
+
         try
         {
             String SQL_RER_points = "SELECT POINTS " +
                     "FROM RE_RULES" +
-                    "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"'";
+                    "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"' AND VERSION_NO = '"+versionNo+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
         }
         catch(SQLException e)
@@ -440,9 +457,10 @@ public class Customer {
             type = rs.getString("TYPE");
         }
 
+        String walletId;
         try
         {
-            String SQL_RER_points = "SELECT POINTS " +
+            String SQL_RER_points = "SELECT WALLET_ID, POINTS " +
                     "FROM WALLET" +
                     "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
@@ -453,6 +471,7 @@ public class Customer {
         }
         if(rs.next())
         {
+            walletId=rs.getString("WALLET_ID");
             wallet_points = rs.getInt("POINTS");
         }
 
@@ -517,6 +536,37 @@ public class Customer {
         }
 
         //CODE TO UPDATE WALLET_ACT table and ACTIVITY TABLE
+        try {
+            ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
+            ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+            ps.setString(2, acc);
+            ps.setString(3, activity_value);
+        } catch (SQLException e) {
+            System.out.println("SQL Exception encountered");
+        } catch (SQLIntegrityConstraintViolation e) {
+            System.out.println("Integrity Constraint Violation");
+        }
+
+        String activityId;
+        try {
+            String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
+            rs4 = MainMenu.statement.executeQuery(activityIdSelect);
+
+            if (rs4.next()) {
+                activityId = rs4.getInt("MAX_ACT_ID");
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception encountered");
+        }
+        //entry into wallet_acitivity_bridgetable
+        try {
+            ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
+            ps.setString(1, walletId);
+            ps.setString(2, activityId);
+        } catch (SQLIntegrityConstraintViolation e) {
+            System.out.println("Integrity Constraint Violation");
+        }
+
     }
 
     public static void redeemPoints()
