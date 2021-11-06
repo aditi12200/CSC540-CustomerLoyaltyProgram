@@ -7,6 +7,7 @@ public class RewardType {
         int enteredValue, quantity;
         boolean goBack = false;
         Map<Integer, String> rewardCategories=new HashMap();
+        Map<String, String> rewardIdCatMap=new HashMap();
 
         initialize();
 
@@ -35,37 +36,66 @@ public class RewardType {
 
     private static void initialize() {
         try {
-            String rewCategorySelectSql = "select REWARD_NAME from REWARD_TYPE";
+            String rewCategorySelectSql = "select RT_ID, REWARD_NAME from REWARD_TYPE";
 
             ResultSet rs = MainMenu.statement.executeQuery(rewCategorySelectSql);
 
             int i=1;
             while (rs.next()) {
-                actCategories.put(i++, rs.getString("REWARD_NAME"));
+                rewardCategories.put(i++, rs.getString("REWARD_NAME"));
+                rewardIdCatMap.put(rs.getString("REWARD_NAME"), rs.getString("RT_ID"));
             }
         } catch (SQLException e) {
             System.out.println("Reward categories could not be fetched. Please try again.");
         }
     }
 
-    private static void addRewardType(String rewardCode, int quantity) {
-        String sql = "Insert into REWARD(REWARD_CATEGORY_CODE, VALUE, QUANTITY, BRAND_ID) values (?,?,?,?)";
-        try {
-            PreparedStatement ps = Home.connection.prepareStatement(sql);
-            ps.setString(1, Login.userId);
-            ps.setString(2, activityCode);
+    private static void addRewardType(String rewardName, int quantity) {
+        String sql;
+        String value;
+        String rcc;
+        rcc=rewardIdCatMap.get(rewardName);
+        PreparedStatement ps;
+        String sql;
 
-            int rows = ps.executeUpdate();
-            if (rows > 0) {
-                System.out.println("Reward Type has been added successfully.");
-            } else {
-                System.out.println("Reward Type could not be added. Please try again.");
+        if (rewardName.toLowerCase()=="gift card"){
+            System.out.println("Enter the value for the gift card:");
+            value=sc.nextLine();
+
+            try{
+                sql="Insert into REWARD(REWARD_CATEGORY_CODE, VALUE, QUANTITY, BRAND_ID) values (?,?,?,?)";
+                ps=MainMenu.connection.prepareStatement(sql);
+                ps.setString(1,rcc);
+                ps.setString(2,value);
+                ps.setString(3,quantity);
+                ps.setString(4,Login.userId);
+
+            }catch(SQLIntegrityConstraintViolationException e){
+                System.out.println("Reward Type already present.");
+            }catch (SQLException e) {
+                System.out.println("Reward Type can not be added. Please try again.");
             }
-        } catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println("Reward Type already present.");
-        } catch (SQLException e) {
-            System.out.println("Reward Type can not be added. Please try again.");
+        } else{
+            try{
+                sql="Insert into REWARD(REWARD_CATEGORY_CODE, QUANTITY, BRAND_ID) values (?,?,?)";
+                ps=MainMenu.connection.prepareStatement(sql);
+                ps.setString(1,rcc);
+                ps.setString(2,quantity);
+                ps.setString(3,Login.userId);
+            } catch (SQLIntegrityConstraintViolationException e) {
+                System.out.println("Reward Type already present.");
+            } catch (SQLException e) {
+                System.out.println("Reward Type can not be added. Please try again.");
+            }
         }
+
+        int rows = ps.executeUpdate();
+        if (rows > 0) {
+            System.out.println("Reward Type has been added successfully.");
+        } else {
+            System.out.println("Reward Type could not be added. Please try again.");
+        }
+
     }
 
     private static void goBack() {
