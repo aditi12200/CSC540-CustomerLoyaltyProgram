@@ -29,7 +29,7 @@ public class Customer {
                         viewWallet();
                         break;
                     case 4:
-                        //TODO
+                        redeemPoints();
                         break;
                     case 5:
                         MainMenu.displayMenu();
@@ -175,7 +175,7 @@ public class Customer {
                     rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
                     if (rs4.next()) {
-                        activityId = rs4.getInt("ACT_ID");
+                        activityId = rs4.getInt("MAX_ACT_ID");
                     }
                 } catch (SQLException e) {
                     System.out.println("SQL Exception encountered");
@@ -236,6 +236,7 @@ public class Customer {
 
     public static void performRewardActivities()
     {
+        ResultSet rs;
         Scanner sc = new Scanner(System.in);
         //PreparedStatement pstmt = null;
         Map<String, String> brands = new HashMap();
@@ -245,23 +246,21 @@ public class Customer {
             String SQL_Wallet = "Select B.NAME, B.BRAND_ID " +
                     "from BRAND B, WALLET W " +
                     "where B.BRAND_ID = W.BRAND_ID AND W.CUST_ID = '"+Login.userId+"'";
-            ResultSet rs = MainMenu.statement.executeQuery(SQL_Wallet);
-            if(rs != null)          //Hpw to check if rs is empty
+            rs = MainMenu.statement.executeQuery(SQL_Wallet);
+            while(rs.next())
             {
-                while(rs.next())
-                {
-                    brands.put(rs.getString("BRAND_ID"), rs.getString("NAME"));
-                }
-            }
-            else
-            {
-                System.out.println("Please enroll in a brand to view it's reward activities");
-                customerPage();
+                brands.put(rs.getString("BRAND_ID"), rs.getString("NAME"));
             }
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be selected, Please try again.");
+        }
+
+        if(brands.isEmpty())
+        {
+            System.out.println("Please enroll in a brand to view it's activities.");
+            customerPage();
         }
 
         boolean value = false;
@@ -296,7 +295,7 @@ public class Customer {
             String SQL_Activity_name = "SELECT A.ACTIVITY_NAME " +
                     "FROM ACTIVITY_TYPE A, LP_ACT_CATEGORY L" +
                     "WHERE L.ACT_CATEGORY_CODE = A.AT_ID AND BRAND_ID = '"+brandId+"'";
-            ResultSet rs = MainMenu.statement.executeQuery(SQL_Activity_name);
+            rs = MainMenu.statement.executeQuery(SQL_Activity_name);
         }
         catch(SQLException e)
         {
@@ -343,7 +342,7 @@ public class Customer {
             String SQL_Activity_code = "SELECT ACT_CATEGORY_CODE " +
                     "FROM ACTIVITY_TYPE" +
                     "WHERE ACTIVITY_NAME = '"+value_option+"'";
-            ResultSet rs = MainMenu.statement.executeQuery(SQL_Activity_code);
+            rs = MainMenu.statement.executeQuery(SQL_Activity_code);
         }
         catch(SQLException e)
         {
@@ -361,7 +360,7 @@ public class Customer {
             String SQL_RER_points = "SELECT POINTS " +
                     "FROM RE_RULES" +
                     "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"'";
-            ResultSet rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            rs = MainMenu.statement.executeQuery(SQL_RER_points);
         }
         catch(SQLException e)
         {
@@ -377,7 +376,7 @@ public class Customer {
             String SQL_RER_points = "SELECT TYPE " +
                     "FROM LOYALTY_PROGRAM" +
                     "WHERE BRAND_LP_ID = '"+brandId+"'";
-            ResultSet rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            rs = MainMenu.statement.executeQuery(SQL_RER_points);
         }
         catch(SQLException e)
         {
@@ -393,7 +392,7 @@ public class Customer {
             String SQL_RER_points = "SELECT POINTS " +
                     "FROM WALLET" +
                     "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
-            ResultSet rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            rs = MainMenu.statement.executeQuery(SQL_RER_points);
         }
         catch(SQLException e)
         {
@@ -418,7 +417,7 @@ public class Customer {
                 String SQL_RER_points = "SELECT TIER_STATUS " +
                         "FROM WALLET" +
                         "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
-                ResultSet rs = MainMenu.statement.executeQuery(SQL_RER_points);
+                rs = MainMenu.statement.executeQuery(SQL_RER_points);
             }
             catch(SQLException e)
             {
@@ -435,7 +434,7 @@ public class Customer {
                 String SQL_RER_points = "SELECT MULTIPLIER" +
                         "FROM TIER" +
                         "WHERE BRAND_ID = '"+brandId+"' AND TIER_NAME = '"+tier_status+"'";
-                ResultSet rs = MainMenu.statement.executeQuery(SQL_RER_points);
+                rs = MainMenu.statement.executeQuery(SQL_RER_points);
             }
             catch(SQLException e)
             {
@@ -462,6 +461,263 @@ public class Customer {
         catch(SQLException e)
         {
             System.out.println("Points cannot be updated, Please try again. " + e);
+        }
+    }
+
+    public static void redeemPoints()
+    {
+        ResultSet rs;
+        Scanner sc = new Scanner(System.in);
+        //PreparedStatement pstmt = null;
+        Map<String, String> brands_rp = new HashMap();
+        System.out.println("The Brands in Loyalty Program in which you have enrolled are:");
+        try
+        {
+            String SQL_Wallet_rp = "SELECT B.NAME, B.BRAND_ID " +
+                    "FROM BRAND B, WALLET W " +
+                    "where B.BRAND_ID = W.BRAND_ID AND W.CUST_ID = '"+Login.userId+"'";
+            rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
+            while(rs.next())
+            {
+                brands_rp.put(rs.getString("BRAND_ID"), rs.getString("NAME"));
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Activity Type can not be selected, Please try again.");
+        }
+        if(brands_rp.isEmpty())
+        {
+            System.out.println("Please enroll in a brand to redeem points.");
+            customerPage();
+        }
+
+        boolean value = false;
+        String selected_value;
+        while(!value)
+        {
+            //System.out.println("List of Brand in which you have enrolled:");
+            for(String item : brands_rp.values())
+            {
+                System.out.println(item);
+            }
+            System.out.println("Select a Brand whose reward activities you want to see:");  //Check if input to be taken is the number
+            selected_value = sc.nextLine();
+            if(brands_rp.containsValue(selected_value))
+                value=true;
+            if(!value)
+            {
+                System.out.println("Incorrect Brand selected. Please select from the list.");
+            }
+        }
+
+        //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
+        for (Entry<String, String> entry : brands_rp.entrySet()) {
+            if (entry.getValue().equals(selected_value)) {
+                String brandId = entry.getKey();
+                break;
+            }
+        }
+
+        List<String> brands_rcc = new ArrayList();
+        try
+        {
+            String SQL_Wallet_rp = "SELECT REWARD_CATEGORY_CODE" +
+                    "FROM REWARD" +
+                    "WHERE S.BRAND_ID = '"+brandId+"' AND QUANTITY > 0";
+            rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
+            while(rs.next())
+            {
+                brands_rcc.add(rs.getString("REWARD_CATEGORY_CODE"));
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Activity Type can not be selected, Please try again.");
+        }
+        if(brands_rcc.size() == 0)
+        {
+            System.out.println("Sorry! No rewards to redeem for this brand.");
+            redeemPoints();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        for (String i : brands_rcc){
+            sb.append(i+",");
+        }
+        sb.deleteCharAt(sb.length() -1);
+        sb.append(")");
+        return sb.toString();
+
+        Map<String, Integer> brands_rrr = new HashMap();
+        //from the RRR table figure out which rewards are supported for this brand and display that
+        try
+        {
+            String SQL_Wallet_rp = "SELECT R.REWARD_NAME, MAX(S.VERSION_NO)" +
+                    " FROM REWARD_TYPE R, RR_RULES S" +
+                    " WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND R.RT_ID IN " + sb +
+                    " GROUP BY R.REWARD_NAME"
+            rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
+            while(rs.next())
+            {
+                brands_rrr.put(rs.getString("REWARD_NAME"), rs.getInt("VERSION_NO"));
+            }
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Activity Type can not be selected, Please try again.");
+        }
+
+
+        boolean value = false;
+        String selected_reward, R_C_C;
+        int points;
+        //TODO: Identifier, Name
+        while(!value)
+        {
+            System.out.println("List of rewards from which you can select:");
+            for(String item : brands_rrr.keys())
+            {
+                System.out.println(item);
+            }
+            System.out.println("Select a reward from the list:");
+            selected_reward = sc.nextLine();
+            if(brands_rrr.containsKey(selected_reward))
+                value=true;
+            if(!value)
+            {
+                System.out.println("Incorrect reward type selected. Please select from the list.");
+            }
+        }
+
+        //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
+        for (Entry<String, String> entry : brands_rrr.entrySet()) {
+            if (entry.getKey().equals(selected_reward)) {
+                String version = entry.getValue();
+                break;
+            }
+        }
+
+        try
+        {
+            String SQL_Reward = "SELECT S.POINTS, R.RT_ID " +
+                    "FROM REWARD_TYPE R, RR_RULES S " +
+                    "WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND S.VERSION_NO = '"+version+"'" +
+                    " AND R.REWARD_NAME = '"+selected_reward+"'";
+            rs = MainMenu.statement.executeQuery(SQL_Reward);
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Activity Type can not be selected, Please try again.");
+        }
+        if(rs.next())
+        {
+            points = rs.getInt("POINTS");
+            R_C_C = rs.getString("RT_ID");
+        }
+
+        int walletPts;
+        String walletId;
+        try
+        {
+            String SQL_WalletPts = "SELECT W.POINTS, W.WALLET_ID " +
+                    "FROM WALLET W " +
+                    "WHERE W.BRAND_ID = '"+brandId+"' AND W.CUST_ID = '"+Login.userId+"'";
+            rs = MainMenu.statement.executeQuery(SQL_WalletPts);
+        }
+        catch(SQLException e)
+        {
+            System.out.println("Activity Type can not be selected, Please try again.");
+        }
+        if(rs.next()) {
+            walletPts = rs.getInt("POINTS");
+            walletId = rs.getString("WALLET_ID");
+        } else {
+            System.out.println("Wallet could not be found");
+            redeemPoints();
+        }
+
+        //if yes - deduct points from wallet, decrement no of instances by 1
+        //update activity, wallet_activity tables. if GC update wallet_GC table
+        if(walletPts>=points)
+        {
+            try
+            {
+                PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET " +
+                        "SET POINTS = " +(walletPts-points)+
+                        " WHERE WALLET_ID = '"+walletId+"' ");
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.out.println("Wallet could not be updated");
+            }
+
+            try
+            {
+                PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE REWARD " +
+                        "SET QUANTITY = QUANTITY - 1 "+
+                        "WHERE BRAND_ID = '"+brandId+"' AND REWARD_CATEGORY_CODE = '"+R_C_C+"' ");
+                ps.executeUpdate();
+            }
+            catch(SQLException e)
+            {
+                System.out.println("Reward Quantity could not be updated");
+            }
+
+            String redeemCategoryCode;
+            try {
+                String sqlActCategorySelect = "select AT_ID from ACTIVITY_TYPE where ACTIVITY_NAME='REDEEM'";
+                ResultSet rs3 = MainMenu.statement.executeQuery(sqlActCategorySelect);
+                if (rs3.next()) {
+                    redeemCategoryCode = rs3.getString("AT_ID");
+                }
+                //entry into activity table
+                ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
+                ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
+                ps.setString(2, redeemCategoryCode);
+                ps.setString(3, selected_reward);
+            } catch (SQLException e) {
+                System.out.println("SQL Exception encountered");
+            } catch (SQLIntegrityConstraintViolation e) {
+                System.out.println("Integrity Constraint Violation");
+            }
+
+            String activityId;
+            try {
+                String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
+                rs4 = MainMenu.statement.executeQuery(activityIdSelect);
+
+                if (rs4.next()) {
+                    activityId = rs4.getInt("MAX_ACT_ID");
+                }
+            } catch (SQLException e) {
+                System.out.println("SQL Exception encountered");
+            }
+            //entry into wallet_acitivity_bridgetable
+            try {
+                ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
+                ps.setString(1, walletId);
+                ps.setString(2, activityId);
+            } catch (SQLIntegrityConstraintViolation e) {
+                System.out.println("Integrity Constraint Violation");
+            }
+
+            if(selected_reward.toLowerCase().equals("gift card"))
+            {
+                try {
+                    ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
+                    ps.setString(1, walletId);
+                } catch (SQLIntegrityConstraintViolation e) {
+                    System.out.println("Integrity Constraint Violation");
+                }
+            }
+        }
+        else
+        {
+            System.out.println("You do not have enough points to redeem a reward");
+            redeemPoints();
         }
     }
 }
