@@ -69,7 +69,7 @@ public class Customer {
                     availableLoyaltyProgramIds.add(brandIds);
                 }
             } catch (SQLException e) {
-                System.out.println("No active loyalty programs at the moment.")
+                System.out.println("No active loyalty programs at the moment.");
             }
 
             boolean correctValue = false;
@@ -90,7 +90,7 @@ public class Customer {
 
                 customerIsEnrolled = checkIfCustomerEnrolled(LPId);
                 if (!correctValue) {
-                    System.out.println("Chosen loyalty program doesn't exist. Choose again.")
+                    System.out.println("Chosen loyalty program doesn't exist. Choose again.");
                 }
                 if (customerIsEnrolled) {
                     System.out.println("You are already enrolled in the loyalty program.");
@@ -133,10 +133,10 @@ public class Customer {
                         ps.setString(1, LPId);
                         ps.setString(2, Login.userId);
                         ps.setInt(3, 0);
-                        ps.setString(4, tierStatus)
+                        ps.setString(4, tierStatus);
                     } catch (SQLException e) {
                         System.out.println("Incorrect Brand ID");
-                    } catch (SQLIntegrityConstraintViolation e) {
+                    } catch (SQLIntegrityConstraintViolationException e) {
                         System.out.println("Incorrect Brand ID");
                     }
                 }
@@ -154,7 +154,7 @@ public class Customer {
                     ps.setString(3, "JOIN");
                 } catch (SQLException e) {
                     System.out.println("SQL Exception encountered");
-                } catch (SQLIntegrityConstraintViolation e) {
+                } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }
 
@@ -173,7 +173,7 @@ public class Customer {
 
                 //find activity_id from activity table
                 try {
-                    String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
+                    String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY";
                     rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
                     if (rs4.next()) {
@@ -187,7 +187,7 @@ public class Customer {
                     ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
                     ps.setString(1, walletId);
                     ps.setString(2, activityId);
-                } catch (SQLIntegrityConstraintViolation e) {
+                } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }
 
@@ -234,7 +234,7 @@ public class Customer {
                     System.out.println("You do not have any existing wallets.");
                 }
             }
-        } while (enteredValue != 2)
+        } while (enteredValue != 2);
     }
 
     public static void performRewardActivities()
@@ -317,7 +317,7 @@ public class Customer {
         }
         System.out.println("Select one of the option: ");
         for (Map.Entry<String, String> entry : rewardActCategories.entrySet()) {
-            System.out.println(entry.getKey(), ". ", entry.getValue());
+            System.out.println(entry.getKey()+". "+entry.getValue());
             }
         selected_option = sc.nextInt();
         while(!check)
@@ -334,11 +334,10 @@ public class Customer {
         }
         // get the string value for that particular integer
         String value_option = rewardActCategories.get(selected_option);
-        String gcc="";
+        int gcc;
         if(value_option.toLowerCase()=="purchase") {
             System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter.");
-            gcc=sc.nextLine();
-            gcc=gcc.trim();
+            gcc=sc.nextInt();
         }
         // get activity_category_code from activity_category table
         System.out.println("Enter value for this activity");
@@ -353,7 +352,7 @@ public class Customer {
         int Total;
         int Sumtotal;
 
-        if(gcc.length()>0) {
+        if(gcc>0) {
             try
             {
                 String SQL_Activity_code = "SELECT GIFT_CARD_CODE " +
@@ -366,7 +365,7 @@ public class Customer {
                 System.out.println("Gift card could not be retrieved. Please try again.");
             }
 
-            List<String> giftCards=new ArrayList();
+            List<Integer> giftCards=new ArrayList();
             // for that ACC and brand_id, find number of points from RER table
             while(rs.next())
             {
@@ -375,13 +374,13 @@ public class Customer {
 
             if(!giftCards.contains(gcc)) {
                 System.out.println("Please select a valid gift card!");
-                performRewardActivties();
+                Customer.performRewardActivties();
             }
 
             String deleteGcSql = "DELETE from WALLET_GIFTCARD where GIFT_CARD_CODE=?";
             try {
-                PreparedStatement ps = Home.connection.prepareStatement(deleteGcSql);
-                ps.setString(1, gcc);
+                PreparedStatement ps = MainMenu.connection.prepareStatement(deleteGcSql);
+                ps.setInt(1, gcc);
 
                 int rows = ps.executeUpdate();
                 if (rows == 0) {
@@ -411,7 +410,7 @@ public class Customer {
         // for that ACC and brand_id, find number of points from RER table
         if(rs.next())
         {
-            acc = rs.getInt("ACT_CATEGORY_CODE");
+            acc = rs.getString("ACT_CATEGORY_CODE");
         }
 
         int versionNo;
@@ -420,7 +419,7 @@ public class Customer {
             String SQL_RER_latestVersion = "SELECT MAX(VERSION_NO) AS MAX_VERSION" +
                     "FROM RE_RULES" +
                     "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"'";
-            rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            rs = MainMenu.statement.executeQuery(SQL_RER_latestVersion);
         }
         catch(SQLException e)
         {
@@ -483,14 +482,14 @@ public class Customer {
         }
 
         // if not a tiered program add into the wallet
-        if (type.toLowerCase() == 'r')
+        if (type.toLowerCase().equals('r'))
         {
             Total = points + wallet_points;
             Sumtotal = cumulative_points + Total;
 
         }
         // find out if its a tiered program, if so get the tier and the multiplier
-        if (type.toLowerCase() == 't')
+        if (type.toLowerCase().equals('t'))
         {
             //from wallet get the tier status
             try
@@ -533,8 +532,8 @@ public class Customer {
         try
         {
             PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET" +
-                    "SET POINTS = " +Total+, "CUMULATIVE_PTS = "+Sumtotal+
-                    "WHERE CUST_ID = '"+Login.userId+"' AND BRAND_ID = '"+brandId+"'");
+                    " SET POINTS = " +Total+ "CUMULATIVE_PTS = "+Sumtotal+
+                    " WHERE CUST_ID = '"+Login.userId+"' AND BRAND_ID = '"+brandId+"'");
             ps.executeUpdate();
         }
         catch (SQLIntegrityConstraintViolationException e)
@@ -554,13 +553,13 @@ public class Customer {
             ps.setString(3, activity_value);
         } catch (SQLException e) {
             System.out.println("SQL Exception encountered");
-        } catch (SQLIntegrityConstraintViolation e) {
+        } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Integrity Constraint Violation");
         }
 
-        String activityId;
+        int activityId;
         try {
-            String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
+            String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY";
             ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
             if (rs4.next()) {
@@ -573,8 +572,8 @@ public class Customer {
         try {
             PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
             ps.setString(1, walletId);
-            ps.setString(2, activityId);
-        } catch (SQLIntegrityConstraintViolation e) {
+            ps.setInt(2, activityId);
+        } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Integrity Constraint Violation");
         }
 
@@ -601,7 +600,7 @@ public class Customer {
             if(!tier_status.equals(maxTier))
             {
                 String update = "UPDATE WALLET SET TIER_STATUS='"+maxTier+"'" +
-                        "where BRAND_ID='"+brandId+" and CUST_ID='"+custId+"'"
+                        "where BRAND_ID='"+brandId+" and CUST_ID='"+custId+"'";
                 PreparedStatement ps = MainMenu.connection.prepareStatement(update);
                 ps.executeUpdate();
                 System.out.println("Tier Status updated successfully");
@@ -707,7 +706,7 @@ public class Customer {
             String SQL_Wallet_rp = "SELECT R.REWARD_NAME, MAX(S.VERSION_NO)" +
                     " FROM REWARD_TYPE R, RR_RULES S" +
                     " WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND R.RT_ID IN " + str +
-                    " GROUP BY R.REWARD_NAME"
+                    " GROUP BY R.REWARD_NAME";
             rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
             while(rs.next())
             {
@@ -720,14 +719,14 @@ public class Customer {
         }
 
 
-        boolean value = false;
+        value = false;
         String selected_reward, R_C_C;
         int points;
         //TODO: Identifier, Name
         while(!value)
         {
             System.out.println("List of rewards from which you can select:");
-            for(String item : brands_rrr.keys())
+            for(String item : brands_rrr.keySet())
             {
                 System.out.println(item);
             }
@@ -831,13 +830,13 @@ public class Customer {
                 ps.setString(3, R_C_C);
             } catch (SQLException e) {
                 System.out.println("SQL Exception encountered");
-            } catch (SQLIntegrityConstraintViolation e) {
+            } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
             }
 
             int activityId;
             try {
-                String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
+                String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY";
                 ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
                 if (rs4.next()) {
@@ -851,7 +850,7 @@ public class Customer {
                 PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
                 ps.setString(1, walletId);
                 ps.setInt(2, activityId);
-            } catch (SQLIntegrityConstraintViolation e) {
+            } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
             }
 
@@ -860,7 +859,7 @@ public class Customer {
                 try {
                     PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
                     ps.setString(1, walletId);
-                } catch (SQLIntegrityConstraintViolation e) {
+                } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }
             }
