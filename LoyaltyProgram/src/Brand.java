@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.sql.*;
+import java.util.*;
 
 public class Brand {
     //NOT SURE ABOUT THIS!

@@ -2,6 +2,7 @@ import java.sql.*;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.*;
 
 public class Login {
     public static String userId, userType;
