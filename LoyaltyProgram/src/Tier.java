@@ -72,11 +72,8 @@ public class Tier {
         do {
             String tierName = "base";
             int tierPoint = 0, tierMultiplier = 1;
-            tierNames[0] = tierName;
-            tierPoints[0] = tierPoint;
-            tierMultipliers[0] = tierMultiplier;
 
-            for (int i = 1; i < tiersCount; i++) {
+            for (int i = 0; i < tiers; i++) {
                 sc.nextLine();
                 System.out.print("Enter Tiers in increasing order of precedence");
                 sc.nextLine();
@@ -155,14 +152,21 @@ public class Tier {
                 System.out.println("Tier" + (i + 1) + " name can not be empty.");
                 isValid = false;
             }
-
+            if(tierPoints[0]!=0) {
+                System.out.println("Tier 1 points should be zero" );
+                isValid=false;
+            }
+            if(tierMultipliers[0]!=1) {
+                System.out.println("Tier 1 multiplier should be one" );
+                isValid=false;
+            }
             if (i != 0 && tierPoints[i] == 0) {
                 System.out.println("Tier" + (i + 1) + " points can not be 0 except base tier.");
                 isValid = false;
             }
 
-            if (tierMultipliers[i] < 1) {
-                System.out.println("Tier" + (i + 1) + " multipliers can not be less than 1.");
+            if (i!=0 && tierMultipliers[i] < 2) {
+                System.out.println("Tier" + (i + 1) + " multipliers can not be less than 2.");
                 isValid = false;
             }
         }

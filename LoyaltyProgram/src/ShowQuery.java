@@ -231,9 +231,7 @@ public class ShowQuery {
 
             if (rs.next()) {
                 ACC = rs.getString("AT_ID");
-            } else {
-                System.out.println("No Brand Found.");
-            }
+
             String sql = "Select  BRAND_ID, SUM(POINTS) AS SUMPOINTS from" +
                     "(select ACT_ID, VALUE from ACTIVITY A where A.ACT_CATEGORY_CODE ='"+ACC+"' " +
                     "NATURAL INNER JOIN" +
@@ -264,8 +262,8 @@ public class ShowQuery {
                 sb.deleteCharAt(sb.length() -1);
                 sb.append(")");
                 String str = sb.toString();
-                String sql = "SELECT NAME FROM BRAND WHERE BRAND_ID IN " + str;
-                rs = MainMenu.statement.executeQuery(sql);
+                String sqlQuery = "SELECT NAME FROM BRAND WHERE BRAND_ID IN " + str;
+                rs = MainMenu.statement.executeQuery(sqlQuery);
                 str="";
                 System.out.println("Brands: ");
                 while(rs.next()) {
@@ -273,7 +271,10 @@ public class ShowQuery {
                 }
                 System.out.print(str);
             }
-            rs.close();
+                rs.close();
+            } else {
+                System.out.println("No Brand Found.");
+            }
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -292,13 +293,13 @@ public class ShowQuery {
             if(rs.next()) {
                  custID = rs.getString("CUST_ID");
             } else {
-                System.Out.println("Customer not found");
+                System.out.println("Customer not found");
             }
             rs = MainMenu.statement.executeQuery(getBrandID);
             if(rs.next()){
                 brandID = rs.getString("BRAND_ID");
             } else {
-                System.Out.println("Brand not found");
+                System.out.println("Brand not found");
             }
             String sqlCred = "select count(*) as numAct from ACTIVITY where ACT_ID in " +
                     "(select ACT_ID from WALLET_ACTIVITY where WALLET_ID = " +
@@ -307,7 +308,7 @@ public class ShowQuery {
             rs = MainMenu.statement.executeQuery(sqlCred);
             if (rs.next()) {
                 while (rs.next()) {
-                    System.Out.println(rs.getString("numAct"));
+                    System.out.println(rs.getString("numAct"));
                 }
             } else {
                 System.out.println("No Activity Found.");
