@@ -48,7 +48,7 @@ public class Login {
 
         ResultSet rs = null;
         try {
-            rs = Mainmenu.statement.executeQuery(sqlquery);
+            rs = MainMenu.statement.executeQuery(sqlquery);
             if (rs.next()) {
                 userType = rs.getString("TYPE"); //update usertype
                 userId = userid;
