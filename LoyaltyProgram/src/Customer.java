@@ -286,7 +286,7 @@ public class Customer {
         }
         String brandId;
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
-        for (Entry<String, String> entry : brands.entrySet()) {
+        for (Map.Entry<String, String> entry : brands.entrySet()) {
             if (entry.getValue().equals(selected_value)) {
                  brandId = entry.getKey();
                 break;
@@ -316,7 +316,7 @@ public class Customer {
             rewardActCategories.put(i++, rs.getString("ACTIVITY_NAME"));
         }
         System.out.println("Select one of the option: ");
-        for (Entry<String, String> entry : rewardActCategories.entrySet()) {
+        for (Map.Entry<String, String> entry : rewardActCategories.entrySet()) {
             System.out.println(entry.getKey(), ". ", entry.getValue());
             }
         selected_option = sc.nextInt();
@@ -435,7 +435,7 @@ public class Customer {
         {
             String SQL_RER_points = "SELECT POINTS " +
                     "FROM RE_RULES" +
-                    "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"' AND VERSION_NO = '"+versionNo+"'";
+                    "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"' AND VERSION_NO = "+versionNo;
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
         }
         catch(SQLException e)
@@ -548,7 +548,7 @@ public class Customer {
 
         //CODE TO UPDATE WALLET_ACT table and ACTIVITY TABLE
         try {
-            ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
+            PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
             ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
             ps.setString(2, acc);
             ps.setString(3, activity_value);
@@ -561,7 +561,7 @@ public class Customer {
         String activityId;
         try {
             String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
-            rs4 = MainMenu.statement.executeQuery(activityIdSelect);
+            ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
             if (rs4.next()) {
                 activityId = rs4.getInt("MAX_ACT_ID");
@@ -571,7 +571,7 @@ public class Customer {
         }
         //entry into wallet_acitivity_bridgetable
         try {
-            ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
+            PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
             ps.setString(1, walletId);
             ps.setString(2, activityId);
         } catch (SQLIntegrityConstraintViolation e) {
@@ -591,7 +591,7 @@ public class Customer {
                 tiername_pts.put(rs.getInt("POINTS"),rs.getString("TIER_NAME"));
             }
             String maxTier;
-            for(Entry<Integer, String> entry : tiername_pts.entrySet())
+            for(Map.Entry<Integer, String> entry : tiername_pts.entrySet())
             {
                 if(entry.getKey()<=Total)
                 {
@@ -610,7 +610,7 @@ public class Customer {
             }
         } catch(SQLException e)
         {
-            System.Out.println("Tier status cannot be updated");
+            System.out.println("Tier status cannot be updated");
         }
     }
 
@@ -662,7 +662,7 @@ public class Customer {
         }
         String brandId;
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
-        for (Entry<String, String> entry : brands_rp.entrySet()) {
+        for (Map.Entry<String, String> entry : brands_rp.entrySet()) {
             if (entry.getValue().equals(selected_value)) {
                 brandId = entry.getKey();
                 break;
@@ -742,9 +742,10 @@ public class Customer {
         }
 
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
-        for (Entry<String, String> entry : brands_rrr.entrySet()) {
+        int version;
+        for (Map.Entry<String, Integer> entry : brands_rrr.entrySet()) {
             if (entry.getKey().equals(selected_reward)) {
-                String version = entry.getValue();
+                version = entry.getValue();
                 break;
             }
         }
@@ -753,7 +754,7 @@ public class Customer {
         {
             String SQL_Reward = "SELECT S.POINTS, R.RT_ID " +
                     "FROM REWARD_TYPE R, RR_RULES S " +
-                    "WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND S.VERSION_NO = '"+version+"'" +
+                    "WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND S.VERSION_NO = "+ version +
                     " AND R.REWARD_NAME = '"+selected_reward+"'";
             rs = MainMenu.statement.executeQuery(SQL_Reward);
         }
@@ -824,7 +825,7 @@ public class Customer {
                     redeemCategoryCode = rs3.getString("AT_ID");
                 }
                 //entry into activity table
-                ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
+                PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
                 ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 ps.setString(2, redeemCategoryCode);
                 ps.setString(3, R_C_C);
@@ -834,10 +835,10 @@ public class Customer {
                 System.out.println("Integrity Constraint Violation");
             }
 
-            String activityId;
+            int activityId;
             try {
                 String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY;
-                rs4 = MainMenu.statement.executeQuery(activityIdSelect);
+                ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
                 if (rs4.next()) {
                     activityId = rs4.getInt("MAX_ACT_ID");
@@ -847,9 +848,9 @@ public class Customer {
             }
             //entry into wallet_acitivity_bridgetable
             try {
-                ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
+                PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
                 ps.setString(1, walletId);
-                ps.setString(2, activityId);
+                ps.setInt(2, activityId);
             } catch (SQLIntegrityConstraintViolation e) {
                 System.out.println("Integrity Constraint Violation");
             }
@@ -857,7 +858,7 @@ public class Customer {
             if(selected_reward.toLowerCase().equals("gift card"))
             {
                 try {
-                    ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
+                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
                     ps.setString(1, walletId);
                 } catch (SQLIntegrityConstraintViolation e) {
                     System.out.println("Integrity Constraint Violation");
