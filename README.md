@@ -1,5 +1,5 @@
 # CSC540-CustomerLoyaltyProgram
-##CSC540 Project
+## CSC540 Project Team 28
 * AISHWARYA RAMACHANDRAN (aramach6)
 * SHREE LAKSHMI RAMASUBRAMANIAN (slramasu)
 * ADITI BHAGAWAT (aabhagwa)
