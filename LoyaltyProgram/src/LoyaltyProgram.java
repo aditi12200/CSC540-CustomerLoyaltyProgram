@@ -61,17 +61,18 @@ public class LoyaltyProgram {
 
 
     private static void insertLoyaltyProgram(String lpName, String lpType) {
-        PreparedStatement statement = null;
+        CallableStatement statement = null;
+        PreparedStatement ps=null;
         try {
 
-            statement = MainMenu.connection.prepareStatement("Insert into LOTALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?,?)");
-            statement.setString(1, Login.userId);
-            statement.setString(2, lpType);
-            statement.execute();
+            ps = MainMenu.connection.prepareStatement("Insert into LOTALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?,?)");
+            ps.setString(1, Login.userId);
+            ps.setString(2, lpType);
+            ps.execute();
 
             LoyaltyProgram.lpType = lpType;
 
-            statement.close();
+            ps.close();
 
             System.out.println("Loyalty Program has been successfully added, please proceed to add activity types, " +
                     "reward types, and corresponding rules for activating the program.");

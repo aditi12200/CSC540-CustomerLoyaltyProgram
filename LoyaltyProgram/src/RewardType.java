@@ -4,20 +4,21 @@ import java.sql.*;
 
 
 public class RewardType {
+    public static Map<Integer, String> rewardCategories=new HashMap();
+    public static Map<String, String> rewardIdCatMap=new HashMap();
+
     public static void rewardTypePage() {
         Scanner sc = new Scanner(System.in);
+
         int enteredValue, quantity;
         boolean goBack = false;
-        Map<Integer, String> rewardCategories=new HashMap();
-        Map<String, String> rewardIdCatMap=new HashMap();
-
         initialize();
 
         do {
             System.out.println("Enter quantity for chosen reward category");
             quantity=sc.nextInt();
             System.out.println("Choose one of the following options");
-            for (Map.Entry<String,String> entry : rewardCategories.entrySet()) {
+            for (Map.Entry<Integer,String> entry : rewardCategories.entrySet()) {
                 System.out.println(entry.getKey() + ". " + entry.getValue());
             }
             int nextOptNum=rewardCategories.size()+1;
@@ -36,7 +37,7 @@ public class RewardType {
         } while (!goBack);
     }
 
-    private static void initialize() {
+    public static void initialize() {
         try {
             String rewCategorySelectSql = "select RT_ID, REWARD_NAME from REWARD_TYPE";
 
@@ -52,13 +53,13 @@ public class RewardType {
         }
     }
 
-    private static void addRewardType(String rewardName, int quantity) {
+    public static void addRewardType(String rewardName, int quantity) {
+        Scanner sc=new Scanner(System.in);
         String sql;
         String value;
         String rcc;
         rcc=rewardIdCatMap.get(rewardName);
-        PreparedStatement ps;
-        String sql;
+        PreparedStatement ps=null;
 
         if (rewardName.toLowerCase()=="gift card"){
             System.out.println("Enter the value for the gift card:");
@@ -69,7 +70,7 @@ public class RewardType {
                 ps=MainMenu.connection.prepareStatement(sql);
                 ps.setString(1,rcc);
                 ps.setString(2,value);
-                ps.setString(3,quantity);
+                ps.setInt(3,quantity);
                 ps.setString(4,Login.userId);
 
             }catch(SQLIntegrityConstraintViolationException e){
@@ -82,25 +83,25 @@ public class RewardType {
                 sql="Insert into REWARD(REWARD_CATEGORY_CODE, QUANTITY, BRAND_ID) values (?,?,?)";
                 ps=MainMenu.connection.prepareStatement(sql);
                 ps.setString(1,rcc);
-                ps.setString(2,quantity);
+                ps.setInt(2,quantity);
                 ps.setString(3,Login.userId);
+
+                int rows = ps.executeUpdate();
+                if (rows > 0) {
+                    System.out.println("Reward Type has been added successfully.");
+                } else {
+                    System.out.println("Reward Type could not be added. Please try again.");
+                }
+
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Reward Type already present.");
             } catch (SQLException e) {
                 System.out.println("Reward Type can not be added. Please try again.");
             }
         }
-
-        int rows = ps.executeUpdate();
-        if (rows > 0) {
-            System.out.println("Reward Type has been added successfully.");
-        } else {
-            System.out.println("Reward Type could not be added. Please try again.");
-        }
-
     }
 
-    private static void goBack() {
+    public static void goBack() {
         if (LoyaltyProgram.lpType.equalsIgnoreCase("R")) {
             Regular.regularPage();
         } else {
