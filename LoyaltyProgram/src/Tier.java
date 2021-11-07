@@ -3,6 +3,7 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Scanner;
 import java.util.*;
+import java.sql.*;
 
 public class Tier {
     public static void tierPage() {

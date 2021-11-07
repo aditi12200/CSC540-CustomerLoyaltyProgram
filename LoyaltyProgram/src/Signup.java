@@ -2,6 +2,8 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Scanner;
+import java.util.*;
+import java.sql.*;
 
 public class Signup {
     public static void signUpPage() {

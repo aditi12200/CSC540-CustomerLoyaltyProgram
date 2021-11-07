@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.sql.PreparedStatement;
+import java.util.*;
+import java.sql.*;
 
 public class LoyaltyProgram {
 

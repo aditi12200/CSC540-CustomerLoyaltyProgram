@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.sql.*;
 
 public class ActivityType {
     Map<Integer, String> actCategories=new HashMap();
