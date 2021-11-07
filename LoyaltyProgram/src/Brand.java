@@ -161,7 +161,7 @@ public class Brand {
 
                 if (result == 2) {
                     System.out.println("RERule with this code is not present.");
-                } else if(ret == 0) {
+                } else if(result == 0) {
                     System.out.println("Activity Category Code entered is invalid");
                 } else {
                     System.out.println("RERule has been updated successfully.");
