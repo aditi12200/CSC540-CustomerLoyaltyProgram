@@ -1,8 +1,8 @@
+
 import java.sql.*;
 import java.util.*;
 
 public class MainMenu {
-
 
     public static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
     public static final String user = "araghut";
@@ -22,7 +22,7 @@ public class MainMenu {
                 statement = connection.createStatement();
 
                 System.out.println("\t\tWelcome to Customer Loyalty Program.\n\n");
-                showMenu();
+                displayMenu();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             } finally {
