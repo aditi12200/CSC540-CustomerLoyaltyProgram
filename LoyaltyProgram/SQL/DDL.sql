@@ -149,13 +149,16 @@ create or replace PROCEDURE update_re_rule
 )
 AS
 CURRVNO INT;
-BEGIN
-    SELECT MAX(VERSIONNO) INTO CURRVNO FROM RERULE WHERE BRANDID = bId AND ACTIVITYCODE = acCode;
-
+EXISTINGCNT INT;
+BEGIN -- will this work if no re rule exist;
+    SELECT MAX(VERSION_NO) INTO CURRVNO FROM RE_RULES WHERE BRAND_ID = bId AND ACT_CATEGORY_CODE = acCode;
+    SELECT COUNT(RER_CODE) INTO EXISTINGCNT FROM RE_RULES WHERE RER_CODE = rerCode;
     IF CURRVNO > 0 THEN
-        -- Insert into rerule table
-        INSERT INTO RERULE(BRANDID, ACTIVITYCODE, POINTS, VERSIONNO) values (bId, acCode, pts, CURRVNO + 1);
+        -- Insert into rerules table
+        INSERT INTO RE_RULES(RER_CODE,BRAND_ID, ACT_CATEGORY_CODE, POINTS, VERSION_NO) values (rerCode,bId, acCode, pts, CURRVNO + 1);
         ret := 1;
+    ELSIF EXISTINGCNT = 0 THEN
+        ret := 2;
     ELSE
         ret := 0;
     END IF;
