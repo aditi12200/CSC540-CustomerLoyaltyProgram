@@ -476,12 +476,12 @@ public class Customer {
         }
 
         // if not a tiered program add into the wallet
-        if (type.toLowerCase() == 'regular')
+        if (type.toLowerCase() == 'r')
         {
             Total = points + wallet_points;
         }
         // find out if its a tiered program, if so get the tier and the multiplier
-        if (type.toLowerCase() == 'tiered')
+        if (type.toLowerCase() == 't')
         {
             //from wallet get the tier status
             try
