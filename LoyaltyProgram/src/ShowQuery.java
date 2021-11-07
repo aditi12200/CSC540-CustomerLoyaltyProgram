@@ -84,8 +84,8 @@ public class ShowQuery {
             } else {
                 System.out.println("No Customer Found.");
             }
-
             rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -109,8 +109,8 @@ public class ShowQuery {
             } else {
                 System.out.println("No Customer Found.");
             }
-
             rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -132,8 +132,8 @@ public class ShowQuery {
             } else {
                 System.out.println("No Reward Found.");
             }
-
             rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -155,8 +155,8 @@ public class ShowQuery {
             } else {
                 System.out.println("No Loyalty Program Found.");
             }
-
             rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -183,8 +183,8 @@ public class ShowQuery {
             } else {
                 System.out.println("No Activity Type Found.");
             }
-
             rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -212,8 +212,8 @@ public class ShowQuery {
             } else {
                 System.out.println("No Customer Found.");
             }
-
             rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -271,10 +271,13 @@ public class ShowQuery {
                 }
                 System.out.print(str);
             }
-                rs.close();
+
             } else {
                 System.out.println("No Brand Found.");
+
             }
+            rs.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
             e.printStackTrace();
@@ -287,36 +290,37 @@ public class ShowQuery {
         String getBrandID = "select BRAND_ID from BRAND where NAME ='Brand02'";
 
         ResultSet rs = null;
+        ResultSet ps = null;
         try {
             rs = MainMenu.statement.executeQuery(getCustID);
+            ps = MainMenu.statement.executeQuery(getBrandID);
             String custID, brandID;
-            if(rs.next()) {
+            if(rs.next() && ps.next()) {
                  custID = rs.getString("CUST_ID");
-            } else {
-                System.out.println("Customer not found");
-            }
-            rs = MainMenu.statement.executeQuery(getBrandID);
-            if(rs.next()){
-                brandID = rs.getString("BRAND_ID");
-            } else {
-                System.out.println("Brand not found");
-            }
-            String sqlCred = "select count(*) as numAct from ACTIVITY where ACT_ID in " +
-                    "(select ACT_ID from WALLET_ACTIVITY where WALLET_ID = " +
-                    "(select WALLET_ID from WALLET where CUST_ID ='"+custID+"' and BRAND_ID ='"+brandID+"' ) " +
-                    "and ACT_DATE between '01-AUG-21' and '30-SEP-21')";
-            rs = MainMenu.statement.executeQuery(sqlCred);
-            if (rs.next()) {
-                while (rs.next()) {
-                    System.out.println(rs.getString("numAct"));
+                 brandID = ps.getString("BRAND_ID");
+                String sqlCred = "select count(*) as numAct from ACTIVITY where ACT_ID in " +
+                        "(select ACT_ID from WALLET_ACTIVITY where WALLET_ID = " +
+                        "(select WALLET_ID from WALLET where CUST_ID ='"+custID+"' and BRAND_ID ='"+brandID+"' ) " +
+                        "and ACT_DATE between '01-AUG-21' and '30-SEP-21')";
+                rs = MainMenu.statement.executeQuery(sqlCred);
+                if (rs.next()) {
+                    while (rs.next()) {
+                        System.out.println(rs.getString("numAct"));
+                    }
+                } else {
+                    System.out.println("No Activity Found.");
                 }
-            } else {
-                System.out.println("No Activity Found.");
-            }
 
+            } else {
+                System.out.println("No Customer/brand found");
+
+            }
             rs.close();
+            ps.close();
+            showQueryPage();
         } catch (SQLException e) {
             Helper.close(rs);
+            Helper.close(ps);
             e.printStackTrace();
         }
     }

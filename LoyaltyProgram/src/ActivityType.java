@@ -1,8 +1,9 @@
 import java.util.Scanner;
 import java.sql.*;
+import java.util.*;
 
 public class ActivityType {
-    Map<Integer, String> actCategories=new HashMap();
+    public static Map<Integer, String> actCategories=new HashMap();
     public static void activityTypePage() {
 
         initialize();
@@ -58,9 +59,28 @@ public class ActivityType {
         try {
             ResultSet rs = MainMenu.statement.executeQuery(sqlActCatSelect);
 
-            int rows = ps.executeQuery();
             if (rs.next()) {
                 acc=rs.getString("AT_ID");
+                String sql = "Insert into LP_ACT_CATEGORY(BRAND_ID, ACT_CATEGORY_CODE) values (?,?)";
+                try {
+                    PreparedStatement ps = MainMenu.connection.prepareStatement(sql);
+                    ps.setString(1, Login.userId);
+                    ps.setString(2, acc);
+
+                    int rows = ps.executeUpdate();
+                    if (rows == 1) {
+                        System.out.println("Activity Type has been added successfully.");
+                    } else {
+                        System.out.println("Activity Type could not be added. Please try again.");
+                    }
+                    displayOptions();
+                } catch (SQLIntegrityConstraintViolationException e) {
+                    System.out.println("Activity Type already present.");
+                    displayOptions();
+                } catch (SQLException e) {
+                    System.out.println("Activity Type could not be added. Please try again.");
+                    displayOptions();
+                }
             } else {
                 System.out.println("Activity Type could not be found. Please try again.");
             }
@@ -70,26 +90,7 @@ public class ActivityType {
             displayOptions();
         }
 
-        String sql = "Insert into LP_ACT_CATEGORY(BRAND_ID, ACT_CATEGORY_CODE) values (?,?)";
-        try {
-            PreparedStatement ps = Home.connection.prepareStatement(sql);
-            ps.setString(1, Login.userId);
-            ps.setString(2, acc);
 
-            int rows = ps.executeUpdate();
-            if (rows == 1) {
-                System.out.println("Activity Type has been added successfully.");
-            } else {
-                System.out.println("Activity Type could not be added. Please try again.");
-            }
-            displayOptions();
-        } catch (SQLIntegrityConstraintViolationException e) {
-            System.out.println("Activity Type already present.");
-            displayOptions();
-        } catch (SQLException e) {
-            System.out.println("Activity Type could not be added. Please try again.");
-            displayOptions();
-        }
     }
 
     private static void goBack() {

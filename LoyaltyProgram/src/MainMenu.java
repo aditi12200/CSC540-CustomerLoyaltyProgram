@@ -36,7 +36,7 @@ public class MainMenu {
     public static void displayMenu() {
         Scanner sc = new Scanner(System.in);
 
-        int enteredValue;
+        int enteredValue=0;
 
         do {
             System.out.println("Select from the options below");
