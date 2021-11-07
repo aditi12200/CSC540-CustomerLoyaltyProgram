@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.*;
 
 public class Customer {
     public static void customerPage() {
@@ -282,10 +283,11 @@ public class Customer {
                 System.out.println("Incorrect Brand selected. Please select from the list.");
             }
         }
+        String brandId;
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
         for (Entry<String, String> entry : brands.entrySet()) {
             if (entry.getValue().equals(selected_value)) {
-                String brandId = entry.getKey();
+                 brandId = entry.getKey();
                 break;
             }
         }
@@ -524,6 +526,7 @@ public class Customer {
             }
             Total = wallet_points + multiplier * points;
             Sumtotal = cumulative_points+Total;
+            checkForTierStatusUpgrade(Total,brandId,tier_status,Login.userId);
         }
 
         try
@@ -576,6 +579,40 @@ public class Customer {
 
     }
 
+    public static void checkForTierStatusUpgrade(int Total, String brandId, String tier_status, String custId){
+        String getTierPoints = "select TIER_NAME, POINTS from TIER where BRAND_ID ='"+brandId+"'";
+        ResultSet rs;
+        Map<Integer, String> tiername_pts = new TreeMap(Collections.reverseOrder());
+        try
+        {
+            rs = MainMenu.statement.executeQuery(getTierPoints);
+            while(rs.next()) {
+                tiername_pts.put(rs.getInt("POINTS"),rs.getString("TIER_NAME"));
+            }
+            String maxTier;
+            for(Entry<Integer, String> entry : tiername_pts.entrySet())
+            {
+                if(entry.getKey()<=Total)
+                {
+                    maxTier = entry.getValue();
+                }
+            }
+            if(!tier_status.equals(maxTier))
+            {
+                String update = "UPDATE WALLET SET TIER_STATUS='"+maxTier+"'" +
+                        "where BRAND_ID='"+brandId+" and CUST_ID='"+custId+"'"
+                PreparedStatement ps = MainMenu.connection.prepareStatement(update);
+                ps.executeUpdate();
+                System.out.println("Tier Status updated successfully");
+            } else {
+                System.out.println("Tier is already set");
+            }
+        } catch(SQLException e)
+        {
+            System.Out.println("Tier status cannot be updated");
+        }
+    }
+
     public static void redeemPoints()
     {
         ResultSet rs;
@@ -622,11 +659,11 @@ public class Customer {
                 System.out.println("Incorrect Brand selected. Please select from the list.");
             }
         }
-
+        String brandId;
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
         for (Entry<String, String> entry : brands_rp.entrySet()) {
             if (entry.getValue().equals(selected_value)) {
-                String brandId = entry.getKey();
+                brandId = entry.getKey();
                 break;
             }
         }
