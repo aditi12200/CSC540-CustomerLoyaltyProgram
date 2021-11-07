@@ -217,15 +217,16 @@ public class Customer {
                 try {
                     String walletSelect = "select * from WALLET where CUST_ID=" + custId;
                     ResultSet rs = MainMenu.statement.executeQuery(walletSelect);
-                    System.out.println("Wallet ID\tBrand ID\tCustomer ID\tPoints\tTier Status");
+                    System.out.println("Wallet ID\tBrand ID\tCustomer ID\tPoints\tCumulative_pts\tTier Status");
                     while (rs.next()) {
                         String walletId = rs.getString("WALLET_ID");
                         String brandId = rs.getString("BRAND_ID");
                         String custId = rs.getString("CUST_ID");
                         int points = rs.getInt("POINTS");
+                        int sumPts = rs.getInt("CUMULATIVE_PTS");
                         String tierStatus = rs.getString("TIER_STATUS");
 
-                        System.out.println(walletId + "\t" + brandId + "\t" + custId + "\t" + points + "\t" + tierStatus);
+                        System.out.println(walletId + "\t" + brandId + "\t" + custId + "\t" + points + "\t" + sumPts + "\t" + tierStatus);
                     }
                 } catch (SQLException e) {
                     System.out.println("You do not have any existing wallets.");
@@ -343,9 +344,11 @@ public class Customer {
         int points;
         String type;
         int wallet_points;
+        int cumulative_points;
         String tier_status;
         int multiplier;
-        String Total;
+        int Total;
+        int Sumtotal;
 
         if(gcc.length()>0) {
             try
@@ -460,7 +463,7 @@ public class Customer {
         String walletId;
         try
         {
-            String SQL_RER_points = "SELECT WALLET_ID, POINTS " +
+            String SQL_RER_points = "SELECT WALLET_ID, POINTS, CUMULATIVE_PTS" +
                     "FROM WALLET" +
                     "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
@@ -473,12 +476,15 @@ public class Customer {
         {
             walletId=rs.getString("WALLET_ID");
             wallet_points = rs.getInt("POINTS");
+            cumulative_points = rs.getInt("CUMULATIVE_PTS");
         }
 
         // if not a tiered program add into the wallet
         if (type.toLowerCase() == 'r')
         {
             Total = points + wallet_points;
+            Sumtotal = cumulative_points + Total;
+
         }
         // find out if its a tiered program, if so get the tier and the multiplier
         if (type.toLowerCase() == 't')
@@ -517,12 +523,13 @@ public class Customer {
                 multiplier = rs.getInt("MULTIPLIER");
             }
             Total = wallet_points + multiplier * points;
+            Sumtotal = cumulative_points+Total;
         }
 
         try
         {
             PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET" +
-                    "SET POINTS = " +Total+
+                    "SET POINTS = " +Total+, "CUMULATIVE_PTS = "+Sumtotal+
                     "WHERE CUST_ID = '"+Login.userId+"' AND BRAND_ID = '"+brandId+"'");
             ps.executeUpdate();
         }
