@@ -61,7 +61,7 @@ public class Signup {
             signUpPage();
         } else {
             try {
-                statement = Home.connection.prepareCall("{call add_brand(?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call add_brand(?, ?, ?, ?, ?)}");
                 statement.setString(1, brandId);
                 statement.setString(2, brandPassword);
                 statement.setString(3, brandName);

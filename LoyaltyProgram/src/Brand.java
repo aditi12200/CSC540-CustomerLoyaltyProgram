@@ -83,7 +83,7 @@ public class Brand {
         System.out.print("Enter activity category id:");
         activityCategoryId = sc.nextLine();
         System.out.print("Enter number of points for this activity:");
-        numOfPoints = sc.nextLine();
+        numOfPoints = sc.nextInt();
 
         int enteredValue = Helper.selectNextOption(sc, "Add RERule");
         CallableStatement statement = null;
@@ -92,12 +92,11 @@ public class Brand {
             brandPage();
         } else {
             try {
-                //TODO: Change query as per our tables
                 statement = MainMenu.connection.prepareCall("{call add_rerule(?, ?, ?, ?, ?)}");
                 statement.setString(1, Login.userId);
                 statement.setString(2, rerCode);
                 statement.setString(3, activityCategoryId);
-                statement.setString(4, numOfPoints);
+                statement.setInt(4, numOfPoints);
                 statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
@@ -134,7 +133,7 @@ public class Brand {
         System.out.print("Enter activity category id:");
         activityCategoryId = sc.nextLine();
         System.out.print("Enter number of points for this activity:");
-        numOfPoints = sc.nextLine();
+        numOfPoints = sc.nextInt();
 
         int enteredValue = Helper.selectNextOption(sc, "Update RERule");
         CallableStatement statement = null;
@@ -143,21 +142,23 @@ public class Brand {
             brandPage();
         } else {
             try {
-                //TODO: Change query as per our tables
-                statement = MainMenu.connection.prepareCall("{call update_rerule(?, ?, ?, ?)}");
-                statement.setString(1, rerCode);
-                statement.setString(2, activityCategoryId);
-                statement.setString(3, numOfPoints);
-                statement.registerOutParameter(4, Types.INTEGER);
+                statement = MainMenu.connection.prepareCall("{call update_rerule(?, ?, ?, ?, ?)}");
+                statement.setString(1, Login.userId);
+                statement.setString(2, rerCode);
+                statement.setString(3, activityCategoryId);
+                statement.setInt(4, numOfPoints);
+                statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
 
-                int result = statement.getInt(4);
+                int result = statement.getInt(5);
 
                 statement.close();
 
-                if (result == 0) {
+                if (result == 2) {
                     System.out.println("RERule with this code is not present.");
+                } else if(ret == 0) {
+                    System.out.println("Activity Category Code entered is invalid");
                 } else {
                     System.out.println("RERule has been updated successfully.");
                 }
@@ -189,16 +190,16 @@ public class Brand {
             brandPage();
         } else {
             try {
-                //TODO: Change query as per our tables
-                statement = MainMenu.connection.prepareCall("{call add_rrrule(?, ?, ?, ?)}");
-                statement.setString(1, rrrCode);
-                statement.setString(2, rewardCategoryId);
-                statement.setString(3, numOfPoints);
-                statement.registerOutParameter(4, Types.INTEGER);
+                statement = MainMenu.connection.prepareCall("{call add_rrrule(?, ?, ?, ?, ?)}");
+                statement.setString(1, Login.userId);
+                statement.setString(2, rrrCode);
+                statement.setString(3, rewardCategoryId);
+                statement.setString(4, numOfPoints);
+                statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
 
-                int result = statement.getInt(4);
+                int result = statement.getInt(5);
 
                 statement.close();
 
@@ -207,7 +208,7 @@ public class Brand {
                 } else if(ret == 1) {
                     System.out.println("RRRule added successfully.");
                 } else {
-                    System.out.println("RRRule could not be added. Please try again.");
+                    System.out.println("This reward type is not part of your loyalty program!");
                 }
                 addRRRule();
             } catch(SQLException e)
@@ -237,21 +238,23 @@ public class Brand {
             brandPage();
         } else {
             try {
-                //TODO: Change query as per our tables
-                statement = MainMenu.connection.prepareCall("{call update_rrrule(?, ?, ?, ?)}");
-                statement.setString(1, rrrCode);
-                statement.setString(2, rewardCategoryId);
-                statement.setString(3, numOfPoints);
-                statement.registerOutParameter(4, Types.INTEGER);
+                statement = MainMenu.connection.prepareCall("{call update_rrrule(?, ?, ?, ?, ?)}");
+                statement.setString(1, Login.userId);
+                statement.setString(2, rrrCode);
+                statement.setString(3, rewardCategoryId);
+                statement.setString(4, numOfPoints);
+                statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
 
-                int result = statement.getInt(4);
+                int result = statement.getInt(5);
 
                 statement.close();
 
-                if (result == 0) {
+                if (result == 2) {
                     System.out.println("RRRule with this code is not present.");
+                } else if(ret == 0) {
+                    System.out.println("Reward Category Code entered is invalid");
                 } else {
                     System.out.println("RRRule has been updated successfully.");
                 }
@@ -268,22 +271,21 @@ public class Brand {
     public static void validateLoyaltyProgram() {
         CallableStatement statement = null;
         try {
-            statement = Home.connection.prepareCall("{call validate_loyalty_program(?, ?, ?, ?)}");
-            statement.setString(1, Login.loggedInUserId);
-            statement.setString(2, lpName);
-            statement.setString(3, lpType);
-            statement.registerOutParameter(4, Types.INTEGER);
+            statement = Home.connection.prepareCall("{call validate_loyalty_program(?, ?, ?)}");
+            statement.setString(1, Login.userId);
+            statement.setString(2, lpType);
+            statement.registerOutParameter(3, Types.INTEGER);
 
             statement.execute();
 
-            int ret = statement.getInt(4);
+            int ret = statement.getInt(3);
 
             if (ret == 0) {
-                System.out.println("Tiers are not defined. Please define the Tiers.");
+                System.out.println("You must define tiers for a tiered loyalty program.");
             } else if (ret == 1) {
-                System.out.println("One Reward Earning rule must be defined.");
+                System.out.println("Please define atleast one Reward Earning Rule.");
             } else if (ret == 2) {
-                System.out.println("One Reward Redeeming rule must be defined.");
+                System.out.println("Please define atleast one Reward Earning Rule.");
             } else {
                 System.out.println("Loyalty Program has been validated and set to active status.");
                 isActive = "ACTIVE";
@@ -293,7 +295,7 @@ public class Brand {
 
         } catch (SQLException e) {
             Utility.close(statement);
-            System.out.println("Loyalty Program can not be validated. Please try again.");
+            System.out.println("Loyalty Program could not be validated. Please try again.");
         }
     }
 
