@@ -219,19 +219,58 @@ public class ShowQuery {
     }
 
     private static void query7() {
-        String sqlCred = "SELECT * FROM TABLE(show_query_7)";
+        String getActCode = "SELECT AT_ID from ACTIVITY_TYPE where ACTIVITY_NAME='REDEEM'";
+
 
         ResultSet rs = null;
         try {
-            rs = MainMenu.statement.executeQuery(sqlCred);
+            rs = MainMenu.statement.executeQuery(getActCode);
+            String ACC;
+
             if (rs.next()) {
-                while (rs.next()) {
-                    //TODO
-                }
+                ACC = rs.getString("AT_ID");
             } else {
                 System.out.println("No Brand Found.");
             }
+            String sql = "Select  BRAND_ID, SUM(POINTS) AS SUMPOINTS from" +
+                    "(select ACT_ID, VALUE from ACTIVITY A where A.ACT_CATEGORY_CODE ='"+ACC+"' " +
+                    "NATURAL INNER JOIN" +
+                    "select WALLET_ID, ACT_ID, BRAND_ID from WALLET_ACTIVITY W, WALLET W1" +
+                    "where W.WALLET_ID = W1.WALLET_ID" +
+                    "on A.ACT_ID = W.ACT_ID ) as temp, RR_RULES R" +
+                    "where temp.BRAND_ID = R.BRAND_ID and temp.VALUE = R.REWARD_CATEGORY_CODE " +
+                    "GROUPBY BRAND_ID" +
+                    "HAVING SUM(POINTS)<500";
+            rs = MainMenu.statement.executeQuery(sql);
 
+            List<String> brandIds=new ArrayList();
+            while(rs.next()) {
+                if(rs.getInt("SUMPOINTS") < 500) {
+                    brandIds.add(rs.getString("BRAND_ID"));
+                }
+            }
+
+            if(brandIds.size() == 0) {
+                System.out.println("No redeem activity has been performed for any brand!");
+                showQueryPage();
+            } else {
+                StringBuilder sb = new StringBuilder();
+                sb.append("(");
+                for (String i : brandIds){
+                    sb.append(i+",");
+                }
+                sb.deleteCharAt(sb.length() -1);
+                sb.append(")");
+                String str = sb.toString();
+                String sql = "SELECT NAME FROM BRAND WHERE BRAND_ID IN " + str;
+                rs = MainMenu.statement.executeQuery(sql);
+                str="";
+                System.out.println("Brands: ");
+                while(rs.next()) {
+                    str=str+" "+rs.getString("NAME");
+                }
+                System.out.print(str);
+            }
             rs.close();
         } catch (SQLException e) {
             Helper.close(rs);

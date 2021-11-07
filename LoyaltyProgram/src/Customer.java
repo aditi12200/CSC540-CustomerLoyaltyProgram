@@ -653,7 +653,7 @@ public class Customer {
         }
         sb.deleteCharAt(sb.length() -1);
         sb.append(")");
-        return sb.toString();
+        String str = sb.toString();
 
         Map<String, Integer> brands_rrr = new HashMap();
         //from the RRR table figure out which rewards are supported for this brand and display that
@@ -661,7 +661,7 @@ public class Customer {
         {
             String SQL_Wallet_rp = "SELECT R.REWARD_NAME, MAX(S.VERSION_NO)" +
                     " FROM REWARD_TYPE R, RR_RULES S" +
-                    " WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND R.RT_ID IN " + sb +
+                    " WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND R.RT_ID IN " + str +
                     " GROUP BY R.REWARD_NAME"
             rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
             while(rs.next())
@@ -782,7 +782,7 @@ public class Customer {
                 ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
                 ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 ps.setString(2, redeemCategoryCode);
-                ps.setString(3, selected_reward);
+                ps.setString(3, R_C_C);
             } catch (SQLException e) {
                 System.out.println("SQL Exception encountered");
             } catch (SQLIntegrityConstraintViolation e) {
