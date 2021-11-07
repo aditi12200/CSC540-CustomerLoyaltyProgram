@@ -294,15 +294,15 @@ public class Brand {
     }
 
     private static void intialize() {
-        String sql = "select BRANDID, TYPE, ACTIVE from LOYALTYPROGRAM where BRANDID =  '" + Login.loggedInUserId + "'";
+        String sql = "select BRAND_LP_ID, TYPE, STATE from LOYALTY_PROGRAM where BRAND_LP_ID =  '" + Login.loggedInUserId + "'";
 
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sql);
             if (rs.next()) {
                 isEnrolled = true;
-                lpName = rs.getString("BRANDID");
-                isActive = rs.getBoolean("ACTIVE");
+                lpName = rs.getString("BRAND_LP_ID");
+                isActive = rs.getBoolean("STATE");
                 lpType = rs.getString("TYPE");
             }
 

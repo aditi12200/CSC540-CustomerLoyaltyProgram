@@ -42,14 +42,14 @@ public class Login {
     private static boolean checkIdAndPass(String userid, String password) {
         boolean success = false;
         //todo: update query
-        String sqlquery = "select usertype from users where userid =  '" + userid
-                + "' and password='" + password + "'";
+        String sqlquery = "select TYPE from USERS where USER_ID =  '" + userid
+                + "' and PWD='" + password + "'";
 
         ResultSet rs = null;
         try {
             rs = Mainmenu.statement.executeQuery(sqlquery);
             if (rs.next()) {
-                userType = rs.getString("USERTYPE"); //update usertype
+                userType = rs.getString("TYPE"); //update usertype
                 userId = userid;
                 success = true;
             } else {

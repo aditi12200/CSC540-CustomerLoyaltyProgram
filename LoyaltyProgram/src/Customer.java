@@ -58,7 +58,7 @@ public class Customer {
             Customer.customerPage();
         }else {
             try {
-                String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_ID=B.BRAND_ID and L.STATE='active'";
+                String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_LP_ID=B.BRAND_ID and L.STATE='active'";
                 ResultSet rs = MainMenu.statement.executeQuery(sqlLoyaltyProgramSelect);
                 while (rs.next()) {
                     String loyaltyProgram = rs.getString("NAME");
@@ -103,7 +103,7 @@ public class Customer {
             String walletId;
             String activityId;
             try {
-                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_ID=" + LPId;//name
+                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_LP_ID=" + LPId;//name
                 ResultSet rs1 = MainMenu.statement.executeQuery(sqlLPTypeSelect);
                 PreparedStatement ps;
                 if (rs1.next()) {
@@ -162,7 +162,7 @@ public class Customer {
                     ResultSet rs4 = MainMenu.statement.executeQuery(walletIdSelect);
 
                     if (rs4.next()) {
-                        walletId = rs4.getInt("WALLET_ID");
+                        walletId = rs4.getInt("MAX_WALLET_ID");
                     }
                 } catch (SQLException e) {
                     System.out.println("SQL Exception encountered");
