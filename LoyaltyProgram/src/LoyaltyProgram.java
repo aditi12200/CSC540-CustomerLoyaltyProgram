@@ -61,7 +61,7 @@ public class LoyaltyProgram {
 
 
     private static void insertLoyaltyProgram(String lpName, String lpType) {
-        CallableStatement statement = null;
+        PreparedStatement statement = null;
         try {
 
             statement = MainMenu.connection.prepareStatement("Insert into LOTALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?,?)");
