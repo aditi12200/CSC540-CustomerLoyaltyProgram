@@ -243,7 +243,7 @@ public class Admin {
                 adminPage();
             } else {
                 try {
-                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into ActivityType (ACTIVITYCODE, ACTIVITYNAME) values (?,?)");
+                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY_TYPE (AT_ID, ACTIVITY_NAME) values (?,?)");
                     ps.setString(1, activityCode);
                     ps.setString(2, activityName);
 
@@ -283,7 +283,7 @@ public class Admin {
                 adminPage();
             } else {
                 try {
-                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into RewardType (REWARDCODE, REWARDNAME) values (?,?)");
+                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into REWARD_TYPE (RT_ID, REWARD_NAME) values (?,?)");
                     ps.setString(1, rewardCode);
                     ps.setString(2, rewardName);
 

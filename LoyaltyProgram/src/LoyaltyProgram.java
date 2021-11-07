@@ -85,7 +85,7 @@ public class LoyaltyProgram {
     private static boolean checkIfBrandIsEnrolled() {
         boolean isEnrolled = false;
 
-        String sql = "select type from loyaltyprogram where brandid =  '" + Login.userId + "'";
+        String sql = "select type from LOYALTY_PROGRAM where BRAND_LP_ID =  '" + Login.userId + "'";
 
         ResultSet rs = null;
         try {
