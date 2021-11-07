@@ -2,7 +2,8 @@ import java.util.Scanner;
 
 public class Brand {
     //NOT SURE ABOUT THIS!
-    public static boolean isEnrolled = false, isActive = false;
+    public static boolean isEnrolled = false;
+    public static String isActive = "INACTIVE";
     public static String lpType = "R", lpName = "";
 
     public static void brandPage() {
@@ -32,7 +33,7 @@ public class Brand {
                         continue;
                     }
                 } else {
-                    if (selection == 6 && isActive) {
+                    if (selection == 6 && isActive.equals("ACTIVE")) {
                         System.out.println("Loyalty program has been validated already and is in active state.");
                         selected = false;
                         continue;
@@ -285,7 +286,7 @@ public class Brand {
                 System.out.println("One Reward Redeeming rule must be defined.");
             } else {
                 System.out.println("Loyalty Program has been validated and set to active status.");
-                isActive = true;
+                isActive = "ACTIVE";
             }
 
             statement.close();
@@ -305,7 +306,7 @@ public class Brand {
             if (rs.next()) {
                 isEnrolled = true;
                 lpName = rs.getString("BRAND_LP_ID");
-                isActive = rs.getBoolean("STATE");
+                isActive = rs.getString("STATE");
                 lpType = rs.getString("TYPE");
             }
 
