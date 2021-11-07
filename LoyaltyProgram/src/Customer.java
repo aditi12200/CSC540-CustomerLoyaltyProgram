@@ -356,29 +356,31 @@ public class Customer {
         int Sumtotal;
 
         if(gcc>0) {
+            List<Integer> giftCards=new ArrayList();
             try
             {
                 String SQL_Activity_code = "SELECT GIFT_CARD_CODE " +
                         "FROM WALLET W, WALLET_GIFTCARD WG " +
                         "WHERE W.WALLET_ID=WG.WALLET_ID AND W.BRAND_ID= '"+brandId+"' AND W.CUST_ID='"+Login.userId+"'";
                 rs = MainMenu.statement.executeQuery(SQL_Activity_code);
+
+
+                // for that ACC and brand_id, find number of points from RER table
+                while(rs.next())
+                {
+                    giftCards.add(rs.getInt("GIFT_CARD_CODE"));
+                }
+
+                if(!giftCards.contains(gcc)) {
+                    System.out.println("Please select a valid gift card!");
+                    Customer.performRewardActivities();
+                }
             }
             catch(SQLException e)
             {
                 System.out.println("Gift card could not be retrieved. Please try again.");
             }
 
-            List<Integer> giftCards=new ArrayList();
-            // for that ACC and brand_id, find number of points from RER table
-            while(rs.next())
-            {
-                giftCards.add(rs.getInt("GIFT_CARD_CODE"));
-            }
-
-            if(!giftCards.contains(gcc)) {
-                System.out.println("Please select a valid gift card!");
-                Customer.performRewardActivities();
-            }
 
             String deleteGcSql = "DELETE from WALLET_GIFTCARD where GIFT_CARD_CODE=?";
             try {
@@ -404,17 +406,18 @@ public class Customer {
                     "FROM ACTIVITY_TYPE" +
                     "WHERE ACTIVITY_NAME = '"+value_option+"'";
             rs = MainMenu.statement.executeQuery(SQL_Activity_code);
+            // for that ACC and brand_id, find number of points from RER table
+            if(rs.next())
+            {
+                acc = rs.getString("ACT_CATEGORY_CODE");
+            }
+
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be added, Please try again.");
         }
 
-        // for that ACC and brand_id, find number of points from RER table
-        if(rs.next())
-        {
-            acc = rs.getString("ACT_CATEGORY_CODE");
-        }
 
         int versionNo;
         try
@@ -423,15 +426,16 @@ public class Customer {
                     "FROM RE_RULES" +
                     "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_latestVersion);
+            if(rs.next())
+            {
+                versionNo = rs.getInt("MAX_VERSION");
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be added, Please try again.");
         }
-        if(rs.next())
-        {
-            versionNo = rs.getInt("MAX_VERSION");
-        }
+
 
         try
         {
@@ -439,14 +443,15 @@ public class Customer {
                     "FROM RE_RULES" +
                     "WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"' AND VERSION_NO = "+versionNo;
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            if(rs.next())
+            {
+                points = rs.getInt("POINTS");
+            }
+
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be added, Please try again.");
-        }
-        if(rs.next())
-        {
-            points = rs.getInt("POINTS");
         }
 
         try
@@ -455,14 +460,14 @@ public class Customer {
                     "FROM LOYALTY_PROGRAM" +
                     "WHERE BRAND_LP_ID = '"+brandId+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            if(rs.next())
+            {
+                type = rs.getString("TYPE");
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be added, Please try again.");
-        }
-        if(rs.next())
-        {
-            type = rs.getString("TYPE");
         }
 
         int walletId;
@@ -472,16 +477,17 @@ public class Customer {
                     "FROM WALLET" +
                     "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
+            if(rs.next())
+            {
+                walletId=rs.getInt("WALLET_ID");
+                wallet_points = rs.getInt("POINTS");
+                cumulative_points = rs.getInt("CUMULATIVE_PTS");
+            }
+
         }
         catch(SQLException e)
         {
             System.out.println("No points available, Please try again.");
-        }
-        if(rs.next())
-        {
-            walletId=rs.getInt("WALLET_ID");
-            wallet_points = rs.getInt("POINTS");
-            cumulative_points = rs.getInt("CUMULATIVE_PTS");
         }
 
         // if not a tiered program add into the wallet
@@ -501,15 +507,16 @@ public class Customer {
                         "FROM WALLET" +
                         "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
                 rs = MainMenu.statement.executeQuery(SQL_RER_points);
+                if(rs.next())
+                {
+                    tier_status = rs.getString("TIER_STATUS");
+                }
             }
             catch(SQLException e)
             {
                 System.out.println("Activity Type can not be added, Please try again.");
             }
-            if(rs.next())
-            {
-                tier_status = rs.getString("TIER_STATUS");
-            }
+
 
             //from tier table, brandid , tier_status, get multiplier
             try
@@ -518,15 +525,16 @@ public class Customer {
                         "FROM TIER" +
                         "WHERE BRAND_ID = '"+brandId+"' AND TIER_NAME = '"+tier_status+"'";
                 rs = MainMenu.statement.executeQuery(SQL_RER_points);
+                if(rs.next())
+                {
+                    multiplier = rs.getInt("MULTIPLIER");
+                }
             }
             catch(SQLException e)
             {
                 System.out.println("Activity Type can not be added, Please try again.");
             }
-            if(rs.next())
-            {
-                multiplier = rs.getInt("MULTIPLIER");
-            }
+
             Total = wallet_points + multiplier * points;
             Sumtotal = cumulative_points+Total;
             checkForTierStatusUpgrade(Total,brandId,tier_status,Login.userId);
@@ -578,6 +586,8 @@ public class Customer {
             ps.setInt(2, activityId);
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Integrity Constraint Violation");
+        } catch (SQLException e) {
+            System.out.println("Can not Insert into wallet and activity");
         }
 
     }
@@ -759,15 +769,15 @@ public class Customer {
                     "WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND S.VERSION_NO = "+ version +
                     " AND R.REWARD_NAME = '"+selected_reward+"'";
             rs = MainMenu.statement.executeQuery(SQL_Reward);
+            if(rs.next())
+            {
+                points = rs.getInt("POINTS");
+                R_C_C = rs.getString("RT_ID");
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be selected, Please try again.");
-        }
-        if(rs.next())
-        {
-            points = rs.getInt("POINTS");
-            R_C_C = rs.getString("RT_ID");
         }
 
         int walletPts;
@@ -778,18 +788,19 @@ public class Customer {
                     "FROM WALLET W " +
                     "WHERE W.BRAND_ID = '"+brandId+"' AND W.CUST_ID = '"+Login.userId+"'";
             rs = MainMenu.statement.executeQuery(SQL_WalletPts);
+            if(rs.next()) {
+                walletPts = rs.getInt("POINTS");
+                walletId = rs.getInt("WALLET_ID");
+            } else {
+                System.out.println("Wallet could not be found");
+                redeemPoints();
+            }
         }
         catch(SQLException e)
         {
             System.out.println("Activity Type can not be selected, Please try again.");
         }
-        if(rs.next()) {
-            walletPts = rs.getInt("POINTS");
-            walletId = rs.getInt("WALLET_ID");
-        } else {
-            System.out.println("Wallet could not be found");
-            redeemPoints();
-        }
+
 
         //if yes - deduct points from wallet, decrement no of instances by 1
         //update activity, wallet_activity tables. if GC update wallet_GC table
@@ -831,10 +842,10 @@ public class Customer {
                 ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 ps.setString(2, redeemCategoryCode);
                 ps.setString(3, R_C_C);
-            } catch (SQLException e) {
-                System.out.println("SQL Exception encountered");
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
+            } catch (SQLException e) {
+                System.out.println("SQL Exception encountered");
             }
 
             int activityId;
@@ -855,6 +866,8 @@ public class Customer {
                 ps.setInt(2, activityId);
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
+            } catch (SQLException e) {
+                System.out.println("could not assign activity to wallet");
             }
 
             if(selected_reward.toLowerCase().equals("gift card"))
@@ -864,6 +877,8 @@ public class Customer {
                     ps.setInt(1, walletId);
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
+                } catch(SQLException e) {
+                    System.out.println("Could not assign a gift card");
                 }
             }
         }
