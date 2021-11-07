@@ -201,12 +201,18 @@ public class Customer {
 
     private static boolean checkIfCustomerEnrolled(String chosenLP){
         String sqlWalletSelect="select * from WALLET where CUST_ID="+Login.userId+" and BRAND_ID="+chosenLP;
-        ResultSet rs = MainMenu.statement.executeQuery(sqlWalletSelect);
+        try {
+            ResultSet rs = MainMenu.statement.executeQuery(sqlWalletSelect);
 
-        if(rs.next()) {
-            return true;
+            if(rs.next()) {
+                return true;
+            }
+            return false;
+        } catch(SQLException e) {
+            System.out.println("Could not determine if customer is already enrolled.");
+            enrollLoyaltyProgram();
         }
-        return false;
+        return true;
     }
 
     public static void viewWallet() {
@@ -395,8 +401,6 @@ public class Customer {
                 System.out.println("Gift card could not be used. Please try again.");
                 performRewardActivities();
             }
-
-            //TODO: CODE TO CHECK IF PURCHASE AMOUNT IS LESS THAN OR EQUAL TO GC AMT. IF YES, SET GiVEREWARD FLAG TO FALSE?
 
         }
 
