@@ -782,7 +782,7 @@ public class Customer {
                 ps = MainMenu.connection.prepareStatement("Insert into ACTIVITY (ACT_DATE, ACT_CATEGORY_CODE, VALUE) values (?,?,?)");
                 ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 ps.setString(2, redeemCategoryCode);
-                ps.setString(3, selected_reward);
+                ps.setString(3, R_C_C);
             } catch (SQLException e) {
                 System.out.println("SQL Exception encountered");
             } catch (SQLIntegrityConstraintViolation e) {
