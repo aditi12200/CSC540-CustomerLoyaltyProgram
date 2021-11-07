@@ -198,7 +198,7 @@ public class Admin {
             adminPage();
         } else {
             try {
-                statement = MainMenu.connection.prepareCall("{call admin_add_customer(?, ?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call admin_add_customer(?, ?, ?, ?, ?)}");
                 statement.setString(1, customerUserId);
                 statement.setString(2, customerName);
                 statement.setString(3, customerAddress);

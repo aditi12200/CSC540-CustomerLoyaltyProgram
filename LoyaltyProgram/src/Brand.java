@@ -92,15 +92,16 @@ public class Brand {
         } else {
             try {
                 //TODO: Change query as per our tables
-                statement = MainMenu.connection.prepareCall("{call add_rerule(?, ?, ?, ?)}");
-                statement.setString(1, rerCode);
-                statement.setString(2, activityCategoryId);
-                statement.setString(3, numOfPoints);
-                statement.registerOutParameter(4, Types.INTEGER);
+                statement = MainMenu.connection.prepareCall("{call add_rerule(?, ?, ?, ?, ?)}");
+                statement.setString(1, Login.userId);
+                statement.setString(2, rerCode);
+                statement.setString(3, activityCategoryId);
+                statement.setString(4, numOfPoints);
+                statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
 
-                int result = statement.getInt(4);
+                int result = statement.getInt(5);
 
                 statement.close();
 
@@ -108,6 +109,8 @@ public class Brand {
                     System.out.println("RERule with this code already present.");
                 } else if(ret == 1) {
                     System.out.println("RERule added successfully.");
+                } else if(ret == 2) {
+                    System.out.println("This activty type is not part of your loyalty program!");
                 } else {
                     System.out.println("RERule could not be added. Please try again.");
                 }
