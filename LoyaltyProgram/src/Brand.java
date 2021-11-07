@@ -82,7 +82,7 @@ public class Brand {
         System.out.print("Enter activity category id:");
         activityCategoryId = sc.nextLine();
         System.out.print("Enter number of points for this activity:");
-        numOfPoints = sc.nextLine();
+        numOfPoints = sc.nextInt();
 
         int enteredValue = Helper.selectNextOption(sc, "Add RERule");
         CallableStatement statement = null;
@@ -96,7 +96,7 @@ public class Brand {
                 statement.setString(1, Login.userId);
                 statement.setString(2, rerCode);
                 statement.setString(3, activityCategoryId);
-                statement.setString(4, numOfPoints);
+                statement.setInt(4, numOfPoints);
                 statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
@@ -133,7 +133,7 @@ public class Brand {
         System.out.print("Enter activity category id:");
         activityCategoryId = sc.nextLine();
         System.out.print("Enter number of points for this activity:");
-        numOfPoints = sc.nextLine();
+        numOfPoints = sc.nextInt();
 
         int enteredValue = Helper.selectNextOption(sc, "Update RERule");
         CallableStatement statement = null;
@@ -143,20 +143,23 @@ public class Brand {
         } else {
             try {
                 //TODO: Change query as per our tables
-                statement = MainMenu.connection.prepareCall("{call update_rerule(?, ?, ?, ?)}");
-                statement.setString(1, rerCode);
-                statement.setString(2, activityCategoryId);
-                statement.setString(3, numOfPoints);
-                statement.registerOutParameter(4, Types.INTEGER);
+                statement = MainMenu.connection.prepareCall("{call update_rerule(?, ?, ?, ?, ?)}");
+                statement.setString(1, Login.userId);
+                statement.setString(2, rerCode);
+                statement.setString(3, activityCategoryId);
+                statement.setInt(4, numOfPoints);
+                statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
 
-                int result = statement.getInt(4);
+                int result = statement.getInt(5);
 
                 statement.close();
 
-                if (result == 0) {
+                if (result == 2) {
                     System.out.println("RERule with this code is not present.");
+                } else if(ret == 0) {
+                    System.out.println("Activity Category Code entered is invalid");
                 } else {
                     System.out.println("RERule has been updated successfully.");
                 }
