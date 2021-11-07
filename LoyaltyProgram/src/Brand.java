@@ -9,7 +9,7 @@ public class Brand {
     public static String lpType = "R", lpName = "";
 
     public static void brandPage() {
-        initialize();
+        Brand.intialize();
         Scanner sc = new Scanner(System.in);
         int enteredValue;
         boolean selected = false;
@@ -29,13 +29,13 @@ public class Brand {
                 selected = true;
 
                 if (!isEnrolled) {
-                    if (selection >= 2 && selection <= 5) {
+                    if (enteredValue >= 2 && enteredValue <= 5) {
                         System.out.println("Brand is not enrolled in a program yet. Please enroll first.");
                         selected = false;
                         continue;
                     }
                 } else {
-                    if (selection == 6 && isActive.equals("ACTIVE")) {
+                    if (enteredValue == 6 && isActive.equals("ACTIVE")) {
                         System.out.println("Loyalty program has been validated already and is in active state.");
                         selected = false;
                         continue;
@@ -77,7 +77,8 @@ public class Brand {
     }
     
     public static void addRERule() {
-        String rerCode, activityCategoryId, numOfPoints;
+        String rerCode, activityCategoryId;
+        int numOfPoints;
 
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter Reward Earning Rule code:");
@@ -103,7 +104,7 @@ public class Brand {
 
                 statement.execute();
 
-                int result = statement.getInt(5);
+                int ret = statement.getInt(5);
 
                 statement.close();
 
@@ -127,7 +128,8 @@ public class Brand {
     }
 
     public static void updateRERule() {
-        String rerCode, activityCategoryId, numOfPoints;
+        String rerCode, activityCategoryId;
+        int numOfPoints;
 
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter code of Reward Earning Rule that you want to update:");
@@ -175,15 +177,16 @@ public class Brand {
     }
 
     public static void addRRRule() {
-        String rrrCode, rewardCategoryId, numOfPoints;
+        String rrrCode, rewardCategoryId;
+        int numOfPoints;
 
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter Reward Redemption Rule code:");
-        rerCode = sc.nextLine();
+        rrrCode = sc.nextLine();
         System.out.print("Enter reward category id:");
-        activityCategoryId = sc.nextLine();
+        rewardCategoryId = sc.nextLine();
         System.out.print("Enter number of points for this reward:");
-        numOfPoints = sc.nextLine();
+        numOfPoints = sc.nextInt();
 
         int enteredValue = Helper.selectNextOption(sc, "Add RRRule");
         CallableStatement statement = null;
@@ -196,7 +199,7 @@ public class Brand {
                 statement.setString(1, Login.userId);
                 statement.setString(2, rrrCode);
                 statement.setString(3, rewardCategoryId);
-                statement.setString(4, numOfPoints);
+                statement.setInt(4, numOfPoints);
                 statement.registerOutParameter(5, Types.INTEGER);
 
                 statement.execute();
@@ -255,7 +258,7 @@ public class Brand {
 
                 if (result == 2) {
                     System.out.println("RRRule with this code is not present.");
-                } else if(ret == 0) {
+                } else if(result == 0) {
                     System.out.println("Reward Category Code entered is invalid");
                 } else {
                     System.out.println("RRRule has been updated successfully.");
@@ -273,7 +276,7 @@ public class Brand {
     public static void validateLoyaltyProgram() {
         CallableStatement statement = null;
         try {
-            statement = Home.connection.prepareCall("{call validate_loyalty_program(?, ?, ?)}");
+            statement = MainMenu.connection.prepareCall("{call validate_loyalty_program(?, ?, ?)}");
             statement.setString(1, Login.userId);
             statement.setString(2, lpType);
             statement.registerOutParameter(3, Types.INTEGER);
@@ -296,13 +299,13 @@ public class Brand {
             statement.close();
 
         } catch (SQLException e) {
-            Utility.close(statement);
+            Helper.close(statement);
             System.out.println("Loyalty Program could not be validated. Please try again.");
         }
     }
 
     private static void intialize() {
-        String sql = "select BRAND_LP_ID, TYPE, STATE from LOYALTY_PROGRAM where BRAND_LP_ID =  '" + Login.loggedInUserId + "'";
+        String sql = "select BRAND_LP_ID, TYPE, STATE from LOYALTY_PROGRAM where BRAND_LP_ID =  '" + Login.userId + "'";
 
         ResultSet rs = null;
         try {
