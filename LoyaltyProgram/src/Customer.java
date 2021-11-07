@@ -54,7 +54,7 @@ public class Customer {
         List<String> availableLoyaltyPrograms = new ArrayList<String>();
         List<String> availableLoyaltyProgramIds = new ArrayList<String>();
 
-        enteredValue = Helper.selectNextOption(sc, "enrollLoyaltyProgram");
+        int enteredValue = Helper.selectNextOption(sc, "enrollLoyaltyProgram");
 
         if (enteredValue==2){
             Customer.customerPage();
@@ -74,6 +74,8 @@ public class Customer {
 
             boolean correctValue = false;
             boolean customerIsEnrolled = true;
+            String LPId;
+            int LP_index;
             while (!correctValue && customerIsEnrolled) {
                 System.out.println("List of available loyalty programs: ");
 
@@ -102,10 +104,10 @@ public class Customer {
             String loyaltyProgramType;
             String tierStatus;
             String joinCategoryCode;
-            String walletId;
-            String activityId;
+            int walletId;
+            int activityId;
             try {
-                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_LP_ID=" + LPId;//name
+                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_LP_ID='" + LPId +"'";//name
                 ResultSet rs1 = MainMenu.statement.executeQuery(sqlLPTypeSelect);
                 PreparedStatement ps;
                 if (rs1.next()) {
@@ -124,7 +126,7 @@ public class Customer {
 
                 } else if (loyaltyProgramType.toLowerCase() == "T") {
                     try {
-                        String sqlTierSelect = "select * from TIER where BRAND_ID=" + LPId + " and PRECEDENCE=1";
+                        String sqlTierSelect = "select * from TIER where BRAND_ID='" + LPId + "' and PRECEDENCE=1";
                         ResultSet rs2 = MainMenu.statement.executeQuery(sqlTierSelect);
                         if (rs2.next()) {
                             tierStatus = rs2.getString("TIER_NAME");
@@ -174,7 +176,7 @@ public class Customer {
                 //find activity_id from activity table
                 try {
                     String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY";
-                    rs4 = MainMenu.statement.executeQuery(activityIdSelect);
+                    ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);
 
                     if (rs4.next()) {
                         activityId = rs4.getInt("MAX_ACT_ID");
@@ -185,8 +187,8 @@ public class Customer {
                 //entry into wallet_acitivity_bridgetable
                 try {
                     ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
-                    ps.setString(1, walletId);
-                    ps.setString(2, activityId);
+                    ps.setInt(1, walletId);
+                    ps.setInt(2, activityId);
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }
@@ -199,6 +201,7 @@ public class Customer {
 
     private static boolean checkIfCustomerEnrolled(String chosenLP){
         String sqlWalletSelect="select * from WALLET where CUST_ID="+Login.userId+" and BRAND_ID="+chosenLP;
+        ResultSet rs = MainMenu.statement.executeQuery(sqlWalletSelect);
 
         if(rs.next()) {
             return true;
@@ -207,7 +210,7 @@ public class Customer {
     }
 
     public static void viewWallet() {
-        String custId = Login.userId;
+        String customerId = Login.userId;
         Scanner sc = new Scanner(System.in);
         int enteredValue;
         do {
@@ -217,11 +220,11 @@ public class Customer {
                 customerPage();
             } else {
                 try {
-                    String walletSelect = "select * from WALLET where CUST_ID=" + custId;
+                    String walletSelect = "select * from WALLET where CUST_ID=" + customerId;
                     ResultSet rs = MainMenu.statement.executeQuery(walletSelect);
                     System.out.println("Wallet ID\tBrand ID\tCustomer ID\tPoints\tCumulative_pts\tTier Status");
                     while (rs.next()) {
-                        String walletId = rs.getString("WALLET_ID");
+                        int walletId = rs.getInt("WALLET_ID");
                         String brandId = rs.getString("BRAND_ID");
                         String custId = rs.getString("CUST_ID");
                         int points = rs.getInt("POINTS");
@@ -316,7 +319,7 @@ public class Customer {
             rewardActCategories.put(i++, rs.getString("ACTIVITY_NAME"));
         }
         System.out.println("Select one of the option: ");
-        for (Map.Entry<String, String> entry : rewardActCategories.entrySet()) {
+        for (Map.Entry<Integer, String> entry : rewardActCategories.entrySet()) {
             System.out.println(entry.getKey()+". "+entry.getValue());
             }
         selected_option = sc.nextInt();
@@ -342,7 +345,7 @@ public class Customer {
         // get activity_category_code from activity_category table
         System.out.println("Enter value for this activity");
         String activity_value=sc.nextLine();
-        int acc;
+        String acc;
         int points;
         String type;
         int wallet_points;
@@ -358,7 +361,7 @@ public class Customer {
                 String SQL_Activity_code = "SELECT GIFT_CARD_CODE " +
                         "FROM WALLET W, WALLET_GIFTCARD WG " +
                         "WHERE W.WALLET_ID=WG.WALLET_ID AND W.BRAND_ID= '"+brandId+"' AND W.CUST_ID='"+Login.userId+"'";
-                ResultSet rs = MainMenu.statement.executeQuery(SQL_Activity_code);
+                rs = MainMenu.statement.executeQuery(SQL_Activity_code);
             }
             catch(SQLException e)
             {
@@ -374,7 +377,7 @@ public class Customer {
 
             if(!giftCards.contains(gcc)) {
                 System.out.println("Please select a valid gift card!");
-                Customer.performRewardActivties();
+                Customer.performRewardActivities();
             }
 
             String deleteGcSql = "DELETE from WALLET_GIFTCARD where GIFT_CARD_CODE=?";
@@ -462,7 +465,7 @@ public class Customer {
             type = rs.getString("TYPE");
         }
 
-        String walletId;
+        int walletId;
         try
         {
             String SQL_RER_points = "SELECT WALLET_ID, POINTS, CUMULATIVE_PTS" +
@@ -476,7 +479,7 @@ public class Customer {
         }
         if(rs.next())
         {
-            walletId=rs.getString("WALLET_ID");
+            walletId=rs.getInt("WALLET_ID");
             wallet_points = rs.getInt("POINTS");
             cumulative_points = rs.getInt("CUMULATIVE_PTS");
         }
@@ -571,7 +574,7 @@ public class Customer {
         //entry into wallet_acitivity_bridgetable
         try {
             PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
-            ps.setString(1, walletId);
+            ps.setInt(1, walletId);
             ps.setInt(2, activityId);
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Integrity Constraint Violation");
@@ -768,7 +771,7 @@ public class Customer {
         }
 
         int walletPts;
-        String walletId;
+        int walletId;
         try
         {
             String SQL_WalletPts = "SELECT W.POINTS, W.WALLET_ID " +
@@ -782,7 +785,7 @@ public class Customer {
         }
         if(rs.next()) {
             walletPts = rs.getInt("POINTS");
-            walletId = rs.getString("WALLET_ID");
+            walletId = rs.getInt("WALLET_ID");
         } else {
             System.out.println("Wallet could not be found");
             redeemPoints();
@@ -796,7 +799,7 @@ public class Customer {
             {
                 PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET " +
                         "SET POINTS = " +(walletPts-points)+
-                        " WHERE WALLET_ID = '"+walletId+"' ");
+                        " WHERE WALLET_ID = "+walletId);
                 ps.executeUpdate();
             }
             catch(SQLException e)
@@ -848,7 +851,7 @@ public class Customer {
             //entry into wallet_acitivity_bridgetable
             try {
                 PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
-                ps.setString(1, walletId);
+                ps.setInt(1, walletId);
                 ps.setInt(2, activityId);
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
@@ -858,7 +861,7 @@ public class Customer {
             {
                 try {
                     PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
-                    ps.setString(1, walletId);
+                    ps.setInt(1, walletId);
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }
