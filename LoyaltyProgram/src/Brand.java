@@ -210,7 +210,7 @@ public class Brand {
 
                 if (result == 0) {
                     System.out.println("RRRule with this code already present.");
-                } else if(ret == 1) {
+                } else if(result == 1) {
                     System.out.println("RRRule added successfully.");
                 } else {
                     System.out.println("This reward type is not part of your loyalty program!");
