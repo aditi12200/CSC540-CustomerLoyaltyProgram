@@ -1,18 +1,22 @@
 import java.util.Scanner;
 
-
 public class ActivityType {
+    Map<Integer, String> actCategories=new HashMap();
     public static void activityTypePage() {
-        Scanner sc = new Scanner(System.in);
-        int enteredValue;
-        boolean goBack = false;
-        Map<Integer, String> actCategories=new HashMap();
 
         initialize();
 
+        displayOptions();
+
+    }
+
+    private static void displayOptions() {
+        Scanner sc = new Scanner(System.in);
+        int enteredValue;
+        boolean goBack = false;
         do {
             System.out.println("Choose one of the following options");
-            for (Map.Entry<String,String> entry : actCategories.entrySet()) {
+            for (Map.Entry<Integer,String> entry : actCategories.entrySet()) {
                 System.out.println(entry.getKey() + ". " + entry.getValue());
             }
             int nextOptNum=actCategories.size()+1;
@@ -43,11 +47,12 @@ public class ActivityType {
             }
         } catch (SQLException e) {
             System.out.println("Activity categories could not be fetched. Please try again.");
+            initialize();
         }
     }
 
     private static void addActivityType(String activityCategory) {
-        String sqlActCatSelect = "Select AT_ID from ACTIVITY_TYPE WHERE ACTIVITY NAME='"+activityCategory+"'";
+        String sqlActCatSelect = "Select AT_ID from ACTIVITY_TYPE WHERE ACTIVITY_NAME='"+activityCategory+"'";
         String acc;
         try {
             ResultSet rs = MainMenu.statement.executeQuery(sqlActCatSelect);
@@ -58,8 +63,10 @@ public class ActivityType {
             } else {
                 System.out.println("Activity Type could not be found. Please try again.");
             }
+            displayOptions();
         } catch (SQLException e) {
             System.out.println("Activity Type could not be found. Please try again.");
+            displayOptions();
         }
 
         String sql = "Insert into LP_ACT_CATEGORY(BRAND_ID, ACT_CATEGORY_CODE) values (?,?)";
@@ -74,10 +81,13 @@ public class ActivityType {
             } else {
                 System.out.println("Activity Type could not be added. Please try again.");
             }
+            displayOptions();
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Activity Type already present.");
+            displayOptions();
         } catch (SQLException e) {
-            System.out.println("Activity Type can not be added. Please try again.");
+            System.out.println("Activity Type could not be added. Please try again.");
+            displayOptions();
         }
     }
 
