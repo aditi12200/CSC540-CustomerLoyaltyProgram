@@ -17,7 +17,7 @@ public class Helper {
     }
 
     public static void close(Statement stmt) {
-        if (st != null) {
+        if (stmt != null) {
             try {
                 stmt.close();
             } catch (Throwable e) {
@@ -38,7 +38,7 @@ public class Helper {
 
     public static int selectNextOption(Scanner sc, String optionText) {
         boolean selected = false;
-        int enteredValue;
+        int enteredValue=0;
 
         do{
             System.out.println("Choose one of the following options");
