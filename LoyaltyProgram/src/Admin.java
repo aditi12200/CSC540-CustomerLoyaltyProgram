@@ -165,6 +165,7 @@ public class Admin {
                     System.out.println("Brand user id already exists. Please try again.");
                 } else {
                     System.out.println("Brand added successfully.");
+                    adminPage();
                 }
 
                 statement.close();
@@ -212,6 +213,7 @@ public class Admin {
                     System.out.println("Customer user id already exists. Please try again.");
                 } else {
                     System.out.println("Customer added successfully.");
+                    adminPage();
                 }
 
                 statement.close();
