@@ -47,4 +47,4 @@ b)	Functional Dependencies:
 8)	In Activity_type table, At_id is the primary key that identifies activity_name and visible parameter of the table.
 9)	In the Tier table, tier_name and brand_id together form the primary key which uniquely identifies precedence, points, and multiplier for that tier.
 10)	 In the table RE_Rules, brand_id and version_no together form the primary key which identifies RER_code, points, and activity_category_code.
-11)	 LP_Act_Category is a bridge table,
+11)  LP_Act_Category is a bridge table in which brand_id and activity_category_code is the primary key and acts as a bridge between the loyalty_program and activity_type table.
