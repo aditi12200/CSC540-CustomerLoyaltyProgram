@@ -1,0 +1,50 @@
+Final Report
+Customer Loyalty Marketplace Application
+CSC 540 - Database Application Programming
+Submitted by Team 28
+
+1)	Final ER Diagram
+
+
+Figure 1: ER diagram for customer loyalty program
+
+2)	2 SQL files are added in the documentation folder
+a)	DDL.sql – contains all the DDL statements (creating tables, sequences, triggers and procedures).
+b)	DML.sql – contains all the DML statements (Inserting into brands and all related tables for brands).
+
+3)	Constraints
+a)	Short description:
+A)	Procedures
+1)	admin_add_brand: This workflow is initiated by admin to add brand into the database. This procedure updates brand and user tables.
+2)	admin_add_customer: This workflow is initiated by admin to add brand into the database. This procedure updates customer and user tables.
+3)	add_brand: This procedure helps the brand to signup to the loyalty program and it affects brand and user tables.
+4)	add_customer: This procedure helps the customer to sign up to the loyalty program and it affects customer and user tables.
+5)	add_re_rule: This procedure is used by the brand to add Reward Earning Rules into the database. It affects RE_Rule table.
+6)	update_re_rule: This procedure is used by the brand to update Reward Earning Rules into the database. It affects RE_Rule table. It inserts a new row into the RE_Rule table by updating the version of the rule.
+7)	add_rr_rule: This procedure is used by the brand to add Reward Redeeming Rules into the database. It affects RR_Rule table.
+8)	update_rr_rule: This procedure is used by the brand to update Reward Redeeming Rules into the database. It affects RR_Rule table. It inserts a new row into the RR_Rule table by updating the version of the rule.
+9)	validate_loyalty_program: This procedure is checking if one Reward Earning Rule and one Reward Redeeming Rule is defined. It also checks if there is atleast one tier that is defined.
+
+B)	Constraints in java program
+1)	Activity_type: In this table, constraints are created to ensure that only visible activities are displayed to the user i.e., activities such as JOIN and REDEEM are not displayed as reward activities.
+2)	Tier: In this table, constraints are created to ensure that the number of tiers are between 1 and 3, points and multipliers are in the increasing order, tier names are non-empty, points are greater than 0 except the base tier and multiplier value is not less than 1.
+3)	RE_Rules (Add): In this, constraints are created to ensure that activity category code already exists, and that reward earning rule code does not exist in the table.
+4)	RR_Rules (Add): In this, constraints are created to ensure that reward category code already exists, and that reward redemption rule code does not exist in the table.
+5)	RE_Rules (Update): In this, constraints are created to ensure that reward earning rule exists and activity category code is valid.
+6)	RR_Rules (Update): In this, constraints are created to ensure that reward redeeming rule exists and reward category code is valid.
+7)	Enroll in Loyalty Program: This constraint ensures that the customer is not already enrolled in a particular brand. If not, then customer can be enrolled else gives user the message that the user is already enrolled in that loyalty program.
+8)	Purchase activity: This constraint is used when a gift card is used, ensure that the gift card is valid and mark the gift card as consumed.
+9)	Redeem: To redeem a reward that reward’s quantity should be greater than 0. This constraint ensures the same. It also ensures that the customer has enough points to redeem that reward. If the customer has points, then deduct the points from their wallet. If a gift card is redeemed, associate that gift card with customer’s wallet and reduce the number of quantities of reward by 1.
+
+b)	Functional Dependencies:
+1)	In Users table, user_id is the primary key that uniquely identifies the password and type of user.
+2)	In Customer table, cust_id is the primary key that identifies name, phone number and address.
+3)	In Brand table, brand_id is the primary key that identifies name, address and join date of the brand in the loyalty program.
+4)	In loyalty_program table, brand_lp_id is the primary key that identifies type and state of the loyalty program.
+5)	In wallet_activity table, wallet_id and activity_id together form the primary key.
+6)	In reward_type, rt_id is the primary key that identifies reward_name in the table.
+7)	In RR_Rules table, rrr_code is the primary key that identifies points, reward_category_code, brand_id and version_no.
+8)	In Activity_type table, At_id is the primary key that identifies activity_name and visible parameter of the table.
+9)	In the Tier table, tier_name and brand_id together form the primary key which uniquely identifies precedence, points, and multiplier for that tier.
+10)	 In the table RE_Rules, brand_id and version_no together form the primary key which identifies RER_code, points, and activity_category_code.
+11)  LP_Act_Category is a bridge table in which brand_id and activity_category_code is the primary key and acts as a bridge between the loyalty_program and activity_type table.
