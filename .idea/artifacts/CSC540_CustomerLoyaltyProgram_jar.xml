@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CSC540-CustomerLoyaltyProgram:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/group28_CustomerLoyaltyProgram_jar</output-path>
+    <root id="archive" name="CSC540-CustomerLoyaltyProgram.jar">
+      <element id="module-output" name="CSC540-CustomerLoyaltyProgram" />
+    </root>
+  </artifact>
+</component>

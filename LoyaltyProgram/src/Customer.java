@@ -74,7 +74,7 @@ public class Customer {
 
             boolean correctValue = false;
             boolean customerIsEnrolled = true;
-            String LPId;
+            String LPId="";
             int LP_index;
             while (!correctValue && customerIsEnrolled) {
                 System.out.println("List of available loyalty programs: ");
@@ -101,11 +101,11 @@ public class Customer {
             }
             //customer has chosen a new and correct loyalty program --> chosenLoyaltyProgram
             //Entry into wallet table assuming wallet_id is auto_generated
-            String loyaltyProgramType;
-            String tierStatus;
-            String joinCategoryCode;
-            int walletId;
-            int activityId;
+            String loyaltyProgramType="";
+            String tierStatus="";
+            String joinCategoryCode="";
+            int walletId=0;
+            int activityId=0;
             try {
                 String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_LP_ID='" + LPId +"'";//name
                 ResultSet rs1 = MainMenu.statement.executeQuery(sqlLPTypeSelect);
@@ -136,9 +136,9 @@ public class Customer {
                         ps.setString(2, Login.userId);
                         ps.setInt(3, 0);
                         ps.setString(4, tierStatus);
-                    } catch (SQLException e) {
-                        System.out.println("Incorrect Brand ID");
                     } catch (SQLIntegrityConstraintViolationException e) {
+                        System.out.println("Incorrect Brand ID");
+                    } catch (SQLException e) {
                         System.out.println("Incorrect Brand ID");
                     }
                 }
@@ -154,10 +154,10 @@ public class Customer {
                     ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                     ps.setString(2, joinCategoryCode);
                     ps.setString(3, "JOIN");
-                } catch (SQLException e) {
-                    System.out.println("SQL Exception encountered");
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
+                }catch (SQLException e) {
+                    System.out.println("SQL Exception encountered");
                 }
 
                 //find wallet_id of customer for current brand
@@ -331,7 +331,7 @@ public class Customer {
     }
 
     public static String getAccCode(String value_option){
-        String acc;
+        String acc = "";
         ResultSet rs;
         try
         {
@@ -356,7 +356,7 @@ public class Customer {
 
     public static int getPoints(String acc, String brandId){
         ResultSet rs;
-        int points;
+        int points = 0;
         try
         {
             String SQL_RER_points = "SELECT POINTS FROM RE_RULES" +
@@ -379,7 +379,7 @@ public class Customer {
     }
 
     public static String getLpType(String brandId){
-        String type;
+        String type = "";
         ResultSet rs;
         try
         {
@@ -401,7 +401,7 @@ public class Customer {
     }
 
     public static String getTierStatus(String brandId){
-        String tier_status;
+        String tier_status = "";
         ResultSet rs;
         try
         {
@@ -423,7 +423,7 @@ public class Customer {
     }
 
     public static int getMultiplier(String brandId, String tier_status){
-        int multiplier;
+        int multiplier = 0;
         ResultSet rs;
         try
         {
@@ -484,7 +484,7 @@ public class Customer {
 
     public static void updateWalletActivity(int walletId) {
         ResultSet rs;
-        int activityId;
+        int activityId = 0;
         try {
             String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY";
             ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);
@@ -524,7 +524,7 @@ public class Customer {
         }
 
         boolean value = false;
-        String selected_value;
+        String selected_value="";
         while(!value)
         {
             System.out.println("List of Brand in which you have enrolled:");
@@ -541,7 +541,7 @@ public class Customer {
                 System.out.println("Incorrect Brand selected. Please select from the list.");
             }
         }
-        String brandId;
+        String brandId = "";
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
         for (Map.Entry<String, String> entry : brands.entrySet()) {
             if (entry.getValue().equals(selected_value)) {
@@ -592,12 +592,12 @@ public class Customer {
         String acc;
         int points;
         String type;
-        int wallet_points;
-        int cumulative_points;
+        int wallet_points = 0;
+        int cumulative_points = 0;
         String tier_status;
         int multiplier;
-        int Total;
-        int Sumtotal;
+        int Total = 0;
+        int Sumtotal = 0;
 
         if(gcc>0) {
             List<Integer> giftCards;
@@ -613,7 +613,7 @@ public class Customer {
         acc = getAccCode(value_option);
         points = getPoints(acc,brandId);
         type = getLpType(brandId);
-        int walletId;
+        int walletId = 0;
         try
         {
             String SQL_RER_points = "SELECT WALLET_ID, POINTS, CUMULATIVE_PTS" +
@@ -671,7 +671,7 @@ public class Customer {
             while(rs.next()) {
                 tiername_pts.put(rs.getInt("POINTS"),rs.getString("TIER_NAME"));
             }
-            String maxTier;
+            String maxTier = "";
             for(Map.Entry<Integer, String> entry : tiername_pts.entrySet())
             {
                 if(entry.getKey()<=Total)
@@ -724,7 +724,7 @@ public class Customer {
         }
 
         boolean value = false;
-        String selected_value;
+        String selected_value = "";
         while(!value)
         {
             //System.out.println("List of Brand in which you have enrolled:");
@@ -741,7 +741,7 @@ public class Customer {
                 System.out.println("Incorrect Brand selected. Please select from the list.");
             }
         }
-        String brandId;
+        String brandId = null;
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
         for (Map.Entry<String, String> entry : brands_rp.entrySet()) {
             if (entry.getValue().equals(selected_value)) {
@@ -802,8 +802,9 @@ public class Customer {
 
 
         value = false;
-        String selected_reward, R_C_C;
-        int points;
+        String selected_reward = null;
+        String R_C_C = null;
+        int points = 0;
         //TODO: Identifier, Name
         while(!value)
         {
@@ -823,7 +824,7 @@ public class Customer {
         }
 
         //CODE TO FETCH REWARD ACTIVTIES FOR SELECTED BRAND
-        int version;
+        int version = 0;
         for (Map.Entry<String, Integer> entry : brands_rrr.entrySet()) {
             if (entry.getKey().equals(selected_reward)) {
                 version = entry.getValue();
@@ -849,8 +850,8 @@ public class Customer {
             System.out.println("Activity Type can not be selected, Please try again.");
         }
 
-        int walletPts;
-        int walletId;
+        int walletPts = 0;
+        int walletId = 0;
         try
         {
             String SQL_WalletPts = "SELECT W.POINTS, W.WALLET_ID " +
@@ -899,7 +900,7 @@ public class Customer {
                 System.out.println("Reward Quantity could not be updated");
             }
 
-            String redeemCategoryCode;
+            String redeemCategoryCode = null;
             try {
                 String sqlActCategorySelect = "select AT_ID from ACTIVITY_TYPE where ACTIVITY_NAME='REDEEM'";
                 ResultSet rs3 = MainMenu.statement.executeQuery(sqlActCategorySelect);
@@ -917,7 +918,7 @@ public class Customer {
                 System.out.println("SQL Exception encountered");
             }
 
-            int activityId;
+            int activityId = 0;
             try {
                 String activityIdSelect = "select MAX(ACT_ID) AS MAX_ACT_ID from ACTIVITY";
                 ResultSet rs4 = MainMenu.statement.executeQuery(activityIdSelect);

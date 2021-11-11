@@ -8,8 +8,8 @@ public class MainMenu {
     public static final String user = "araghut";
     public static final String passwd = "200421320";
 
-    public static Connection connection = null;
-    public static Statement statement = null;
+    public static Connection connection;
+    public static Statement statement;
 
     public static void main(String[] args) {
         try {
