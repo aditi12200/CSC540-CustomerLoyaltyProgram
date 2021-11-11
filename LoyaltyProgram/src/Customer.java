@@ -592,12 +592,12 @@ public class Customer {
         String acc;
         int points;
         String type;
-        int wallet_points = 0;
-        int cumulative_points = 0;
+        int wallet_points;
+        int cumulative_points;
         String tier_status;
         int multiplier;
-        int Total = 0;
-        int Sumtotal = 0;
+        int Total;
+        int Sumtotal;
 
         if(gcc>0) {
             List<Integer> giftCards;
@@ -613,7 +613,7 @@ public class Customer {
         acc = getAccCode(value_option);
         points = getPoints(acc,brandId);
         type = getLpType(brandId);
-        int walletId = 0;
+        int walletId;
         try
         {
             String SQL_RER_points = "SELECT WALLET_ID, POINTS, CUMULATIVE_PTS" +
@@ -625,7 +625,37 @@ public class Customer {
                 walletId=rs.getInt("WALLET_ID");
                 wallet_points = rs.getInt("POINTS");
                 cumulative_points = rs.getInt("CUMULATIVE_PTS");
+
+                // if not a tiered program add into the wallet
+                if (type.toLowerCase().equals('r'))
+                {
+                    Total = points + wallet_points;
+                    Sumtotal = cumulative_points + Total;
+                    updateWallet(Total,Sumtotal,brandId);
+                    updateActivity(acc,activity_value);
+                    updateWalletActivity(walletId);
+
+                }
+                // find out if its a tiered program, if so get the tier and the multiplier
+                if (type.toLowerCase().equals('t'))
+                {
+                    //from wallet get the tier status
+                    tier_status = getTierStatus(brandId);
+
+                    //from tier table, brandid , tier_status, get multiplier
+                    multiplier = getMultiplier(brandId,tier_status);
+
+                    Total = wallet_points + multiplier * points;
+                    Sumtotal = cumulative_points+Total;
+                    checkForTierStatusUpgrade(Total,brandId,tier_status,Login.userId);
+                    updateWallet(Total,Sumtotal,brandId);
+                    updateActivity(acc,activity_value);
+                    updateWalletActivity(walletId);
+                }
+
+
             }
+
 
         }
         catch(SQLException e)
@@ -634,30 +664,6 @@ public class Customer {
             performRewardActivities();
         }
 
-        // if not a tiered program add into the wallet
-        if (type.toLowerCase().equals('r'))
-        {
-            Total = points + wallet_points;
-            Sumtotal = cumulative_points + Total;
-
-        }
-        // find out if its a tiered program, if so get the tier and the multiplier
-        if (type.toLowerCase().equals('t'))
-        {
-            //from wallet get the tier status
-            tier_status = getTierStatus(brandId);
-
-            //from tier table, brandid , tier_status, get multiplier
-            multiplier = getMultiplier(brandId,tier_status);
-
-            Total = wallet_points + multiplier * points;
-            Sumtotal = cumulative_points+Total;
-            checkForTierStatusUpgrade(Total,brandId,tier_status,Login.userId);
-        }
-
-        updateWallet(Total,Sumtotal,brandId);
-        updateActivity(acc,activity_value);
-        updateWalletActivity(walletId);
 
     }
 
@@ -715,7 +721,7 @@ public class Customer {
         }
         catch(SQLException e)
         {
-            System.out.println("Activity Type can not be selected, Please try again.");
+            System.out.println("Brands could not be fetched. Please try again.");
         }
         if(brands_rp.isEmpty())
         {
@@ -754,8 +760,8 @@ public class Customer {
         try
         {
             String SQL_Wallet_rp = "SELECT REWARD_CATEGORY_CODE" +
-                    "FROM REWARD" +
-                    "WHERE S.BRAND_ID = '"+brandId+"' AND QUANTITY > 0";
+                    " FROM REWARD" +
+                    " WHERE S.BRAND_ID = '"+brandId+"' AND QUANTITY > 0";
             rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
             while(rs.next())
             {
@@ -764,7 +770,7 @@ public class Customer {
         }
         catch(SQLException e)
         {
-            System.out.println("Activity Type can not be selected, Please try again.");
+            System.out.println("Reward categories could not be fetched. Please try again.");
         }
         if(brands_rcc.size() == 0)
         {
@@ -797,7 +803,8 @@ public class Customer {
         }
         catch(SQLException e)
         {
-            System.out.println("Activity Type can not be selected, Please try again.");
+            System.out.println("Reward Earning Rule could not be fetched. Please try again.");
+            redeemPoints();
         }
 
 
@@ -843,11 +850,15 @@ public class Customer {
             {
                 points = rs.getInt("POINTS");
                 R_C_C = rs.getString("RT_ID");
+            } else {
+                System.out.println("Points for redeeming this reward could not be fetched. Please try again.");
+                redeemPoints();
             }
         }
         catch(SQLException e)
         {
-            System.out.println("Activity Type can not be selected, Please try again.");
+            System.out.println("Points for redeeming this reward could not be fetched. Please try again.");
+            redeemPoints();
         }
 
         int walletPts = 0;
@@ -868,7 +879,8 @@ public class Customer {
         }
         catch(SQLException e)
         {
-            System.out.println("Activity Type can not be selected, Please try again.");
+            System.out.println("Wallet could not be found. Please try again.");
+            redeemPoints();
         }
 
 
@@ -886,6 +898,7 @@ public class Customer {
             catch(SQLException e)
             {
                 System.out.println("Wallet could not be updated");
+                redeemPoints();
             }
 
             try
@@ -898,6 +911,7 @@ public class Customer {
             catch(SQLException e)
             {
                 System.out.println("Reward Quantity could not be updated");
+                redeemPoints();
             }
 
             String redeemCategoryCode = null;
@@ -914,8 +928,10 @@ public class Customer {
                 ps.setString(3, R_C_C);
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
+                redeemPoints();
             } catch (SQLException e) {
                 System.out.println("SQL Exception encountered");
+                redeemPoints();
             }
 
             int activityId = 0;
@@ -928,6 +944,7 @@ public class Customer {
                 }
             } catch (SQLException e) {
                 System.out.println("SQL Exception encountered");
+                redeemPoints();
             }
             //entry into wallet_acitivity_bridgetable
             try {
@@ -936,8 +953,10 @@ public class Customer {
                 ps.setInt(2, activityId);
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
+                redeemPoints();
             } catch (SQLException e) {
                 System.out.println("could not assign activity to wallet");
+                redeemPoints();
             }
 
             if(selected_reward.toLowerCase().equals("gift card"))
@@ -947,8 +966,10 @@ public class Customer {
                     ps.setInt(1, walletId);
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
+                    redeemPoints();
                 } catch(SQLException e) {
                     System.out.println("Could not assign a gift card");
+                    redeemPoints();
                 }
             }
         }
