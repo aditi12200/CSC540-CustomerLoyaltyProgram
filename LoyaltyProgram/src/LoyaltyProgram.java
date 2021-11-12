@@ -65,17 +65,22 @@ public class LoyaltyProgram {
         PreparedStatement ps=null;
         try {
 
-            ps = MainMenu.connection.prepareStatement("Insert into LOYALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?,?)");
+            ps = MainMenu.connection.prepareStatement("Insert into LOYALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?)");
             ps.setString(1, Login.userId);
             ps.setString(2, lpType);
-            ps.execute();
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Loyalty Program has been added successfully.");
+            } else {
+                System.out.println("Loyalty Program could not be added. Please try again.");
+            }
 
             LoyaltyProgram.lpType = lpType;
 
             ps.close();
 
-            System.out.println("Loyalty Program has been successfully added, please proceed to add activity types, " +
-                    "reward types, and corresponding rules for activating the program.");
+            //System.out.println("Loyalty Program has been successfully added, please proceed to add activity types, " +
+            //        "reward types, and corresponding rules for activating the program.");
 
         } catch (SQLException e) {
             Helper.close(statement);
