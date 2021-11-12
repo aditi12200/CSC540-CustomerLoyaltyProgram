@@ -248,7 +248,7 @@ public class Customer {
     public static Map<String, String> fetchBrands() {
         ResultSet rs;
         Scanner sc = new Scanner(System.in);
-        Map<String, String> brands = new HashMap();
+        Map<String, String> brands = new HashMap<String, String>();
         System.out.println("The Brands in Loyalty Program in which you have enrolled are:");
         try
         {
@@ -270,7 +270,7 @@ public class Customer {
     public static Map<Integer,String> getRewardActForBrand(String brandId) {
         int i=1;
         ResultSet rs;
-        Map<Integer,String> rewardActCategories = new HashMap();
+        Map<Integer,String> rewardActCategories = new HashMap<Integer,String>();
         try
         {
             String SQL_Activity_name = "SELECT A.ACTIVITY_NAME " +
@@ -289,7 +289,7 @@ public class Customer {
     }
 
     public static List<Integer> getGiftCardForCustomer(String brandId){
-        List<Integer> giftCards=new ArrayList();
+        List<Integer> giftCards=new ArrayList<Integer>();
         ResultSet rs;
         try
         {
@@ -515,7 +515,7 @@ public class Customer {
         ResultSet rs;
         Scanner sc = new Scanner(System.in);
         //PreparedStatement pstmt = null;
-        Map<String, String> brands = new HashMap();
+        Map<String, String> brands = new HashMap<String, String>();
         brands = fetchBrands();
         if(brands.isEmpty())
         {
@@ -553,7 +553,7 @@ public class Customer {
         // and then get reward activity names from the reward category table.
         //TODO: Change this to fetch from RER table instead!
         //Assuming rs contains activity category names
-        Map<Integer, String> rewardActCategories=new HashMap();
+        Map<Integer, String> rewardActCategories=new HashMap<Integer, String>();
         rewardActCategories = getRewardActForBrand(brandId);
         if(rewardActCategories.isEmpty()){
             System.out.println("No reward activities found.");
@@ -670,7 +670,7 @@ public class Customer {
     public static void checkForTierStatusUpgrade(int Total, String brandId, String tier_status, String custId){
         String getTierPoints = "select TIER_NAME, POINTS from TIER where BRAND_ID ='"+brandId+"'";
         ResultSet rs;
-        Map<Integer, String> tiername_pts = new TreeMap(Collections.reverseOrder());
+        Map<Integer, String> tiername_pts = new TreeMap<Integer, String>(Collections.reverseOrder());
         try
         {
             rs = MainMenu.statement.executeQuery(getTierPoints);
@@ -706,7 +706,7 @@ public class Customer {
         ResultSet rs;
         Scanner sc = new Scanner(System.in);
         //PreparedStatement pstmt = null;
-        Map<String, String> brands_rp = new HashMap();
+        Map<String, String> brands_rp = new HashMap<String, String>();
         System.out.println("The Brands in Loyalty Program in which you have enrolled are:");
         try
         {
@@ -756,7 +756,7 @@ public class Customer {
             }
         }
 
-        List<String> brands_rcc = new ArrayList();
+        List<String> brands_rcc = new ArrayList<String>();
         try
         {
             String SQL_Wallet_rp = "SELECT REWARD_CATEGORY_CODE" +
@@ -787,7 +787,7 @@ public class Customer {
         sb.append(")");
         String str = sb.toString();
 
-        Map<String, Integer> brands_rrr = new HashMap();
+        Map<String, Integer> brands_rrr = new HashMap<String, Integer>();
         //from the RRR table figure out which rewards are supported for this brand and display that
         try
         {

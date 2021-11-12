@@ -3,7 +3,7 @@ import java.sql.*;
 import java.util.*;
 
 public class ActivityType {
-    public static Map<Integer, String> actCategories=new HashMap();
+    public static Map<Integer, String> actCategories=new HashMap<Integer, String>();
     public static void activityTypePage() {
 
         initialize();
