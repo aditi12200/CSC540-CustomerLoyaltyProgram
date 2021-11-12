@@ -4,8 +4,8 @@ import java.sql.*;
 
 
 public class RewardType {
-    public static Map<Integer, String> rewardCategories=new HashMap();
-    public static Map<String, String> rewardIdCatMap=new HashMap();
+    public static Map<Integer, String> rewardCategories=new HashMap<Integer, String>();
+    public static Map<String, String> rewardIdCatMap=new HashMap<String, String>();
 
     public static void rewardTypePage() {
         Scanner sc = new Scanner(System.in);

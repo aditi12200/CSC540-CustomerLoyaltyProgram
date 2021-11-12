@@ -243,7 +243,7 @@ public class ShowQuery {
                     "HAVING SUM(POINTS)<500";
             rs = MainMenu.statement.executeQuery(sql);
 
-            List<String> brandIds=new ArrayList();
+            List<String> brandIds=new ArrayList<String>();
             while(rs.next()) {
                 if(rs.getInt("SUMPOINTS") < 500) {
                     brandIds.add(rs.getString("BRAND_ID"));
