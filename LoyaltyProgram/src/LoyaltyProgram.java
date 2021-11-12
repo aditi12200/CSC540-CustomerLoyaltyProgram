@@ -65,7 +65,7 @@ public class LoyaltyProgram {
         PreparedStatement ps=null;
         try {
 
-            ps = MainMenu.connection.prepareStatement("Insert into LOTALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?,?)");
+            ps = MainMenu.connection.prepareStatement("Insert into LOYALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?,?)");
             ps.setString(1, Login.userId);
             ps.setString(2, lpType);
             ps.execute();
