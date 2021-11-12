@@ -146,7 +146,7 @@ public class Brand {
             brandPage();
         } else {
             try {
-                statement = MainMenu.connection.prepareCall("{call update_rerule(?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call update_re_rule(?, ?, ?, ?, ?)}");
                 statement.setString(1, Login.userId);
                 statement.setString(2, rerCode);
                 statement.setString(3, activityCategoryId);
@@ -195,7 +195,7 @@ public class Brand {
             brandPage();
         } else {
             try {
-                statement = MainMenu.connection.prepareCall("{call add_rrrule(?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call add_rr_rule(?, ?, ?, ?, ?)}");
                 statement.setString(1, Login.userId);
                 statement.setString(2, rrrCode);
                 statement.setString(3, rewardCategoryId);
@@ -243,7 +243,7 @@ public class Brand {
             brandPage();
         } else {
             try {
-                statement = MainMenu.connection.prepareCall("{call update_rrrule(?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call update_rr_rule(?, ?, ?, ?, ?)}");
                 statement.setString(1, Login.userId);
                 statement.setString(2, rrrCode);
                 statement.setString(3, rewardCategoryId);
