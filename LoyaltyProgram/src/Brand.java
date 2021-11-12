@@ -95,7 +95,7 @@ public class Brand {
             brandPage();
         } else {
             try {
-                statement = MainMenu.connection.prepareCall("{call add_rerule(?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call add_re_rule(?, ?, ?, ?, ?)}");
                 statement.setString(1, Login.userId);
                 statement.setString(2, rerCode);
                 statement.setString(3, activityCategoryId);
@@ -113,7 +113,7 @@ public class Brand {
                 } else if(ret == 1) {
                     System.out.println("RERule added successfully.");
                 } else if(ret == 2) {
-                    System.out.println("This activty type is not part of your loyalty program!");
+                    System.out.println("This activity type is not part of your loyalty program!");
                 } else {
                     System.out.println("RERule could not be added. Please try again.");
                 }
