@@ -647,7 +647,7 @@ public class Customer {
 
                     Total = wallet_points + multiplier * points;
                     Sumtotal = cumulative_points+Total;
-                    checkForTierStatusUpgrade(Total,brandId,tier_status,Login.userId);
+                    checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
                     updateWallet(Total,Sumtotal,brandId);
                     updateActivity(acc,activity_value);
                     updateWalletActivity(walletId);
