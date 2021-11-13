@@ -724,7 +724,7 @@ public class Customer {
             }
         }
         catch(SQLException e)
-        {
+        {   e.printStackTrace();
             System.out.println("could not fetch Wallet Activities");
             performRewardActivities();
         }
