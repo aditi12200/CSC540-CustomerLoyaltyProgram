@@ -53,7 +53,7 @@ public class Tier {
         int tiers = 0;
 
         do {
-            System.out.print("Enter no. of tiers(minimum 1 and maximum 3): ");
+            System.out.println("Enter no. of tiers(minimum 1 and maximum 3): ");
             tiers = sc.nextInt();
 
             if (tiers > 0 && tiers < 4) {
@@ -75,14 +75,13 @@ public class Tier {
 
             for (int i = 0; i < tiers; i++) {
                 sc.nextLine();
-                System.out.print("Enter Tiers in increasing order of precedence");
-                sc.nextLine();
-                System.out.print("Enter Tier" + (i + 1) + " Name:");
+                System.out.println("Enter Tiers in increasing order of precedence");
+                System.out.println("Enter Tier " + (i + 1) + " Name:");
                 tierName = sc.nextLine();
-                if (i != 1) {
-                    System.out.print("Enter Tier" + (i + 1) + " Points Required:");
+                if (i != 0) {
+                    System.out.println("Enter Tier" + (i + 1) + " Points Required:");
                     tierPoint = sc.nextInt();
-                    System.out.print("Enter Tier" + (i + 1) + " Points Multiplier:");
+                    System.out.println("Enter Tier" + (i + 1) + " Points Multiplier:");
                     tierMultiplier = sc.nextInt();
                 } else {
                     System.out.println("Points required will be 0 for base tier.");

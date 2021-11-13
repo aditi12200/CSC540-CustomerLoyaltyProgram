@@ -78,7 +78,7 @@ public class Admin {
                     if (rs.next()) {
                         String customerName = rs.getString("NAME");
                         String customerAddress = rs.getString("ADDRESS");
-                        String customerPhone = rs.getString("PHONENUMBER");
+                        String customerPhone = rs.getString("PHONENO");
 
                         System.out.println("Customer UserId: " + customerUserId);
                         System.out.println("Customer Name: " + customerName);
