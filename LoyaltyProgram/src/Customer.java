@@ -515,7 +515,7 @@ public class Customer {
         try
         {
             PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET" +
-                    " SET POINTS = " +Total+ ", CUMULATIVE_PTS = "+Sumtotal+
+                    " SET POINTS =" +Total+ ", CUMULATIVE_PTS = "+Sumtotal+
                     " WHERE CUST_ID = '"+Login.userId+"' AND BRAND_ID = '"+brandId+"'");
             ps.executeUpdate();
         }
@@ -714,16 +714,14 @@ public class Customer {
 
                     Total = wallet_points + multiplier * points;
                     Sumtotal = cumulative_points+Total;
-                    checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
+//                    checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
                     updateWallet(Total,Sumtotal,brandId);
                     updateActivity(acc,activity_value);
                     updateWalletActivity(walletId);
                 }
-
-
+            }else{
+                System.out.println("could not fetch wallet information");
             }
-
-
         }
         catch(SQLException e)
         {
