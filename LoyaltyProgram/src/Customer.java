@@ -175,6 +175,7 @@ public class Customer {
                             enrollLoyaltyProgram();
                         }
                     } catch (SQLIntegrityConstraintViolationException e) {
+                        e.printStackTrace();
                         System.out.println("Wallet already exists");
                         enrollLoyaltyProgram();
                     } catch (SQLException e) {
