@@ -1021,7 +1021,7 @@ public class Customer {
                 PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
                 ps.setInt(1, walletId);
                 ps.setInt(2, activityId);
-                ps.executeUpdate()
+                ps.executeUpdate();
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation in Wallet Activity Table");
                 redeemPoints();
