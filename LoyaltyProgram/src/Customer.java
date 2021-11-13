@@ -996,10 +996,11 @@ public class Customer {
                 ps.setString(3, R_C_C);
                 ps.executeUpdate();
             } catch (SQLIntegrityConstraintViolationException e) {
-                System.out.println("Integrity Constraint Violation");
+                e.printStackTrace();
+                System.out.println("Integrity Constraint Violation in Activity Table");
                 redeemPoints();
             } catch (SQLException e) {
-                System.out.println("SQL Exception encountered");
+                System.out.println("Activity could not be logged into Activity Table");
                 redeemPoints();
             }
 
@@ -1012,7 +1013,7 @@ public class Customer {
                     activityId = rs4.getInt("MAX_ACT_ID");
                 }
             } catch (SQLException e) {
-                System.out.println("SQL Exception encountered");
+                System.out.println("SQL Exception encountered while fetching latest redeem activity");
                 redeemPoints();
             }
             //entry into wallet_acitivity_bridgetable
@@ -1020,11 +1021,12 @@ public class Customer {
                 PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
                 ps.setInt(1, walletId);
                 ps.setInt(2, activityId);
+                ps.executeUpdate()
             } catch (SQLIntegrityConstraintViolationException e) {
-                System.out.println("Integrity Constraint Violation");
+                System.out.println("Integrity Constraint Violation in Wallet Activity Table");
                 redeemPoints();
             } catch (SQLException e) {
-                System.out.println("could not assign activity to wallet");
+                System.out.println("Could not assign activity to wallet");
                 redeemPoints();
             }
 
@@ -1033,8 +1035,9 @@ public class Customer {
                 try {
                     PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
                     ps.setInt(1, walletId);
+                    ps.executeUpdate();
                 } catch (SQLIntegrityConstraintViolationException e) {
-                    System.out.println("Integrity Constraint Violation");
+                    System.out.println("Integrity Constraint Violation in Wallet giftcard table");
                     redeemPoints();
                 } catch(SQLException e) {
                     System.out.println("Could not assign a gift card");
