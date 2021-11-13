@@ -478,6 +478,9 @@ public class Customer {
             if(rs.next())
             {
                 tier_status = rs.getString("TIER_STATUS");
+            } else {
+                System.out.println("Tier Status could not be fetched");
+                performRewardActivities();
             }
         }
         catch(SQLException e)
@@ -500,6 +503,9 @@ public class Customer {
             if(rs.next())
             {
                 multiplier = rs.getInt("MULTIPLIER");
+            } else{
+                System.out.println("Multiplier could not be fetched");
+                performRewardActivities();
             }
         }
         catch(SQLException e)
