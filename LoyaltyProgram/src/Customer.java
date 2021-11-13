@@ -426,9 +426,9 @@ public class Customer {
         try
         {
             String SQL_RER_points = "SELECT POINTS FROM RE_RULES" +
-                    " WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"' AND VERSION_NO = SELECT MAX(VERSION_NO) " +
+                    " WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"' AND VERSION_NO = (SELECT MAX(VERSION_NO)" +
                     "FROM RE_RULES" +
-                    " WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"'";
+                    " WHERE ACT_CATEGORY_CODE = '"+acc+"' AND BRAND_ID = '"+brandId+"')";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
             if(rs.next())
             {
