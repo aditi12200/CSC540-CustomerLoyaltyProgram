@@ -97,17 +97,21 @@ public class Customer {
                     chosenLoyaltyProgram = sc.nextLine();
 
                     correctValue = availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
-                    LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
-                    LPId = availableLoyaltyProgramIds.get(LP_index);
+                    if (correctValue){
+                        LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
+                        LPId = availableLoyaltyProgramIds.get(LP_index);
 
-                    customerIsEnrolled = checkIfCustomerEnrolled(LPId);
-                    if (!correctValue) {
+                        customerIsEnrolled = checkIfCustomerEnrolled(LPId);
+
+                        if (customerIsEnrolled) {
+                            System.out.println("You are already enrolled in the loyalty program.");
+                            Customer.customerPage();
+                        }
+                    }
+                    else {
                         System.out.println("Chosen loyalty program doesn't exist. Choose again.");
                     }
-                    if (customerIsEnrolled) {
-                        System.out.println("You are already enrolled in the loyalty program.");
-                        Customer.customerPage();
-                    }
+
                 }
             }
             //customer has chosen a new and correct loyalty program --> chosenLoyaltyProgram
