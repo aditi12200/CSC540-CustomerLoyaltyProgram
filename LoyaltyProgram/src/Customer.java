@@ -160,6 +160,9 @@ public class Customer {
                         ResultSet rs2 = MainMenu.statement.executeQuery(sqlTierSelect);
                         if (rs2.next()) {
                             tierStatus = rs2.getString("TIER_NAME");
+                        } else{
+                            System.out.println("No tier Name found");
+                            enrollLoyaltyProgram();
                         }
                         ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS,TIER_STATUS) values (?,?,?,?)");
                         ps.setString(1, LPId);
@@ -167,7 +170,7 @@ public class Customer {
                         ps.setInt(3, 0);
                         ps.setString(4, tierStatus);
                         int row=ps.executeUpdate();
-                        if(row<=0){
+                        if(row==0){
                             System.out.println("Could not create a wallet");
                             enrollLoyaltyProgram();
                         }
