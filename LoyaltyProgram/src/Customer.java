@@ -912,7 +912,7 @@ public class Customer {
                 points = rs.getInt("POINTS");
                 R_C_C = rs.getString("RT_ID");
             } else {
-                System.out.println("Points for redeeming this reward could not be fetched. Please try again.");
+                System.out.println("Points for redeeming this reward could not be fetched.");
                 redeemPoints();
             }
         }
@@ -934,7 +934,7 @@ public class Customer {
                 walletPts = rs.getInt("POINTS");
                 walletId = rs.getInt("WALLET_ID");
             } else {
-                System.out.println("Wallet could not be found");
+                System.out.println("Wallet could not be found.");
                 redeemPoints();
             }
         }
@@ -987,6 +987,7 @@ public class Customer {
                 ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 ps.setString(2, redeemCategoryCode);
                 ps.setString(3, R_C_C);
+                ps.executeUpdate();
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Integrity Constraint Violation");
                 redeemPoints();
