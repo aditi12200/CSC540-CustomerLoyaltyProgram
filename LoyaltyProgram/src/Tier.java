@@ -71,11 +71,9 @@ public class Tier {
 
         do {
             String tierName = "base";
-            int tierPoint, tierMultiplier;
+            int tierPoint = 0, tierMultiplier = 1;
 
             for (int i = 0; i < tiers; i++) {
-                tierPoint=0;
-                tierMultiplier=1;
                 sc.nextLine();
                 System.out.println("Enter Tiers in increasing order of precedence");
                 System.out.println("Enter Tier " + (i + 1) + " Name:");
@@ -85,14 +83,16 @@ public class Tier {
                     tierPoint = sc.nextInt();
                     System.out.println("Enter Tier " + (i + 1) + " Points Multiplier:");
                     tierMultiplier = sc.nextInt();
+                    tierNames[i] = tierName;
+                    tierPoints[i] = tierPoint;
+                    tierMultipliers[i] = tierMultiplier;
                 } else {
                     System.out.println("Points required will be 0 for base tier.");
                     System.out.println("Points multiplier will be 1 for base tier.");
+                    tierNames[i] = tierName;
+                    tierPoints[i] = 0;
+                    tierMultipliers[i] = 1;
                 }
-
-                tierNames[i] = tierName;
-                tierPoints[i] = tierPoint;
-                tierMultipliers[i] = tierMultiplier;
             }
 
             if (validateTier(tierNames, tierPoints, tierMultipliers, tiers)) {
