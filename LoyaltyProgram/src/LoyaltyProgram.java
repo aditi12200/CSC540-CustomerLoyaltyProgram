@@ -13,7 +13,7 @@ public class LoyaltyProgram {
         boolean selected = false;
         if(checkIfBrandIsEnrolled()){
             System.out.println("Brand is already enrolled in a Loyalty Program");
-            enteredValue = Helper.selectNextOption(sc, "Add Activity/Reward Types");
+            enteredValue = Helper.selectNextOption(sc, "Add Tiers/Activity/Reward Types");
             if(enteredValue == 1){
                 if(lpType.equalsIgnoreCase("R")){
                     Regular.regularPage();

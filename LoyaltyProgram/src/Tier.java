@@ -79,9 +79,9 @@ public class Tier {
                 System.out.println("Enter Tier " + (i + 1) + " Name:");
                 tierName = sc.nextLine();
                 if (i != 0) {
-                    System.out.println("Enter Tier" + (i + 1) + " Points Required:");
+                    System.out.println("Enter Tier " + (i + 1) + " Points Required:");
                     tierPoint = sc.nextInt();
-                    System.out.println("Enter Tier" + (i + 1) + " Points Multiplier:");
+                    System.out.println("Enter Tier " + (i + 1) + " Points Multiplier:");
                     tierMultiplier = sc.nextInt();
                 } else {
                     System.out.println("Points required will be 0 for base tier.");
@@ -148,24 +148,28 @@ public class Tier {
 
         for (int i = 0; i < tiersCount; i++) {
             if (tierNames[i].equals("")) {
-                System.out.println("Tier" + (i + 1) + " name can not be empty.");
+                System.out.println("Tier " + (i + 1) + " name can not be empty.");
                 isValid = false;
             }
             if(tierPoints[0]!=0) {
+                System.out.println("FOR DEBUGGING");
+                System.out.println("Points for base tier got set to "+tierPoints[0]);
                 System.out.println("Tier 1 points should be zero" );
                 isValid=false;
             }
             if(tierMultipliers[0]!=1) {
+                System.out.println("FOR DEBUGGING");
+                System.out.println("Multiplier for base tier got set to "+tierMultipliers[0]);
                 System.out.println("Tier 1 multiplier should be one" );
                 isValid=false;
             }
             if (i != 0 && tierPoints[i] == 0) {
-                System.out.println("Tier" + (i + 1) + " points can not be 0 except base tier.");
+                System.out.println("Tier " + (i + 1) + " points can not be 0 except base tier.");
                 isValid = false;
             }
 
             if (i!=0 && tierMultipliers[i] < 2) {
-                System.out.println("Tier" + (i + 1) + " multipliers can not be less than 2.");
+                System.out.println("Tier " + (i + 1) + " multipliers can not be less than 2.");
                 isValid = false;
             }
         }
