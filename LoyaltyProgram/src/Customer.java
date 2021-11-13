@@ -90,6 +90,7 @@ public class Customer {
                         System.out.println(prog);
                     }
 
+                    sc.next();
                     System.out.println("Enter the loyalty program you want to enroll in: ");
                     chosenLoyaltyProgram = sc.nextLine();
 
