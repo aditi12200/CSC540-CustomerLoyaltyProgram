@@ -90,7 +90,6 @@ public class Customer {
 
 
                     System.out.println("Enter the loyalty program you want to enroll in: ");
-                    sc.next();
                     chosenLoyaltyProgram = sc.nextLine();
 
                     correctValue = availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
