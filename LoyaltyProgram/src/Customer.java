@@ -684,8 +684,8 @@ public class Customer {
         try
         {
             String SQL_RER_points = "SELECT WALLET_ID, POINTS, CUMULATIVE_PTS" +
-                    "FROM WALLET" +
-                    "WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
+                    " FROM WALLET" +
+                    " WHERE BRAND_ID = '"+brandId+"' AND CUST_ID = '"+Login.userId+"'";
             rs = MainMenu.statement.executeQuery(SQL_RER_points);
             if(rs.next())
             {
@@ -724,7 +724,7 @@ public class Customer {
             }
         }
         catch(SQLException e)
-        {
+        {   e.printStackTrace();
             System.out.println("could not fetch Wallet Activities");
             performRewardActivities();
         }
