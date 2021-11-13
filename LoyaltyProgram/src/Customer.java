@@ -176,6 +176,7 @@ public class Customer {
                         System.out.println("Wallet already exists");
                         enrollLoyaltyProgram();
                     } catch (SQLException e) {
+                        e.printStackTrace();
                         System.out.println("Could not create a wallet");
                         enrollLoyaltyProgram();
                     }
