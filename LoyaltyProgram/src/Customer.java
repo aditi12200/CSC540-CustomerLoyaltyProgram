@@ -51,7 +51,7 @@ public class Customer {
         } while (!selected);
     }
 
-    public static void enrollLoyaltyProgram(){
+    public static void enrollLoyaltyProgram() {
         String chosenLoyaltyProgram;
         Scanner sc=new Scanner(System.in);
         List<String> availableLoyaltyPrograms = new ArrayList<String>();
@@ -70,6 +70,7 @@ public class Customer {
                 }
             } catch (SQLException e) {
                 System.out.println("No active loyalty programs at the moment.");
+                customerPage();
             }
 
             boolean correctValue = false;
@@ -138,10 +139,12 @@ public class Customer {
 
                         int row=ps.executeUpdate();
                         if(row<=0){
-                            System.out.println("Could not enroll into the loyalty program");
+                            System.out.println("Could not create a wallet");
+                            enrollLoyaltyProgram();
                         }
                     } catch (SQLIntegrityConstraintViolationException e) {
-                        System.out.println("Incorrect Brand ID");
+                        System.out.println("Could not create a wallet");
+                        enrollLoyaltyProgram();
                     }
 
                 } else if (loyaltyProgramType.toLowerCase() == "t") {
@@ -158,12 +161,15 @@ public class Customer {
                         ps.setString(4, tierStatus);
                         int row=ps.executeUpdate();
                         if(row<=0){
-                            System.out.println("Could not enroll into the loyalty program");
+                            System.out.println("Could not create a wallet");
+                            enrollLoyaltyProgram();
                         }
                     } catch (SQLIntegrityConstraintViolationException e) {
-                        System.out.println("Incorrect Brand ID");
+                        System.out.println("Wallet already exists");
+                        enrollLoyaltyProgram();
                     } catch (SQLException e) {
-                        System.out.println("Incorrect Brand ID");
+                        System.out.println("Could not create a wallet");
+                        enrollLoyaltyProgram();
                     }
                 }
                 //find join activity category code
@@ -180,12 +186,15 @@ public class Customer {
                     ps.setString(3, "JOIN");
                     int row=ps.executeUpdate();
                     if(row<=0){
-                        System.out.println("Could not enroll into loyalty program.");
+                        System.out.println("Could not record activity");
+                        enrollLoyaltyProgram();
                     }
                 } catch (SQLIntegrityConstraintViolationException e) {
-                    System.out.println("Integrity Constraint Violation");
+                    System.out.println("Integrity Constraint Violation while inserting in activity table");
+                    enrollLoyaltyProgram();
                 }catch (SQLException e) {
-                    System.out.println("SQL Exception encountered");
+                    System.out.println("Could not record activity");
+                    enrollLoyaltyProgram();
                 }
 
                 //find wallet_id of customer for current brand
@@ -195,9 +204,13 @@ public class Customer {
 
                     if (rs4.next()) {
                         walletId = rs4.getInt("MAX_WALLET_ID");
+                    } else{
+                        System.out.println("Wallet does not exist");
+                        enrollLoyaltyProgram();
                     }
                 } catch (SQLException e) {
-                    System.out.println("SQL Exception encountered");
+                    System.out.println("Could not fetch wallet details");
+                    enrollLoyaltyProgram();
                 }
 
 
@@ -208,9 +221,13 @@ public class Customer {
 
                     if (rs4.next()) {
                         activityId = rs4.getInt("MAX_ACT_ID");
+                    } else {
+                        System.out.println("Activity not found");
+                        enrollLoyaltyProgram();
                     }
                 } catch (SQLException e) {
-                    System.out.println("SQL Exception encountered");
+                    System.out.println("Could not fetch activity details");
+                    enrollLoyaltyProgram();
                 }
                 //entry into wallet_acitivity_bridgetable
                 try {
@@ -219,11 +236,19 @@ public class Customer {
                     ps.setInt(2, activityId);
                     int row=ps.executeUpdate();
                     if(row<=0){
-                        System.out.println("Couldn't enroll into loyalty program");
+                        System.out.println("Could not record wallet and activity");
+                        enrollLoyaltyProgram();
                     }
                 } catch (SQLIntegrityConstraintViolationException e) {
-                    System.out.println("Integrity Constraint Violation");
+                    System.out.println("Integrity Constraint Violation while inserting in wallet activity table");
+                    enrollLoyaltyProgram();
+                } catch(SQLException e) {
+                    System.out.println("Could not record wallet and activity");
+                    enrollLoyaltyProgram();
                 }
+
+                System.out.println("Successfully enrolled in Loyalty Program");
+                customerPage();
 
             } catch (SQLException e) {
                 System.out.println("SQL Exception Encountered"); //figure out this message
