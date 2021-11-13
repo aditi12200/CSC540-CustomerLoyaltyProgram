@@ -299,10 +299,10 @@ public class Customer {
                         String brandId = rs.getString("BRAND_ID");
                         String custId = rs.getString("CUST_ID");
                         int points = rs.getInt("POINTS");
-                        int sumPts = rs.getInt("CUMULATIVE_PTS");
+//                        int sumPts = rs.getInt("CUMULATIVE_PTS");
                         String tierStatus = rs.getString("TIER_STATUS");
 
-                        System.out.println(walletId + "\t" + brandId + "\t" + custId + "\t" + points + "\t" + sumPts + "\t" + tierStatus);
+                        System.out.println(walletId + "\t" + brandId + "\t" + custId + "\t" + points + "\t" + tierStatus);
                     }
                 } catch (SQLException e) {
                     System.out.println("You do not have any existing wallets.");
