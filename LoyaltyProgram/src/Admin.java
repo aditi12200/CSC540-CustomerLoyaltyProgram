@@ -71,7 +71,7 @@ public class Admin {
                 adminPage();
             } else {
                 try {
-                    String sqlCustomerSelect = "select * from CUSTOMER where CUST_ID = '" + customerUserId + "'";
+                    String sqlCustomerSelect = "select * from CUSTOMER where CUST_ID  = '" + customerUserId + "'";
 
                     ResultSet rs = MainMenu.statement.executeQuery(sqlCustomerSelect);
 

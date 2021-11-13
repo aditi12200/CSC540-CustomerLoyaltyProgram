@@ -12,7 +12,7 @@ public class LoyaltyProgram {
         int enteredValue;
         boolean selected = false;
         if(checkIfBrandIsEnrolled()){
-            System.out.println("Brand is already enrolled in a Loyality Program");
+            System.out.println("Brand is already enrolled in a Loyalty Program");
             enteredValue = Helper.selectNextOption(sc, "Add Activity/Reward Types");
             if(enteredValue == 1){
                 if(lpType.equalsIgnoreCase("R")){
@@ -65,9 +65,10 @@ public class LoyaltyProgram {
         PreparedStatement ps=null;
         try {
 
-            ps = MainMenu.connection.prepareStatement("Insert into LOYALTY_PROGRAM (BRAND_LP_ID, TYPE) values (?,?)");
+            ps = MainMenu.connection.prepareStatement("Insert into LOYALTY_PROGRAM (BRAND_LP_ID, TYPE, STATE) values (?,?,?)");
             ps.setString(1, Login.userId);
             ps.setString(2, lpType);
+            ps.setString(3, "INACTIVE");
             int rows = ps.executeUpdate();
             if (rows > 0) {
                 System.out.println("Loyalty Program has been added successfully.");

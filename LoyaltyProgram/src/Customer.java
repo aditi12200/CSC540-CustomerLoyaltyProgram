@@ -226,7 +226,7 @@ public class Customer {
                 customerPage();
             } else {
                 try {
-                    String walletSelect = "select * from WALLET where CUST_ID=" + customerId;
+                    String walletSelect = "select * from WALLET where CUST_ID='" + customerId +"'";
                     ResultSet rs = MainMenu.statement.executeQuery(walletSelect);
                     System.out.println("Wallet ID\tBrand ID\tCustomer ID\tPoints\tCumulative_pts\tTier Status");
                     while (rs.next()) {

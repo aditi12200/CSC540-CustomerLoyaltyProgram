@@ -159,10 +159,13 @@ public class Brand {
 
                 statement.close();
 
-                if (result == 2) {
+                if(result == 3) {
+                    System.out.println("Activity Category Code entered is invalid or not part of your loyalty program.");
+                }
+                else if(result == 2) {
                     System.out.println("RERule with this code is not present.");
                 } else if(result == 0) {
-                    System.out.println("Activity Category Code entered is invalid");
+                    System.out.println("RERule with this rule code and/or activity category code does not exist.");
                 } else {
                     System.out.println("RERule has been updated successfully.");
                 }
@@ -256,10 +259,13 @@ public class Brand {
 
                 statement.close();
 
-                if (result == 2) {
+                if(result == 3) {
+                    System.out.println("Reward Category Code entered is invalid or not part of your loyalty program.");
+                }
+                else if (result == 2) {
                     System.out.println("RRRule with this code is not present.");
                 } else if(result == 0) {
-                    System.out.println("Reward Category Code entered is invalid");
+                    System.out.println("RRRule with this rule code and/or reward category code does not exist.");
                 } else {
                     System.out.println("RRRule has been updated successfully.");
                 }

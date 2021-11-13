@@ -14,8 +14,8 @@ public class Login {
         do {
             System.out.print("Enter your userid:");
             String userid = sc.nextLine();
-            System.out.print("Enter your password:");
-            String password = sc.nextLine();
+            char[] pwd = System.console().readPassword("Enter password:");
+            String password = pwd.toString();
 
             int option = Helper.selectNextOption(sc, "Sign in");
 

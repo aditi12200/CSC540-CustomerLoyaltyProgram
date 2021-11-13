@@ -30,6 +30,7 @@ public class RewardType {
                 goBack=true;
                 goBack();
             } else if(rewardCategories.containsKey(enteredValue)) {
+                checkIfRuleAlreadyExistsFOrThisCategory(rewardCategories.get(enteredValue));
                 addRewardType(rewardCategories.get(enteredValue), quantity);
             } else {
                 System.out.println("You have made an invalid choice. Please pick again.");
@@ -61,7 +62,11 @@ public class RewardType {
         rcc=rewardIdCatMap.get(rewardName);
         PreparedStatement ps=null;
 
-        if (rewardName.toLowerCase()=="gift card"){
+        System.out.println("======FOR DEBUGGING======");
+        System.out.println("Reward Name is "+rewardName);
+        System.out.println("=========================");
+
+        if (rewardName.equalsIgnoreCase("gift card")){
             System.out.println("Enter the value for the gift card:");
             value=sc.nextLine();
 
@@ -98,6 +103,22 @@ public class RewardType {
             } catch (SQLException e) {
                 System.out.println("Reward Type can not be added. Please try again.");
             }
+        }
+    }
+
+    public static void checkIfRuleAlreadyExistsFOrThisCategory(String rewardName) {
+        String rcc=rewardIdCatMap.get(rewardName);
+        try {
+            String sqlBrandRccSelect = "select * from REWARD where BRAND_ID  = '" + Login.userId + "' AND REWARD_CATEGORY_CODE = '" + rcc + "'";
+
+            ResultSet rs = MainMenu.statement.executeQuery(sqlBrandRccSelect);
+
+            if (rs.next()) {
+                System.out.println("Reward Type already present.");
+                rewardTypePage();
+            }
+        } catch (SQLException e) {
+            System.out.println("Reward category data for this brand could not be fetched. Please try again.");
         }
     }
 
