@@ -50,7 +50,7 @@ ALTER TABLE RE_RULES ADD CONSTRAINT RER_PK PRIMARY KEY (RER_CODE,BRAND_ID,VERSIO
 ALTER TABLE LOYALTY_PROGRAM DROP PRIMARY KEY;
 ALTER TABLE LOYALTY_PROGRAM ADD CONSTRAINT LP_PK PRIMARY KEY(BRAND_LP_ID);
 
---trigger to update tier
+-------------------------------------------Trigger to update tier--------------------------------------------------------------
 
 CREATE OR REPLACE TRIGGER TR_UPDATE_TIER
     AFTER INSERT ON WALLET
