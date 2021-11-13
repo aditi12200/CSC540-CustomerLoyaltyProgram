@@ -65,8 +65,8 @@ public class Tier {
 
         boolean tierFlag = false;
 
-        String[] tierNames = new String[3];
-        int[] tierPoints = new int[3], tierMultipliers = new int[3];
+        String[] tierNames = new String[tiers];
+        int[] tierPoints = new int[tiers], tierMultipliers = new int[tiers];
 
 
         do {
