@@ -78,7 +78,7 @@ public class Customer {
             String LPId="";
             int LP_index;
             while (!correctValue && customerIsEnrolled) {
-                if(availableLoyaltyPrograms.size()==0){
+                if(availableLoyaltyPrograms.size()==0 || availableLoyaltyProgramIds.size()==0){
                     System.out.println("No available loyalty programs at the moment.");
                     Customer.customerPage();
                 }
@@ -99,8 +99,12 @@ public class Customer {
                         if(enteredValue==2){
                             Customer.customerPage();
                         }
+                        for (String prog : availableLoyaltyProgramIds) {
+                            System.out.println(prog);
+                        }
                         LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
                         LPId = availableLoyaltyProgramIds.get(LP_index);
+                        System.out.println(LPId);
 
                         customerIsEnrolled = checkIfCustomerEnrolled(LPId);
 
@@ -128,6 +132,9 @@ public class Customer {
                 PreparedStatement ps;
                 if (rs1.next()) {
                     loyaltyProgramType = rs1.getString("TYPE");
+                } else{
+                    System.out.println("No Loyalty program found");
+                    enrollLoyaltyProgram();
                 }
 
                 if (loyaltyProgramType.toLowerCase() == "r") {
