@@ -178,6 +178,10 @@ public class Customer {
                     ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
                     ps.setString(2, joinCategoryCode);
                     ps.setString(3, "JOIN");
+                    int row=ps.executeUpdate();
+                    if(row<=0){
+                        System.out.println("Could not enroll into loyalty program.");
+                    }
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }catch (SQLException e) {
@@ -186,7 +190,7 @@ public class Customer {
 
                 //find wallet_id of customer for current brand
                 try {
-                    String walletIdSelect = "select MAX(WALLET_ID) AS MAX_WALLET_ID from WALLET where CUST_ID=" + Login.userId;
+                    String walletIdSelect = "select MAX(WALLET_ID) AS MAX_WALLET_ID from WALLET where CUST_ID='" + Login.userId+"'";
                     ResultSet rs4 = MainMenu.statement.executeQuery(walletIdSelect);
 
                     if (rs4.next()) {
@@ -213,6 +217,10 @@ public class Customer {
                     ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
                     ps.setInt(1, walletId);
                     ps.setInt(2, activityId);
+                    int row=ps.executeUpdate();
+                    if(row<=0){
+                        System.out.println("Couldn't enroll into loyalty program");
+                    }
                 } catch (SQLIntegrityConstraintViolationException e) {
                     System.out.println("Integrity Constraint Violation");
                 }
