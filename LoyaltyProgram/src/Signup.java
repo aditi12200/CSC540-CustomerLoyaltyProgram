@@ -111,7 +111,7 @@ public class Signup {
             signUpPage();
         } else {
             try {
-                statement = MainMenu.connection.prepareCall("{call add_customer(?, ?, ?, ?, ?, ?, ?)}");
+                statement = MainMenu.connection.prepareCall("{call add_customer(?, ?, ?, ?, ?, ?)}");
                 statement.setString(1, customerId);
                 statement.setString(2, customerPassword);
                 statement.setString(3, customerName);
