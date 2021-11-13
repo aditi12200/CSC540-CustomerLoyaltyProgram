@@ -99,12 +99,9 @@ public class Customer {
                         if(enteredValue==2){
                             Customer.customerPage();
                         }
-                        for (String prog : availableLoyaltyProgramIds) {
-                            System.out.println(prog);
-                        }
+
                         LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
                         LPId = availableLoyaltyProgramIds.get(LP_index);
-                        System.out.println(LPId);
 
                         customerIsEnrolled = checkIfCustomerEnrolled(LPId);
 
