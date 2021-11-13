@@ -57,11 +57,8 @@ public class Customer {
         List<String> availableLoyaltyPrograms = new ArrayList<String>();
         List<String> availableLoyaltyProgramIds = new ArrayList<String>();
 
-        int enteredValue = Helper.selectNextOption(sc, "Enroll in Loyalty Program");
+        int enteredValue = 0;
 
-        if (enteredValue==2){
-            Customer.customerPage();
-        }else {
             try {
                 String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_LP_ID=B.BRAND_ID and L.STATE='ACTIVE'";
                 ResultSet rs = MainMenu.statement.executeQuery(sqlLoyaltyProgramSelect);
@@ -98,6 +95,10 @@ public class Customer {
 
                     correctValue = availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
                     if (correctValue){
+                        enteredValue = Helper.selectNextOption(sc, "Enroll in Loyalty Program");
+                        if(enteredValue==2){
+                            Customer.customerPage();
+                        }
                         LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
                         LPId = availableLoyaltyProgramIds.get(LP_index);
 
@@ -220,7 +221,6 @@ public class Customer {
             } catch (SQLException e) {
                 System.out.println("SQL Exception Encountered"); //figure out this message
             }
-        }
     }
 
     private static boolean checkIfCustomerEnrolled(String chosenLP){
