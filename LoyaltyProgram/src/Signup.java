@@ -50,7 +50,7 @@ public class Signup {
         System.out.print("Enter brand id (This will be used as your loyalty program's id):");
         brandId = sc.nextLine();
         char[] pwd = System.console().readPassword("Enter password:");
-        brandPassword = pwd.toString();
+        brandPassword = new String(pwd);
         System.out.print("Enter brand name:");
         brandName = sc.nextLine();
         System.out.print("Enter address:");
@@ -96,7 +96,7 @@ public class Signup {
         System.out.print("Enter customer id:");
         customerId = sc.nextLine();
         char[] pwd = System.console().readPassword("Enter password:");
-        customerPassword = pwd.toString();
+        customerPassword = new String(pwd);
         System.out.print("Enter name:");
         customerName = sc.nextLine();
         System.out.print("Enter address:");
