@@ -298,11 +298,12 @@ public class Brand {
                 System.out.println("Please define atleast one Reward Earning Rule.");
                 brandPage();
             } else if (ret == 2) {
-                System.out.println("Please define atleast one Reward Earning Rule.");
+                System.out.println("Please define atleast one Reward Redemption Rule.");
                 brandPage();
             } else {
                 System.out.println("Loyalty Program has been validated and set to active status.");
                 isActive = "ACTIVE";
+                brandPage();
             }
 
             statement.close();

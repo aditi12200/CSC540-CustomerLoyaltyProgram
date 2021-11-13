@@ -144,6 +144,7 @@ public class Tier {
         for (int i = 0; i < points.length; i++) {
             if (points[i] != tierPoints[i]) {
                 isValid=false;
+                System.out.println("Please provide points in increasing order");
                 break;
             }
         }
@@ -151,6 +152,7 @@ public class Tier {
         for (int i = 0; i < multiplier.length; i++) {
             if (multiplier[i] != tierMultipliers[i]) {
                 isValid=false;
+                System.out.println("Please provide multiplier in increasing order");
                 break;
             }
         }
