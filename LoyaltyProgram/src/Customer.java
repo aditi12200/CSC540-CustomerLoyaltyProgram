@@ -161,11 +161,12 @@ public class Customer {
                             System.out.println("No tier Name found");
                             enrollLoyaltyProgram();
                         }
-                        ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS,TIER_STATUS) values (?,?,?,?)");
+                        ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID, POINTS, CUMULATIVE_PTS, TIER_STATUS) values (?,?,?,?,?)");
                         ps.setString(1, LPId);
                         ps.setString(2, Login.userId);
                         ps.setInt(3, 0);
-                        ps.setString(4, tierStatus);
+                        ps.setInt(4,0);
+                        ps.setString(5, tierStatus);
                         int row=ps.executeUpdate();
                         if(row==0){
                             System.out.println("Could not create a wallet");
