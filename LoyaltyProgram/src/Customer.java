@@ -1,3 +1,5 @@
+import oracle.jdbc.internal.OracleConnection;
+
 import java.util.Scanner;
 import java.util.*;
 import java.sql.*;
@@ -43,7 +45,7 @@ public class Customer {
 
             } catch (Exception e) {
                 System.out.println("Please pick an option between 1 and 5.");
-                sc.next();
+                enteredValue=sc.nextInt();
             }
         } while (!selected);
     }
@@ -60,7 +62,7 @@ public class Customer {
             Customer.customerPage();
         }else {
             try {
-                String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_LP_ID=B.BRAND_ID and L.STATE='active'";
+                String sqlLoyaltyProgramSelect = "select * from LOYALTY_PROGRAM L, BRAND B where L.BRAND_LP_ID=B.BRAND_ID and L.STATE='ACTIVE'";
                 ResultSet rs = MainMenu.statement.executeQuery(sqlLoyaltyProgramSelect);
                 while (rs.next()) {
                     String loyaltyProgram = rs.getString("NAME");
@@ -77,26 +79,32 @@ public class Customer {
             String LPId="";
             int LP_index;
             while (!correctValue && customerIsEnrolled) {
-                System.out.println("List of available loyalty programs: ");
-
-                for (String prog : availableLoyaltyPrograms) {
-                    System.out.println(prog);
-                }
-
-                System.out.println("Enter the loyalty program you want to enroll in: ");
-                chosenLoyaltyProgram = sc.nextLine();
-
-                correctValue = availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
-                LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
-                LPId = availableLoyaltyProgramIds.get(LP_index);
-
-                customerIsEnrolled = checkIfCustomerEnrolled(LPId);
-                if (!correctValue) {
-                    System.out.println("Chosen loyalty program doesn't exist. Choose again.");
-                }
-                if (customerIsEnrolled) {
-                    System.out.println("You are already enrolled in the loyalty program.");
+                if(availableLoyaltyPrograms.size()==0){
+                    System.out.println("No available loyalty programs at the moment.");
                     Customer.customerPage();
+                }
+                else{
+                    System.out.println("List of available loyalty programs: ");
+
+                    for (String prog : availableLoyaltyPrograms) {
+                        System.out.println(prog);
+                    }
+
+                    System.out.println("Enter the loyalty program you want to enroll in: ");
+                    chosenLoyaltyProgram = sc.nextLine();
+
+                    correctValue = availableLoyaltyPrograms.contains(chosenLoyaltyProgram);
+                    LP_index = availableLoyaltyPrograms.indexOf(chosenLoyaltyProgram);
+                    LPId = availableLoyaltyProgramIds.get(LP_index);
+
+                    customerIsEnrolled = checkIfCustomerEnrolled(LPId);
+                    if (!correctValue) {
+                        System.out.println("Chosen loyalty program doesn't exist. Choose again.");
+                    }
+                    if (customerIsEnrolled) {
+                        System.out.println("You are already enrolled in the loyalty program.");
+                        Customer.customerPage();
+                    }
                 }
             }
             //customer has chosen a new and correct loyalty program --> chosenLoyaltyProgram
