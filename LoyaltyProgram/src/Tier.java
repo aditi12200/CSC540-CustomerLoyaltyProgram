@@ -74,7 +74,6 @@ public class Tier {
             int tierPoint = 0, tierMultiplier = 1;
             tierPoints[0] = 0;
             tierMultipliers[0] = 1;
-            System.out.println("TIER multiplier for base tier got set to"+tierMultipliers[0]);
 
             for (int i = 0; i < tiers; i++) {
                 sc.nextLine();
@@ -93,8 +92,6 @@ public class Tier {
                     System.out.println("Points required will be 0 for base tier.");
                     System.out.println("Points multiplier will be 1 for base tier.");
                     tierNames[i] = tierName;
-                    System.out.println("Tier name got set to "+tierName);
-                    System.out.println("TIER multiplier for tier "+(i+1)+" got set to"+tierMultipliers[i]);
                 }
             }
 
@@ -140,6 +137,7 @@ public class Tier {
     private static boolean validateTier(String[] tierNames, int[] tierPoints, int[] tierMultipliers, int tiersCount) {
         boolean isValid = true;
         int[] points = tierPoints;
+        System.out.println("Value of multiplier before copy "+tierMultipliers[0]);
         int[] multiplier = tierMultipliers;
         Arrays.sort(points);
         Arrays.sort(multiplier);
@@ -147,9 +145,12 @@ public class Tier {
             isValid = false;
         }
 
+        System.out.println("Value of multiplier before compare "+tierMultipliers[0]);
         if(!Arrays.equals(multiplier,tierMultipliers)){
             isValid = false;
         }
+
+        System.out.println("Value of multiplier after compare "+tierMultipliers[0]);
 
         for (int i = 0; i < tiersCount; i++) {
             if (tierNames[i].equals("")) {
