@@ -649,7 +649,7 @@ public class Customer {
         String value_option = rewardActCategories.get(selected_option);
         int gcc=0;
         if(value_option.toLowerCase().equals("purchase")) {
-            System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter.");
+            System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter 0.");
             gcc=sc.nextInt();
         }
         // get activity_category_code from activity_category table
