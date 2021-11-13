@@ -136,21 +136,17 @@ public class Tier {
 
     private static boolean validateTier(String[] tierNames, int[] tierPoints, int[] tierMultipliers, int tiersCount) {
         boolean isValid = true;
-        int[] points = tierPoints;
-        System.out.println("Value of multiplier before copy "+tierMultipliers[0]);
-        int[] multiplier = tierMultipliers;
+        int[] points = tierPoints.clone();
+        int[] multiplier = tierMultipliers.clone();
         Arrays.sort(points);
         Arrays.sort(multiplier);
         if(!Arrays.equals(points,tierPoints)) {
             isValid = false;
         }
 
-        System.out.println("Value of multiplier before compare "+tierMultipliers[0]);
         if(!Arrays.equals(multiplier,tierMultipliers)){
             isValid = false;
         }
-
-        System.out.println("Value of multiplier after compare "+tierMultipliers[0]);
 
         for (int i = 0; i < tiersCount; i++) {
             if (tierNames[i].equals("")) {
