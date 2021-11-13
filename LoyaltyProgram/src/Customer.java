@@ -136,10 +136,11 @@ public class Customer {
 
                 if ((loyaltyProgramType.toLowerCase()).equals("r")) {
                     try {
-                        ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS) values (?,?,?)");
+                        ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS, CUMULATIVE_PTS) values (?,?,?,?)");
                         ps.setString(1, LPId);//name
                         ps.setString(2, Login.userId);
                         ps.setInt(3, 0);
+                        ps.setInt(4,0);
 
                         int row=ps.executeUpdate();
                         if(row<=0){
