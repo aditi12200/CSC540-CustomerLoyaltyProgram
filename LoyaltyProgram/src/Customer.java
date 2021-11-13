@@ -862,6 +862,11 @@ public class Customer {
             System.out.println("Reward Earning Rule could not be fetched. Please try again.");
             redeemPoints();
         }
+        if(brands_rrr.size() == 0)
+        {
+            System.out.println("Sorry! No rewards to redeem.");
+            redeemPoints();
+        }
 
 
         value = false;
