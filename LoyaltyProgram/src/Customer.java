@@ -44,8 +44,9 @@ public class Customer {
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Please pick an option between 1 and 5.");
-                enteredValue=sc.nextInt();
+                customerPage();
             }
         } while (!selected);
     }
@@ -117,24 +118,29 @@ public class Customer {
             int walletId=0;
             int activityId=0;
             try {
-                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_LP_ID='" + LPId +"'";//name
+                String sqlLPTypeSelect = "select * from LOYALTY_PROGRAM where BRAND_LP_ID='" + LPId +"'";
                 ResultSet rs1 = MainMenu.statement.executeQuery(sqlLPTypeSelect);
                 PreparedStatement ps;
                 if (rs1.next()) {
                     loyaltyProgramType = rs1.getString("TYPE");
                 }
 
-                if (loyaltyProgramType.toLowerCase() == "R") {
+                if (loyaltyProgramType.toLowerCase() == "r") {
                     try {
                         ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS) values (?,?,?)");
                         ps.setString(1, LPId);//name
                         ps.setString(2, Login.userId);
                         ps.setInt(3, 0);
+
+                        int row=ps.executeUpdate();
+                        if(row<=0){
+                            System.out.println("Could not enroll into the loyalty program");
+                        }
                     } catch (SQLIntegrityConstraintViolationException e) {
                         System.out.println("Incorrect Brand ID");
                     }
 
-                } else if (loyaltyProgramType.toLowerCase() == "T") {
+                } else if (loyaltyProgramType.toLowerCase() == "t") {
                     try {
                         String sqlTierSelect = "select * from TIER where BRAND_ID='" + LPId + "' and PRECEDENCE=1";
                         ResultSet rs2 = MainMenu.statement.executeQuery(sqlTierSelect);
@@ -146,6 +152,10 @@ public class Customer {
                         ps.setString(2, Login.userId);
                         ps.setInt(3, 0);
                         ps.setString(4, tierStatus);
+                        int row=ps.executeUpdate();
+                        if(row<=0){
+                            System.out.println("Could not enroll into the loyalty program");
+                        }
                     } catch (SQLIntegrityConstraintViolationException e) {
                         System.out.println("Incorrect Brand ID");
                     } catch (SQLException e) {
@@ -210,7 +220,7 @@ public class Customer {
     }
 
     private static boolean checkIfCustomerEnrolled(String chosenLP){
-        String sqlWalletSelect="select * from WALLET where CUST_ID="+Login.userId+" and BRAND_ID="+chosenLP;
+        String sqlWalletSelect="select * from WALLET where CUST_ID='"+Login.userId+"'and BRAND_ID='"+chosenLP+"'";
         try {
             ResultSet rs = MainMenu.statement.executeQuery(sqlWalletSelect);
 
