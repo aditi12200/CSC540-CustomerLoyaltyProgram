@@ -101,7 +101,7 @@ public class Admin {
         Scanner sc = new Scanner(System.in);
 
         do {
-            System.out.print("Enter brand userid:");
+            System.out.print("Enter brand id:");
             brandUserId = sc.nextLine();
 
             enteredValue = Helper.selectNextOption(sc, "Show Brand Info");
