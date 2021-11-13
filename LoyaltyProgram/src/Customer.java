@@ -412,7 +412,7 @@ public class Customer {
 
         }
         catch(SQLException e)
-        {
+        {   e.printStackTrace();
             System.out.println("Act category could not be fetched.");
             performRewardActivities();
         }
@@ -647,7 +647,7 @@ public class Customer {
         // get the string value for that particular integer
         String value_option = rewardActCategories.get(selected_option);
         int gcc=0;
-        if(value_option.toLowerCase()=="purchase") {
+        if(value_option.toLowerCase().equals("purchase")) {
             System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter.");
             gcc=sc.nextInt();
         }
