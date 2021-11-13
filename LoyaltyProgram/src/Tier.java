@@ -71,9 +71,11 @@ public class Tier {
 
         do {
             String tierName = "base";
-            int tierPoint = 0, tierMultiplier = 1;
+            int tierPoint, tierMultiplier;
 
             for (int i = 0; i < tiers; i++) {
+                tierPoint=0;
+                tierMultiplier=1;
                 sc.nextLine();
                 System.out.println("Enter Tiers in increasing order of precedence");
                 System.out.println("Enter Tier " + (i + 1) + " Name:");
