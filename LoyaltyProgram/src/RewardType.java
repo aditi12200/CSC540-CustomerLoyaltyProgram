@@ -62,10 +62,6 @@ public class RewardType {
         rcc=rewardIdCatMap.get(rewardName);
         PreparedStatement ps=null;
 
-        System.out.println("======FOR DEBUGGING======");
-        System.out.println("Reward Name is "+rewardName);
-        System.out.println("=========================");
-
         if (rewardName.equalsIgnoreCase("gift card")){
             System.out.println("Enter the value for the gift card:");
             value=sc.nextLine();
@@ -78,10 +74,17 @@ public class RewardType {
                 ps.setInt(3,quantity);
                 ps.setString(4,Login.userId);
 
+                int rows = ps.executeUpdate();
+                if (rows > 0) {
+                    System.out.println("Reward Type has been added successfully.");
+                } else {
+                    System.out.println("Reward Type could not be added. Please try again.");
+                }
+
             }catch(SQLIntegrityConstraintViolationException e){
                 System.out.println("Reward Type already present.");
             }catch (SQLException e) {
-                System.out.println("Reward Type can not be added. Please try again.");
+                System.out.println("Reward Type could not be added. Please try again.");
             }
         } else{
             try{
