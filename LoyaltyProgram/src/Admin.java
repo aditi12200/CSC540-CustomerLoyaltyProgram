@@ -89,6 +89,7 @@ public class Admin {
                     }
                 } catch (SQLException e) {
                     System.out.println("Customer data could not be fetched. Please try again.");
+                    e.printStackTrace();
                 }
             }
             sc.nextLine();

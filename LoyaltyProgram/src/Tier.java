@@ -33,7 +33,7 @@ public class Tier {
                         RewardType.rewardTypePage();
                         break;
                     case 4:
-                        LoyaltyProgram.addLoyaltyProgram();
+                        Brand.brandPage();
                         break;
                     default:
                         System.out.println("You have made an invalid choice. Please pick again.");

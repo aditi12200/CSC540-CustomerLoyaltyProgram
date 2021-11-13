@@ -293,10 +293,13 @@ public class Brand {
 
             if (ret == 0) {
                 System.out.println("You must define tiers for a tiered loyalty program.");
+                brandPage();
             } else if (ret == 1) {
                 System.out.println("Please define atleast one Reward Earning Rule.");
+                brandPage();
             } else if (ret == 2) {
                 System.out.println("Please define atleast one Reward Earning Rule.");
+                brandPage();
             } else {
                 System.out.println("Loyalty Program has been validated and set to active status.");
                 isActive = "ACTIVE";
@@ -307,6 +310,7 @@ public class Brand {
         } catch (SQLException e) {
             Helper.close(statement);
             System.out.println("Loyalty Program could not be validated. Please try again.");
+            brandPage();
         }
     }
 
