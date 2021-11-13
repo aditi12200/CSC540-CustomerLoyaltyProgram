@@ -54,7 +54,7 @@ public class Customer {
         List<String> availableLoyaltyPrograms = new ArrayList<String>();
         List<String> availableLoyaltyProgramIds = new ArrayList<String>();
 
-        int enteredValue = Helper.selectNextOption(sc, "enrollLoyaltyProgram");
+        int enteredValue = Helper.selectNextOption(sc, "Enroll in Loyalty Program");
 
         if (enteredValue==2){
             Customer.customerPage();
@@ -220,7 +220,7 @@ public class Customer {
         Scanner sc = new Scanner(System.in);
         int enteredValue;
         do {
-            enteredValue = Helper.selectNextOption(sc, "viewWallet");
+            enteredValue = Helper.selectNextOption(sc, "View Wallet");
 
             if (enteredValue == 2) {
                 customerPage();

@@ -65,7 +65,7 @@ public class Admin {
             System.out.print("Enter customer userid:");
             customerUserId = sc.nextLine();
 
-            enteredValue = Helper.selectNextOption(sc, "showCustomerInfo");
+            enteredValue = Helper.selectNextOption(sc, "Show Customer Info");
 
             if (enteredValue == 2) {
                 adminPage();
@@ -85,10 +85,10 @@ public class Admin {
                         System.out.println("Customer Phone: " + customerPhone);
                         System.out.println("Customer Address: " + customerAddress);
                     } else {
-                        System.out.println("Invalid customer name, please try again.");
+                        System.out.println("Invalid customer user id. Please try again.");
                     }
                 } catch (SQLException e) {
-                    System.out.println("Invalid customer name, please try again.");
+                    System.out.println("Customer data could not be fetched. Please try again.");
                 }
             }
             sc.nextLine();
@@ -104,7 +104,7 @@ public class Admin {
             System.out.print("Enter brand userid:");
             brandUserId = sc.nextLine();
 
-            enteredValue = Helper.selectNextOption(sc, "showBrandInfo");
+            enteredValue = Helper.selectNextOption(sc, "Show Brand Info");
 
             if (enteredValue == 2) {
                 adminPage();
@@ -124,10 +124,10 @@ public class Admin {
                         System.out.println("Brand Address: " + brandAddress);
                         System.out.println("Brand Join Date: " + brandJoinDate);
                     } else {
-                        System.out.println("Invalid brand name, please try again.");
+                        System.out.println("Invalid brand id. Please try again.");
                     }
                 } catch (SQLException e) {
-                    System.out.println("invalid brand name, please try again.");
+                    System.out.println("Could not fetch brand data. Please try again.");
                 }
                 sc.nextLine();
             }
@@ -145,7 +145,7 @@ public class Admin {
         System.out.print("Enter address:");
         brandAddress = sc.nextLine();
 
-        int enteredValue = Helper.selectNextOption(sc, "addBrand");
+        int enteredValue = Helper.selectNextOption(sc, "Add Brand");
         CallableStatement statement = null;
 
         if (enteredValue == 2) {
@@ -192,7 +192,7 @@ public class Admin {
         System.out.print("Enter phone:");
         customerPhone = sc.nextLine();
 
-        int enteredValue = Helper.selectNextOption(sc, "addCustomer");
+        int enteredValue = Helper.selectNextOption(sc, "Add Customer");
         CallableStatement statement = null;
 
         if (enteredValue == 2) {
@@ -239,7 +239,7 @@ public class Admin {
             System.out.print("Enter activity name:");
             activityName = sc.nextLine();
 
-            enteredValue = Helper.selectNextOption(sc, "addActivityType");
+            enteredValue = Helper.selectNextOption(sc, "Add Activity Type");
 
             if (enteredValue == 2) {
                 adminPage();
@@ -279,7 +279,7 @@ public class Admin {
             System.out.print("Enter reward name:");
             rewardName = sc.nextLine();
 
-            enteredValue = Helper.selectNextOption(sc, "addRewardType");
+            enteredValue = Helper.selectNextOption(sc, "Add Reward Type");
 
             if (enteredValue == 2) {
                 adminPage();
