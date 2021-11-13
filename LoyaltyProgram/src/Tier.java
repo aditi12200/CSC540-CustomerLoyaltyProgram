@@ -72,6 +72,8 @@ public class Tier {
         do {
             String tierName = "base";
             int tierPoint = 0, tierMultiplier = 1;
+            tierPoints[0] = 0;
+            tierMultipliers[0] = 1;
 
             for (int i = 0; i < tiers; i++) {
                 sc.nextLine();
@@ -90,8 +92,6 @@ public class Tier {
                     System.out.println("Points required will be 0 for base tier.");
                     System.out.println("Points multiplier will be 1 for base tier.");
                     tierNames[i] = tierName;
-                    tierPoints[i] = 0;
-                    tierMultipliers[i] = 1;
                 }
             }
 
