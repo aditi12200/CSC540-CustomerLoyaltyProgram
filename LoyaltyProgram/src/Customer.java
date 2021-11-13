@@ -408,7 +408,7 @@ public class Customer {
             // for that ACC and brand_id, find number of points from RER table
             if(rs.next())
             {
-                acc = rs.getString("ACT_CATEGORY_CODE");
+                acc = rs.getString("AT_ID");
             }
 
         }
