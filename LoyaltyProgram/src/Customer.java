@@ -401,7 +401,7 @@ public class Customer {
         ResultSet rs;
         try
         {
-            String SQL_Activity_code = "SELECT ACT_CATEGORY_CODE " +
+            String SQL_Activity_code = "SELECT AT_ID " +
                     "FROM ACTIVITY_TYPE" +
                     " WHERE ACTIVITY_NAME = '"+value_option+"'";
             rs = MainMenu.statement.executeQuery(SQL_Activity_code);
