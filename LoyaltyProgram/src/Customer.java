@@ -792,7 +792,7 @@ public class Customer {
         {
             String SQL_Wallet_rp = "SELECT REWARD_CATEGORY_CODE" +
                     " FROM REWARD" +
-                    " WHERE S.BRAND_ID = '"+brandId+"' AND QUANTITY > 0";
+                    " WHERE BRAND_ID = '"+brandId+"' AND QUANTITY > 0";
             rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
             while(rs.next())
             {
