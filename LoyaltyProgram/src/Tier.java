@@ -140,12 +140,19 @@ public class Tier {
         int[] multiplier = tierMultipliers.clone();
         Arrays.sort(points);
         Arrays.sort(multiplier);
-        if(!Arrays.equals(points,tierPoints)) {
-            isValid = false;
+
+        for (int i = 0; i < points.length; i++) {
+            if (points[i] != tierPoints[i]) {
+                isValid=false;
+                break;
+            }
         }
 
-        if(!Arrays.equals(multiplier,tierMultipliers)){
-            isValid = false;
+        for (int i = 0; i < multiplier.length; i++) {
+            if (multiplier[i] != tierMultipliers[i]) {
+                isValid=false;
+                break;
+            }
         }
 
         for (int i = 0; i < tiersCount; i++) {
