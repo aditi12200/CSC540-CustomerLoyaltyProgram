@@ -137,7 +137,7 @@ public class Customer {
                     enrollLoyaltyProgram();
                 }
 
-                if (loyaltyProgramType.toLowerCase() == "r") {
+                if ((loyaltyProgramType.toLowerCase()).equals("r")) {
                     try {
                         ps = MainMenu.connection.prepareStatement("Insert into WALLET (BRAND_ID, CUST_ID,POINTS) values (?,?,?)");
                         ps.setString(1, LPId);//name
@@ -154,7 +154,7 @@ public class Customer {
                         enrollLoyaltyProgram();
                     }
 
-                } else if (loyaltyProgramType.toLowerCase() == "t") {
+                } else if ((loyaltyProgramType.toLowerCase()).equals("t")) {
                     try {
                         String sqlTierSelect = "select * from TIER where BRAND_ID='" + LPId + "' and PRECEDENCE=1";
                         ResultSet rs2 = MainMenu.statement.executeQuery(sqlTierSelect);
