@@ -74,6 +74,7 @@ public class Tier {
             int tierPoint = 0, tierMultiplier = 1;
             tierPoints[0] = 0;
             tierMultipliers[0] = 1;
+            System.out.println("TIER multiplier for base tier got set to"+tierMultipliers[0]);
 
             for (int i = 0; i < tiers; i++) {
                 sc.nextLine();
@@ -92,6 +93,8 @@ public class Tier {
                     System.out.println("Points required will be 0 for base tier.");
                     System.out.println("Points multiplier will be 1 for base tier.");
                     tierNames[i] = tierName;
+                    System.out.println("Tier name got set to "+tierName);
+                    System.out.println("TIER multiplier for tier "+(i+1)+" got set to"+tierMultipliers[i]);
                 }
             }
 
