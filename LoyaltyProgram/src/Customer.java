@@ -285,10 +285,8 @@ public class Customer {
     public static void viewWallet() {
         String customerId = Login.userId;
         Scanner sc = new Scanner(System.in);
-        int enteredValue;
+        int enteredValue=1;
         do {
-            enteredValue = Helper.selectNextOption(sc, "View Wallet");
-
             if (enteredValue == 2) {
                 customerPage();
             } else {
@@ -309,6 +307,7 @@ public class Customer {
                 } catch (SQLException e) {
                     System.out.println("You do not have any existing wallets.");
                 }
+                enteredValue = Helper.selectNextOption(sc, "View Wallet");
             }
         } while (enteredValue != 2);
     }
