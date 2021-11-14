@@ -759,7 +759,12 @@ public class Customer {
             performRewardActivities();
         }
 
-
+        int enteredValue = Helper.selectNextOption(sc,"Perform reward activities");
+        if(enteredValue==1){
+            performRewardActivities();
+        } else{
+            customerPage();
+        }
     }
 
     public static void checkForTierStatusUpgrade(int Total, String brandId, String tier_status, String custId){
