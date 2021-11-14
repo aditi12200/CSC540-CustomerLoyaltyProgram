@@ -1108,5 +1108,12 @@ public class Customer {
             System.out.println("You do not have enough points to redeem a reward");
             redeemPoints();
         }
+
+        int enteredValue = Helper.selectNextOption(sc,"Perform redemption activities");
+        if(enteredValue==1){
+            redeemPoints();
+        } else{
+            customerPage();
+        }
     }
 }
