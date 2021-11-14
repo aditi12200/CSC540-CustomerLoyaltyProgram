@@ -520,6 +520,7 @@ public class Customer {
     }
 
     public static void updateWallet(int Total, int Sumtotal, String brandId){
+        System.out.println("I have entered in update wallet");
         ResultSet rs;
         try
         {
@@ -772,6 +773,7 @@ public class Customer {
     }
 
     public static void checkForTierStatusUpgrade(int Total, String brandId, String tier_status, String custId){
+        System.out.println("I am checking for tier status upgrade");
         String getTierPoints = "select TIER_NAME, POINTS from TIER where BRAND_ID ='"+brandId+"'";
         ResultSet rs;
         Map<Integer, String> tiername_pts = new TreeMap<Integer, String>(Collections.reverseOrder());
@@ -805,7 +807,6 @@ public class Customer {
                 }
             } else {
                 System.out.println("Tier is already set");
-                return;
             }
         } catch(SQLException e)
         {
