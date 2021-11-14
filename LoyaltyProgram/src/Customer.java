@@ -679,10 +679,12 @@ public class Customer {
         if(value_option.toLowerCase().equals("purchase")) {
             System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter 0.");
             gcc=sc.nextInt();
-            sc.nextLine();
+
         }
         // get activity_category_code from activity_category table
+        sc.nextLine();
         System.out.println("Enter value for this activity");
+
         String activity_value=sc.nextLine();
         String acc;
         int points;
