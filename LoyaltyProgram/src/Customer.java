@@ -520,10 +520,16 @@ public class Customer {
         ResultSet rs;
         try
         {
-            PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET" +
-                    " SET POINTS =" +Total+ ", CUMULATIVE_PTS = "+Sumtotal+
-                    " WHERE CUST_ID = '"+Login.userId+"' AND BRAND_ID = '"+brandId+"'");
-            ps.executeUpdate();
+            PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET SET POINTS = ?, CUMULATIVE_PTS = ? WHERE CUST_ID = ? AND BRAND_ID = ?");
+            ps.setInt(1,Total);
+            ps.setInt(2,Sumtotal);
+            ps.setString(3,Login.userId);
+            ps.setString(4,brandId);
+            int rows=ps.executeUpdate();
+            if(rows==0) {
+                System.out.println("Could not update points and cumulative points in wallet");
+                performRewardActivities();
+            }
         }
         catch (SQLIntegrityConstraintViolationException e)
         {
@@ -545,6 +551,11 @@ public class Customer {
             ps.setDate(1, java.sql.Date.valueOf(java.time.LocalDate.now()));
             ps.setString(2, acc);
             ps.setString(3, activity_value);
+            int rows=ps.executeUpdate();
+            if(rows==0) {
+                System.out.println("Reward activity could not be recorded.");
+                performRewardActivities();
+            }
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Integrity Constraint Violation!");
             performRewardActivities();
@@ -563,6 +574,9 @@ public class Customer {
 
             if (rs4.next()) {
                 activityId = rs4.getInt("MAX_ACT_ID");
+            } else {
+                System.out.println("No activity data found");
+                performRewardActivities();
             }
         } catch (SQLException e) {
             System.out.println("SQL Exception encountered");
@@ -573,6 +587,11 @@ public class Customer {
             PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_ACTIVITY(WALLET_ID, ACT_ID) values (?,?)");
             ps.setInt(1, walletId);
             ps.setInt(2, activityId);
+            int rows=ps.executeUpdate();
+            if(rows==0) {
+                System.out.println("Could not record wallet activity information");
+                performRewardActivities();
+            }
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Integrity Constraint Violation");
             performRewardActivities();
@@ -966,10 +985,14 @@ public class Customer {
         {
             try
             {
-                PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET " +
-                        "SET POINTS = " +(walletPts-points)+
-                        " WHERE WALLET_ID = "+walletId);
-                ps.executeUpdate();
+                PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET SET POINTS = ? WHERE WALLET_ID = ?");
+                ps.setInt(1, (walletPts-points));
+                ps.setInt(2, walletId);
+                int rows=ps.executeUpdate();
+                if(rows==0) {
+                    System.out.println("Could not update wallet while redeeming");
+                    redeemPoints();
+                }
             }
             catch(SQLException e)
             {
@@ -979,10 +1002,14 @@ public class Customer {
 
             try
             {
-                PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE REWARD " +
-                        "SET QUANTITY = QUANTITY - 1 "+
-                        "WHERE BRAND_ID = '"+brandId+"' AND REWARD_CATEGORY_CODE = '"+R_C_C+"' ");
-                ps.executeUpdate();
+                PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE REWARD SET QUANTITY = QUANTITY - 1 WHERE BRAND_ID = ? AND REWARD_CATEGORY_CODE = ?");
+                ps.setString(1, brandId);
+                ps.setString(2, R_C_C);
+                int rows=ps.executeUpdate();
+                if(rows==0) {
+                    System.out.println("Could not decrement reward quantity");
+                    redeemPoints();
+                }
             }
             catch(SQLException e)
             {
