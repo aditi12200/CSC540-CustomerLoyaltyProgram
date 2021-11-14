@@ -902,6 +902,7 @@ public class Customer {
         //from the RRR table figure out which rewards are supported for this brand and display that
         try
         {
+            System.out.println(str);
             String SQL_Wallet_rp = "SELECT R.REWARD_NAME, MAX(S.VERSION_NO)" +
                     " FROM REWARD_TYPE R, RR_RULES S" +
                     " WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND R.RT_ID IN " + str +
@@ -914,7 +915,8 @@ public class Customer {
         }
         catch(SQLException e)
         {
-            System.out.println("Reward Earning Rule could not be fetched. Please try again.");
+            e.printStackTrace();
+            System.out.println("Reward Redemption Rule could not be fetched. Please try again.");
             redeemPoints();
         }
         if(brands_rrr.size() == 0)
