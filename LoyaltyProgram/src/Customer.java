@@ -681,10 +681,11 @@ public class Customer {
             gcc=Integer.parseInt(sc.nextLine());
 
         }
+        Scanner sc1=new Scanner();
         // get activity_category_code from activity_category table
         System.out.println("Enter value for this activity");
 
-        String activity_value=sc.nextLine();
+        String activity_value=sc1.nextLine();
         String acc;
         int points;
         String type;
