@@ -520,7 +520,6 @@ public class Customer {
     }
 
     public static void updateWallet(int Total, int Sumtotal, String brandId){
-        System.out.println("I have entered in update wallet");
         ResultSet rs;
         try
         {
@@ -564,6 +563,7 @@ public class Customer {
             System.out.println("Integrity Constraint Violation!");
             performRewardActivities();
         } catch (SQLException e) {
+            e.printStackTrace();
             System.out.println("Reward activity could not be recorded.");
             performRewardActivities();
         }
@@ -748,9 +748,7 @@ public class Customer {
                     Total = wallet_points + multiplier * points;
                     Sumtotal = cumulative_points+Total;
                     checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
-                    System.out.println("I have returned");
                     updateWallet(Total,Sumtotal,brandId);
-                    System.out.println("updated wallet woohoo");
                     updateActivity(acc,activity_value);
                     updateWalletActivity(walletId);
                 }
