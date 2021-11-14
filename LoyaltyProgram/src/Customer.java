@@ -747,7 +747,9 @@ public class Customer {
                     Total = wallet_points + multiplier * points;
                     Sumtotal = cumulative_points+Total;
                     checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
+                    System.out.println("I have returned");
                     updateWallet(Total,Sumtotal,brandId);
+                    System.out.println("updated wallet woohoo");
                     updateActivity(acc,activity_value);
                     updateWalletActivity(walletId);
                 }
@@ -803,6 +805,7 @@ public class Customer {
                 }
             } else {
                 System.out.println("Tier is already set");
+                return;
             }
         } catch(SQLException e)
         {
