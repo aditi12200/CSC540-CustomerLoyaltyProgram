@@ -456,6 +456,9 @@ public class Customer {
             if(rs.next())
             {
                 type = rs.getString("TYPE");
+            } else {
+                System.out.println("type cannot be fetched");
+                performRewardActivities();
             }
         }
         catch(SQLException e)
@@ -705,6 +708,7 @@ public class Customer {
         acc = getAccCode(value_option);
         points = getPoints(acc,brandId);
         type = getLpType(brandId);
+        System.out.println(type);
         int walletId;
         try
         {
