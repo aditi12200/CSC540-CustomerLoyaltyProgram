@@ -892,7 +892,7 @@ public class Customer {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
         for (String i : brands_rcc){
-            sb.append(i+",");
+            sb.append("'"+i+"',");
         }
         sb.deleteCharAt(sb.length() -1);
         sb.append(")");
