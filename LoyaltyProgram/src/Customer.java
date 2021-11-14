@@ -903,14 +903,14 @@ public class Customer {
         try
         {
             System.out.println(str);
-            String SQL_Wallet_rp = "SELECT R.REWARD_NAME, MAX(S.VERSION_NO)" +
+            String SQL_Wallet_rp = "SELECT R.REWARD_NAME, MAX(S.VERSION_NO) AS MAX_VERSION" +
                     " FROM REWARD_TYPE R, RR_RULES S" +
                     " WHERE S.BRAND_ID = '"+brandId+"' AND R.RT_ID = S.REWARD_CATEGORY_CODE AND R.RT_ID IN " + str +
                     " GROUP BY R.REWARD_NAME";
             rs = MainMenu.statement.executeQuery(SQL_Wallet_rp);
             while(rs.next())
             {
-                brands_rrr.put(rs.getString("REWARD_NAME"), rs.getInt("VERSION_NO"));
+                brands_rrr.put(rs.getString("REWARD_NAME"), rs.getInt("MAX_VERSION"));
             }
         }
         catch(SQLException e)
