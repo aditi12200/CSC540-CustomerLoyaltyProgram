@@ -729,7 +729,7 @@ public class Customer {
                 if (type.toLowerCase().equals("r"))
                 {
                     Total = points + wallet_points;
-                    Sumtotal = cumulative_points + Total;
+                    Sumtotal = cumulative_points + points;
                     updateWallet(Total,Sumtotal,brandId);
                     updateActivity(acc,activity_value);
                     updateWalletActivity(walletId);
@@ -746,7 +746,7 @@ public class Customer {
                     multiplier = getMultiplier(brandId,tier_status);
 
                     Total = wallet_points + multiplier * points;
-                    Sumtotal = cumulative_points+Total;
+                    Sumtotal = cumulative_points+multiplier * points;
                     checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
                     updateWallet(Total,Sumtotal,brandId);
                     updateActivity(acc,activity_value);
