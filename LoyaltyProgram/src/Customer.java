@@ -723,7 +723,7 @@ public class Customer {
                 cumulative_points = rs.getInt("CUMULATIVE_PTS");
 
                 // if not a tiered program add into the wallet
-                if (type.toLowerCase().equals('r'))
+                if (type.toLowerCase().equals("r"))
                 {
                     Total = points + wallet_points;
                     Sumtotal = cumulative_points + Total;
@@ -733,8 +733,9 @@ public class Customer {
 
                 }
                 // find out if its a tiered program, if so get the tier and the multiplier
-                if (type.toLowerCase().equals('t'))
+                if (type.toLowerCase().equals("t"))
                 {
+                    System.out.println("in type");
                     //from wallet get the tier status
                     tier_status = getTierStatus(brandId);
 
