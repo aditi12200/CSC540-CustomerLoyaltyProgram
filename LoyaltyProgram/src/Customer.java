@@ -660,7 +660,7 @@ public class Customer {
         for (Map.Entry<Integer, String> entry : rewardActCategories.entrySet()) {
             System.out.println(entry.getKey()+". "+entry.getValue());
             }
-        selected_option = sc.nextInt();
+        selected_option = Integer.parseInt(sc.nextLine());
         while(!check)
         {
             if (rewardActCategories.containsKey(selected_option))
@@ -670,7 +670,7 @@ public class Customer {
             else
             {
                 System.out.println("Invalid option. Please input the correct option.");
-                selected_option = sc.nextInt();
+                selected_option = Integer.parseInt(sc.nextLine());
             }
         }
         // get the string value for that particular integer
@@ -678,11 +678,10 @@ public class Customer {
         int gcc=0;
         if(value_option.toLowerCase().equals("purchase")) {
             System.out.println("If you want to use a gift card, please enter the gift card code. If not, please press enter 0.");
-            gcc=sc.nextInt();
+            gcc=Integer.parseInt(sc.nextLine());
 
         }
         // get activity_category_code from activity_category table
-        sc.nextLine();
         System.out.println("Enter value for this activity");
 
         String activity_value=sc.nextLine();
