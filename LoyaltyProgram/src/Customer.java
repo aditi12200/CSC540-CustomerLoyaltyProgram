@@ -708,7 +708,7 @@ public class Customer {
         acc = getAccCode(value_option);
         points = getPoints(acc,brandId);
         type = getLpType(brandId);
-        System.out.println(type);
+
         int walletId;
         try
         {
@@ -735,7 +735,7 @@ public class Customer {
                 // find out if its a tiered program, if so get the tier and the multiplier
                 if (type.toLowerCase().equals("t"))
                 {
-                    System.out.println("in type");
+
                     //from wallet get the tier status
                     tier_status = getTierStatus(brandId);
 
@@ -744,7 +744,7 @@ public class Customer {
 
                     Total = wallet_points + multiplier * points;
                     Sumtotal = cumulative_points+Total;
-//                    checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
+                    checkForTierStatusUpgrade(Sumtotal,brandId,tier_status,Login.userId);
                     updateWallet(Total,Sumtotal,brandId);
                     updateActivity(acc,activity_value);
                     updateWalletActivity(walletId);
@@ -782,11 +782,18 @@ public class Customer {
             }
             if(!tier_status.equals(maxTier))
             {
-                String update = "UPDATE WALLET SET TIER_STATUS='"+maxTier+"'" +
-                        "where BRAND_ID='"+brandId+" and CUST_ID='"+custId+"'";
+                String update = "UPDATE WALLET SET TIER_STATUS=? where BRAND_ID=? and CUST_ID=?";
                 PreparedStatement ps = MainMenu.connection.prepareStatement(update);
-                ps.executeUpdate();
-                System.out.println("Tier Status updated successfully");
+                ps.setString(1, maxTier);
+                ps.setString(2, brandId);
+                ps.setString(3, custId);
+                int rows = ps.executeUpdate();
+                if(rows==0) {
+                    System.out.println("Could not update Tier Status for this wallet");
+                    performRewardActivities();
+                } else {
+                    System.out.println("Tier Status updated successfully");
+                }
             } else {
                 System.out.println("Tier is already set");
             }
