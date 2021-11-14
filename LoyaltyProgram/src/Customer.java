@@ -1005,6 +1005,22 @@ public class Customer {
         //update activity, wallet_activity tables. if GC update wallet_GC table
         if(walletPts>=points)
         {
+            if(selected_reward.toLowerCase().equals("gift card"))
+            {
+                try {
+                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
+                    ps.setInt(1, walletId);
+                    ps.executeUpdate();
+                } catch (SQLIntegrityConstraintViolationException e) {
+                    System.out.println("Integrity Constraint Violation in Wallet giftcard table");
+                    redeemPoints();
+                } catch(SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("Could not assign a gift card");
+                    redeemPoints();
+                }
+            }
+
             try
             {
                 PreparedStatement ps = MainMenu.connection.prepareStatement("UPDATE WALLET SET POINTS = ? WHERE WALLET_ID = ?");
@@ -1087,20 +1103,6 @@ public class Customer {
                 redeemPoints();
             }
 
-            if(selected_reward.toLowerCase().equals("gift card"))
-            {
-                try {
-                    PreparedStatement ps = MainMenu.connection.prepareStatement("Insert into WALLET_GIFTCARD(WALLET_ID) values (?)");
-                    ps.setInt(1, walletId);
-                    ps.executeUpdate();
-                } catch (SQLIntegrityConstraintViolationException e) {
-                    System.out.println("Integrity Constraint Violation in Wallet giftcard table");
-                    redeemPoints();
-                } catch(SQLException e) {
-                    System.out.println("Could not assign a gift card");
-                    redeemPoints();
-                }
-            }
         }
         else
         {
