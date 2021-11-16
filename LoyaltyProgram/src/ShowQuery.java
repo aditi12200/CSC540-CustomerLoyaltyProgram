@@ -69,19 +69,15 @@ public class ShowQuery {
 
     private static void query1() {
 
-        String sqlCustName = "SELECT NAME FROM CUSTOMER WHERE CUST_ID IN (SELECT CUST_ID FROM WALLET WHERE CUST_ID NOT IN (SELECT CUST_ID FROM WALLET WHERE BRAND_ID='Brand02'))";
+        String sqlCustName = "SELECT NAME FROM CUSTOMER WHERE CUST_ID NOT IN (SELECT CUST_ID FROM WALLET WHERE BRAND_ID='Brand02')";
 
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCustName);
-            if (rs.next()) {
                 while(rs.next()){
                     String custName = rs.getString("NAME");
                     System.out.println(custName);
                 }
-            } else {
-                System.out.println("No Customer Found.");
-            }
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
@@ -99,14 +95,11 @@ public class ShowQuery {
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
-            if (rs.next()) {
+
                 while (rs.next()) {
                     String custName=rs.getString("NAME");
                     System.out.println(custName);
                 }
-            } else {
-                System.out.println("No Customer Found.");
-            }
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
@@ -122,13 +115,9 @@ public class ShowQuery {
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlGetReward);
-            if (rs.next()) {
                 while (rs.next()) {
                     System.out.println(rs.getString("REWARD_NAME"));
                 }
-            } else {
-                System.out.println("No Reward Found.");
-            }
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
@@ -145,7 +134,7 @@ public class ShowQuery {
             rs = MainMenu.statement.executeQuery(sqlGetLpName);
             if (rs.next()) {
                 while (rs.next()) {
-                    System.out.println(rs.getString("NAME"));
+                    System.out.println(rs.getString("ACTIVITY_NAME"));
                 }
             } else {
                 System.out.println("No Loyalty Program Found.");
@@ -170,14 +159,10 @@ public class ShowQuery {
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
-            if (rs.next()) {
                 while (rs.next()) {
                     System.out.println(rs.getString("ACTIVITY_NAME"));
                     System.out.println(rs.getString("ACT_COUNT"));
                 }
-            } else {
-                System.out.println("No Activity Type Found.");
-            }
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
@@ -200,13 +185,9 @@ public class ShowQuery {
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
-            if (rs.next()) {
                 while (rs.next()) {
                     System.out.println(rs.getString("NAME"));
                 }
-            } else {
-                System.out.println("No Customer Found.");
-            }
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
@@ -291,13 +272,9 @@ public class ShowQuery {
         try {
 
             rs = MainMenu.statement.executeQuery(sqlCred);
-            if (rs.next()) {
                 while (rs.next()) {
                     System.out.println(rs.getString("numAct"));
                 }
-            } else {
-                System.out.println("No Activity Found.");
-            }
             rs.close();
 
             showQueryPage();
