@@ -87,10 +87,10 @@ public class ShowQuery {
     }
 
     private static void query2() {
-        String sqlCred = "SELECT C.CUST_ID, C.NAME FROM WALLET W,CUSTOMER C WHERE W.WALLET_ID NOT IN " +
+        String sqlCred = "SELECT C.CUST_ID, C.NAME FROM WALLET W,CUSTOMER C WHERE W.CUST_ID = C.CUST_ID AND W.WALLET_ID NOT IN " +
                 "(SELECT WA.WALLET_ID FROM WALLET_ACTIVITY WA WHERE WA.ACT_ID IN " +
                 "(SELECT A.ACT_ID FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_CATEGORY_CODE=A1.AT_ID AND A1.ACTIVITY_NAME<>'JOIN')" +
-                "GROUP BY WA.WALLET_ID)";
+                " GROUP BY WA.WALLET_ID)";
 
         ResultSet rs = null;
         try {
@@ -132,13 +132,9 @@ public class ShowQuery {
         ResultSet rs = null;
         try {
             rs = MainMenu.statement.executeQuery(sqlGetLpName);
-            if (rs.next()) {
                 while (rs.next()) {
-                    System.out.println(rs.getString("ACTIVITY_NAME"));
+                    System.out.println(rs.getString("BRAND_ID"));
                 }
-            } else {
-                System.out.println("No Loyalty Program Found.");
-            }
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
