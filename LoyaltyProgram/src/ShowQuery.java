@@ -69,9 +69,7 @@ public class ShowQuery {
 
     private static void query1() {
 
-        String sqlCustName = "select NAME  from CUSTOMER where CUST_ID in (select CUST_ID from wallet " +
-                "where CUST_ID not in (select CUST_ID from wallet where BRAND_ID = " +
-                "(Select BRAND_ID from BRAND where NAME ='Brand02')))";
+        String sqlCustName = "SELECT NAME FROM CUSTOMER WHERE CUST_ID IN (SELECT CUST_ID FROM WALLET WHERE CUST_ID NOT IN (SELECT CUST_ID FROM WALLET WHERE BRAND_ID='Brand02'))";
 
         ResultSet rs = null;
         try {
@@ -118,9 +116,8 @@ public class ShowQuery {
     }
 
     private static void query3() {
-        String sqlGetReward = "select REWARD_NAME from REWARD_TYPE where RT_ID IN" +
-                "(select REWARD_CATEGORY_CODE from REWARD where BRAND_ID = " +
-                "(select BRAND_ID from BRAND where NAME = 'Brand01'))";
+
+        String sqlGetReward = "SELECT REWARD_NAME FROM REWARD_TYPE WHERE RT_ID IN (SELECT REWARD_CATEGORY_CODE FROM REWARD WHERE BRAND_ID='Brand01')";
 
         ResultSet rs = null;
         try {
