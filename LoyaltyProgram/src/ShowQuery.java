@@ -283,41 +283,29 @@ public class ShowQuery {
 
     private static void query8() {
 
-        String getCustID = "select CUST_ID from CUSTOMER where NAME ='C003'";
-        String getBrandID = "select BRAND_ID from BRAND where NAME ='Brand02'";
 
         ResultSet rs = null;
-        ResultSet ps = null;
+        String sqlCred = "select count(*) as numAct from ACTIVITY where ACT_ID in " +
+                "(select ACT_ID from WALLET_ACTIVITY where WALLET_ID = " +
+                "(select WALLET_ID from WALLET where CUST_ID ='C0003' and BRAND_ID ='Brand02' ) " +
+                "and ACT_DATE between '01-AUG-21' and '30-SEP-21')";
+
         try {
-            rs = MainMenu.statement.executeQuery(getCustID);
-            ps = MainMenu.statement.executeQuery(getBrandID);
-            String custID, brandID;
-            if(rs.next() && ps.next()) {
-                 custID = rs.getString("CUST_ID");
-                 brandID = ps.getString("BRAND_ID");
-                String sqlCred = "select count(*) as numAct from ACTIVITY where ACT_ID in " +
-                        "(select ACT_ID from WALLET_ACTIVITY where WALLET_ID = " +
-                        "(select WALLET_ID from WALLET where CUST_ID ='"+custID+"' and BRAND_ID ='"+brandID+"' ) " +
-                        "and ACT_DATE between '01-AUG-21' and '30-SEP-21')";
-                rs = MainMenu.statement.executeQuery(sqlCred);
-                if (rs.next()) {
-                    while (rs.next()) {
-                        System.out.println(rs.getString("numAct"));
-                    }
-                } else {
-                    System.out.println("No Activity Found.");
+
+            rs = MainMenu.statement.executeQuery(sqlCred);
+            if (rs.next()) {
+                while (rs.next()) {
+                    System.out.println(rs.getString("numAct"));
                 }
-
             } else {
-                System.out.println("No Customer/brand found");
-
+                System.out.println("No Activity Found.");
             }
             rs.close();
-            ps.close();
+
             showQueryPage();
+
         } catch (SQLException e) {
             Helper.close(rs);
-            Helper.close(ps);
             e.printStackTrace();
         }
     }
