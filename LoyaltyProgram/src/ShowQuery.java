@@ -47,6 +47,7 @@ public class ShowQuery {
                         break;
                     case 6:
                         query6();
+                        break;
                     case 7:
                         query7();
                         break;
@@ -185,7 +186,7 @@ public class ShowQuery {
         try {
             rs = MainMenu.statement.executeQuery(sqlCred);
                 while (rs.next()) {
-                    System.out.println(rs.getString("NAME"));
+                    System.out.println(rs.getString("CUST_ID"));
                 }
             rs.close();
             showQueryPage();
@@ -214,8 +215,8 @@ public class ShowQuery {
                     "where W.WALLET_ID = W1.WALLET_ID" +
                     "on A.ACT_ID = W.ACT_ID ) as temp, RR_RULES R" +
                     "where temp.BRAND_ID = R.BRAND_ID and temp.VALUE = R.REWARD_CATEGORY_CODE " +
-                    "GROUPBY BRAND_ID" +
-                    "HAVING SUM(POINTS)<500";
+                    "GROUP BY BRAND_ID" +
+                    " HAVING SUM(POINTS)<500";
             rs = MainMenu.statement.executeQuery(sql);
 
             List<String> brandIds=new ArrayList<String>();
