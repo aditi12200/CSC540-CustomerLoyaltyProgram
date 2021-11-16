@@ -169,15 +169,6 @@ public class ShowQuery {
         String sqlCred = "SELECT CUST_ID FROM WALLET W, WALLET_ACTIVITY WA, ACTIVITY A WHERE W.WALLET_ID = WA.WALLET_ID AND" +
                 " WA.ACT_ID = A.ACT_ID AND W.BRAND_ID = 'Brand01' AND A.ACT_CATEGORY_CODE = (SELECT AT_ID FROM ACTIVITY_TYPE WHERE " +
                 "ACTIVITY_NAME ='REDEEM') GROUP BY CUST_ID HAVING COUNT(*)>1";
-                /*"SELECT NAME, COUNT(*) FROM CUSTOMER WHERE CUST_ID IN " +
-                "(SELECT TEMP.CUST_ID FROM" +
-                "((SELECT A.ACT_ID FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_CATEGORY_CODE=A1.AT_ID" +
-                " AND A1.ACTIVITY_NAME='REDEEM')" +
-                "NATURAL INNER JOIN" +
-                "(SELECT W.ACT_ID, W1.CUST_ID FROM WALLET_ACTIVITY W, WALLET W1 WHERE W.WALLET_ID=W1.WALLET_ID AND" +
-                " W1.BRAND_ID='Brand01')) AS TEMP)" +
-                "GROUP BY NAME" +
-                "HAVING COUNT(*)>1";*/
 
         ResultSet rs = null;
         try {
@@ -205,45 +196,17 @@ public class ShowQuery {
             if (rs.next()) {
                 ACC = rs.getString("AT_ID");
 
-            String sql="SELECT B.NAME, FTEMP.SUMPOINTS FROM " +
-                       "(SELECT TEMP.BRAND_ID, SUM(R.POINTS) AS SUMPOINTS FROM " +
-                       "(SELECT TEMP2. WALLET_ID, TEMP2. BRAND_ID, TEMP1.VALUE FROM " +
-                       "(SELECT A.ACT_ID, A.VALUE FROM ACTIVITY A WHERE A.ACT_CATEGORY_CODE='"+ACC+"') TEMP1 " +
-                       "INNER JOIN (SELECT W.WALLET_ID, W.ACT_ID, W1.BRAND_ID FROM WALLET_ACTIVITY W, WALLET W1 WHERE W.WALLET_ID=W1.WALLET_ID) TEMP2 "+
-                       "ON TEMP1.ACT_ID=TEMP2.ACT_ID) TEMP, RR_RULES R " +
-                       "WHERE TEMP.BRAND_ID=R.BRAND_ID AND TEMP.VALUE=R.REWARD_CATEGORY_CODE GROUP BY TEMP.BRAND_ID HAVING SUM(POINTS)<500) FTEMP, BRAND B " +
-                       "WHERE FTEMP.BRAND_ID=B.BRAND_ID";
-            rs = MainMenu.statement.executeQuery(sql);
+                String sql="SELECT B.NAME, FTEMP.SUMPOINTS FROM " +
+                           "(SELECT TEMP.BRAND_ID, SUM(R.POINTS) AS SUMPOINTS FROM " +
+                           "(SELECT TEMP2. WALLET_ID, TEMP2. BRAND_ID, TEMP1.VALUE FROM " +
+                           "(SELECT A.ACT_ID, A.VALUE FROM ACTIVITY A WHERE A.ACT_CATEGORY_CODE='"+ACC+"') TEMP1 " +
+                           "INNER JOIN (SELECT W.WALLET_ID, W.ACT_ID, W1.BRAND_ID FROM WALLET_ACTIVITY W, WALLET W1 WHERE W.WALLET_ID=W1.WALLET_ID) TEMP2 "+
+                           "ON TEMP1.ACT_ID=TEMP2.ACT_ID) TEMP, RR_RULES R " +
+                           "WHERE TEMP.BRAND_ID=R.BRAND_ID AND TEMP.VALUE=R.REWARD_CATEGORY_CODE GROUP BY TEMP.BRAND_ID HAVING SUM(POINTS)<500) FTEMP, BRAND B " +
+                           "WHERE FTEMP.BRAND_ID=B.BRAND_ID";
+                rs = MainMenu.statement.executeQuery(sql);
 
-            /*List<String> brandIds=new ArrayList<String>();
-            while(rs.next()) {
-                if(rs.getInt("SUMPOINTS") < 500) {
-                    brandIds.add(rs.getString("BRAND_ID"));
-                }
-            }
-
-            if(brandIds.size() == 0) {
-                System.out.println("No redeem activity has been performed for any brand!");
-                showQueryPage();
-            } else {
-                StringBuilder sb = new StringBuilder();
-                sb.append("(");
-                for (String i : brandIds){
-                    sb.append(i+",");
-                }
-                sb.deleteCharAt(sb.length() -1);
-                sb.append(")");
-                String str = sb.toString();
-                String sqlQuery = "SELECT NAME FROM BRAND WHERE BRAND_ID IN " + str;
-                rs = MainMenu.statement.executeQuery(sqlQuery);
-                str="";
-                System.out.println("Brands: ");
-                while(rs.next()) {
-                    str=str+" "+rs.getString("NAME");
-                }
-                System.out.print(str);
-            }*/
-                System.out.println("BRAND                   SUMPOINTS");
+                System.out.println("BRAND          SUMPOINTS");
                 while(rs.next()) {
                     System.out.println(rs.getString("NAME")+"        "+rs.getInt("SUMPOINTS"));
                 }
