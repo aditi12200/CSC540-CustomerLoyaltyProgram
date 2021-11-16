@@ -144,13 +144,13 @@ public class ShowQuery {
     }
 
     private static void query5() {
-        String sqlCred = "SELECT TEMP.ACTIVITY_NAME, COUNT(*) AS ACT_COUNT FROM" +
+        String sqlCred = "SELECT TEMP.ACTIVITY_NAME, COUNT(*) AS ACT_COUNT FROM " +
                 "((SELECT A.ACT_ID, A1.ACTIVITY_NAME FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_CATEGORY_CODE" +
-                "=A1.AT_ID AND A1.VISIBLE='Y')" +
-                "NATURAL INNER JOIN" +
-                "(SELECT * FROM WALLET_ID, ACT_ID FROM WALLET_ACTIVITY WHERE WALLET_ID IN " +
-                "(SELECT W.WALLET_ID FROM WALLET W,BRAND B WHERE W.BRAND_ID=B.BRAND_ID AND B.NAME='Brand01'))) AS TEMP" +
-                "GROUP BY TEMP.ACTIVITY_NAME";
+                "=A1.AT_ID AND A1.VISIBLE='Y') AS TEMP1 " +
+                "INNER JOIN " +
+                "(SELECT * FROM WALLET_ACTIVITY W1, WALLET W WHERE W1.WALLET_ID = W.WALLET_ID AND W.BRAND_ID='Brand01') AS TEMP2" +
+                " ON TEMP1.ACT_ID = TEMP2.ACT_ID) AS TEMP" +
+                " GROUP BY TEMP.ACTIVITY_NAME";
 
         ResultSet rs = null;
         try {
@@ -168,15 +168,18 @@ public class ShowQuery {
     }
 
     private static void query6() {
-        String sqlCred = "SELECT NAME, COUNT(*) FROM CUSTOMER WHERE CUST_ID IN " +
+        String sqlCred = "SELECT CUST_ID FROM WALLET W, WALLET_ACTIVITY WA, ACTIVITY A WHERE W.WALLET_ID = WA.WALLET_ID AND" +
+                " WA.ACT_ID = A.ACT_ID AND W.BRAND_ID = 'Brand01' AND A.ACT_CATEGORY_CODE = (SELECT AT_ID FROM ACTIVITY_TYPE WHERE " +
+                "ACTIVITY_NAME ='REDEEM') GROUP BY CUST_ID HAVING COUNT(*)>1";
+                /*"SELECT NAME, COUNT(*) FROM CUSTOMER WHERE CUST_ID IN " +
                 "(SELECT TEMP.CUST_ID FROM" +
                 "((SELECT A.ACT_ID FROM ACTIVITY A, ACTIVITY_TYPE A1 WHERE A.ACT_CATEGORY_CODE=A1.AT_ID" +
                 " AND A1.ACTIVITY_NAME='REDEEM')" +
                 "NATURAL INNER JOIN" +
-                "(SELECT W.ACT_ID, W1.CUST_ID FROM WALLET_ACTIVITY W, WALLET W1,BRAND B WHERE W.WALLET_ID=W1.WALLET_ID AND" +
-                "B.BRAND_ID=W1.BRAND_ID AND B.NAME='Brand01')) AS TEMP)" +
+                "(SELECT W.ACT_ID, W1.CUST_ID FROM WALLET_ACTIVITY W, WALLET W1 WHERE W.WALLET_ID=W1.WALLET_ID AND" +
+                " W1.BRAND_ID='Brand01')) AS TEMP)" +
                 "GROUP BY NAME" +
-                "HAVING COUNT(*)>1";
+                "HAVING COUNT(*)>1";*/
 
         ResultSet rs = null;
         try {
