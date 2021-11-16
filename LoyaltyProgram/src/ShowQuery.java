@@ -138,9 +138,7 @@ public class ShowQuery {
     }
 
     private static void query4(){
-        String sqlGetLpName = "select NAME from BRAND where BRAND_ID in " +
-                "(select BRAND_ID from RE_RULES where ACT_CATEGORY_CODE = " +
-                "(select AT_ID from ACTIVITY_TYPE where NAME = 'Refer A Friend')) ";
+        String sqlGetLpName = "SELECT BRAND_ID FROM RE_RULES WHERE ACT_CATEGORY_CODE=(SELECT AT_ID FROM ACTIVITY_TYPE WHERE ACTIVITY_NAME='Refer A Friend')";
 
         ResultSet rs = null;
         try {
