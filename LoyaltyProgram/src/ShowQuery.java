@@ -205,18 +205,17 @@ public class ShowQuery {
             if (rs.next()) {
                 ACC = rs.getString("AT_ID");
 
-            String sql = "Select  BRAND_ID, SUM(POINTS) AS SUMPOINTS from" +
-                    "(select ACT_ID, VALUE from ACTIVITY A where A.ACT_CATEGORY_CODE ='"+ACC+"' " +
-                    "NATURAL INNER JOIN" +
-                    "select WALLET_ID, ACT_ID, BRAND_ID from WALLET_ACTIVITY W, WALLET W1" +
-                    "where W.WALLET_ID = W1.WALLET_ID" +
-                    "on A.ACT_ID = W.ACT_ID ) as temp, RR_RULES R" +
-                    "where temp.BRAND_ID = R.BRAND_ID and temp.VALUE = R.REWARD_CATEGORY_CODE " +
-                    "GROUP BY BRAND_ID" +
-                    " HAVING SUM(POINTS)<500";
+            String sql="SELECT B.NAME, FTEMP.SUMPOINTS FROM " +
+                       "(SELECT TEMP.BRAND_ID, SUM(R.POINTS) AS SUMPOINTS FROM " +
+                       "(SELECT TEMP2. WALLET_ID, TEMP2. BRAND_ID, TEMP1.VALUE FROM " +
+                       "(SELECT A.ACT_ID, A.VALUE FROM ACTIVITY A WHERE A.ACT_CATEGORY_CODE='"+ACC+"') TEMP1 " +
+                       "INNER JOIN (SELECT W.WALLET_ID, W.ACT_ID, W1.BRAND_ID FROM WALLET_ACTIVITY W, WALLET W1 WHERE W.WALLET_ID=W1.WALLET_ID) TEMP2 "+
+                       "ON TEMP1.ACT_ID=TEMP2.ACT_ID) TEMP, RR_RULES R " +
+                       "WHERE TEMP.BRAND_ID=R.BRAND_ID AND TEMP.VALUE=R.REWARD_CATEGORY_CODE GROUP BY TEMP.BRAND_ID HAVING SUM(POINTS)<500) FTEMP, BRAND B " +
+                       "WHERE FTEMP.BRAND_ID=B.BRAND_ID";
             rs = MainMenu.statement.executeQuery(sql);
 
-            List<String> brandIds=new ArrayList<String>();
+            /*List<String> brandIds=new ArrayList<String>();
             while(rs.next()) {
                 if(rs.getInt("SUMPOINTS") < 500) {
                     brandIds.add(rs.getString("BRAND_ID"));
@@ -243,12 +242,17 @@ public class ShowQuery {
                     str=str+" "+rs.getString("NAME");
                 }
                 System.out.print(str);
-            }
+            }*/
+                System.out.println("BRAND                   SUMPOINTS");
+                while(rs.next()) {
+                    System.out.println(rs.getString("NAME")+"        "+rs.getInt("SUMPOINTS"));
+                }
 
             } else {
                 System.out.println("No Brand Found.");
 
             }
+
             rs.close();
             showQueryPage();
         } catch (SQLException e) {
