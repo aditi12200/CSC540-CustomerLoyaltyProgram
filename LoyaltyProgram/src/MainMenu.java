@@ -4,9 +4,9 @@ import java.util.*;
 
 public class MainMenu {
 
-    public static final String jdbcURL = "jdbc:oracle:thin:@ora.csc.ncsu.edu:1521:orcl01";
-    public static final String user = "araghut";
-    public static final String passwd = "200421320";
+    public static final String jdbcURL = "";
+    public static final String user = "";
+    public static final String passwd = "";
 
     public static Connection connection;
     public static Statement statement;
